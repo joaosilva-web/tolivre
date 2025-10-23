@@ -1,0 +1,39 @@
+// app/api/auth/login/route.ts
+// NextResponse is not directly used here; `api.ok` returns a NextResponse when needed
+import { PrismaClient } from "@/generated/prisma";
+import { compare } from "bcrypt";
+import { signToken } from "@/app/libs/auth";
+import * as api from "@/app/libs/apiResponse";
+
+const prisma = new PrismaClient();
+
+export async function POST(req: Request) {
+  const { email, password } = await req.json();
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return api.unauthorized("Usuário não encontrado");
+
+  const isValid = await compare(password, user.password);
+  if (!isValid) return api.unauthorized("Senha inválida");
+
+  const token = signToken({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    companyId: user.companyId,
+  });
+
+  const res = api.ok({ message: "Login realizado com sucesso", token });
+  res.cookies.set({
+    name: "token",
+    value: token,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24,
+  });
+
+  return res;
+}
