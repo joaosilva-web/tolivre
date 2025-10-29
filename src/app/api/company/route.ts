@@ -28,16 +28,19 @@ export async function POST(req: NextRequest) {
   try {
     const body: unknown = await req.json();
     const data: CompanyInput = companySchema.parse(body); // valida o body
+    console.log("Dados validados:", data);
 
     const company: Company = await prisma.company.create({
       data: { ...data, users: { connect: { id: user.id } } },
     });
+    console.log("Empresa criada:", company.id);
 
     // Vincula o usuário à empresa
     await prisma.user.update({
       where: { id: user.id },
       data: { companyId: company.id },
     });
+    console.log("Usuário atualizado com companyId:", company.id);
 
     // Re-sign token including the new companyId and set cookie so client session updates
     const newToken = signToken({
@@ -61,15 +64,21 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (error: unknown) {
-    console.error(error);
+    console.error("Erro ao criar empresa:", error);
     if (error instanceof ZodError) {
       return api.badRequest(
         "Erro de validação",
-        error.errors.map((e) => ({
+        error.issues.map((e) => ({
           path: e.path.join("."),
           message: e.message,
         }))
       );
+    }
+    // Retornar erro mais específico
+    if (error && typeof error === "object" && "code" in error) {
+      if (error.code === "P2002") {
+        return api.badRequest("CNPJ/CPF já cadastrado");
+      }
     }
     return api.serverError("Erro ao criar empresa");
   }
@@ -95,7 +104,7 @@ export async function PUT(req: NextRequest) {
     if (error instanceof ZodError) {
       return api.badRequest(
         "Erro de validação",
-        error.errors.map((e) => ({
+        error.issues.map((e) => ({
           path: e.path.join("."),
           message: e.message,
         }))
