@@ -24,6 +24,8 @@ import {
   User,
   Scissors,
 } from "lucide-react";
+import { generateSlots, WorkingHour as SlotWorkingHour, AvailableSlot } from "@/lib/slotGeneration";
+import { UIAppointment } from "@/lib/appointments";
 
 interface Service {
   id: string;
@@ -50,11 +52,12 @@ interface TimeSlot {
   available: boolean;
 }
 
-interface WorkingHour {
+// WorkingHour shape coming from the backend (API) — will be mapped to the slotGeneration shape
+interface WorkingHourFromApi {
   id: string;
   dayOfWeek: number;
-  startTime: string;
-  endTime: string;
+  startTime: string; // e.g. "08:00"
+  endTime: string; // e.g. "17:00"
   companyId: string;
 }
 
@@ -116,81 +119,72 @@ export default function NewAppointmentPage() {
 
     setLoading(true);
     try {
-      // Buscar horários de trabalho da empresa
+      // Buscar horários de trabalho da empresa (com param date)
       const workingHoursRes = await fetch(
-        `/api/working-hours?companyId=${user.companyId}`
+        `/api/working-hours?companyId=${user.companyId}&date=${date
+          .toISOString()
+          .split("T")[0]}`
       );
       if (!workingHoursRes.ok) {
         throw new Error("Erro ao buscar horários de trabalho");
       }
 
-      const workingHours: WorkingHour[] = (await workingHoursRes.json()).data;
+      const workingHoursApi: WorkingHourFromApi[] = (
+        await workingHoursRes.json()
+      ).data;
 
-      // Buscar agendamentos existentes para a data selecionada
+      // Mapear para o formato esperado por generateSlots (openTime/closeTime)
+      const workingHours: SlotWorkingHour[] = workingHoursApi.map((wh) => ({
+        dayOfWeek: wh.dayOfWeek,
+        openTime: wh.startTime,
+        closeTime: wh.endTime,
+      }));
+
+      // Buscar agendamentos existentes para a data selecionada (intervalo)
+      const from = date.toISOString().split("T")[0];
+      const to = from;
       const appointmentsRes = await fetch(
-        `/api/appointments?companyId=${user.companyId}&date=${
-          date.toISOString().split("T")[0]
-        }`
+        `/api/appointments?companyId=${user.companyId}&from=${from}&to=${to}`
       );
       if (!appointmentsRes.ok) {
         throw new Error("Erro ao buscar agendamentos existentes");
       }
 
-      const existingAppointments: Appointment[] = (await appointmentsRes.json())
-        .data;
+      const existingAppointmentsApi: Appointment[] = (
+        await appointmentsRes.json()
+      ).data;
 
-      // Gerar slots disponíveis baseado nos horários de trabalho
-      const slots: TimeSlot[] = [];
-      const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
-
-      // Encontrar horários de trabalho para o dia da semana
-      const dayWorkingHours = workingHours.filter(
-        (wh) => wh.dayOfWeek === dayOfWeek
+      // Mapear para UIAppointment[] esperado por generateSlots
+      const existingAppointments: UIAppointment[] = existingAppointmentsApi.map(
+        (a) => ({
+          id: a.id,
+          clientName: a.clientName || "",
+          service: a.serviceId || "",
+          serviceId: a.serviceId,
+          professionalId: a.professionalId,
+          professionalName: undefined,
+          price: 0,
+          date: a.startTime,
+          status: undefined as unknown as UIAppointment["status"],
+        })
       );
 
-      if (dayWorkingHours.length === 0) {
-        setAvailableSlots([]);
-        return;
-      }
+      const duration = selectedService?.duration || 30;
 
-      // Para cada período de trabalho, gerar slots de 30 minutos
-      dayWorkingHours.forEach((wh) => {
-        const startTime = new Date(`1970-01-01T${wh.startTime}`);
-        const endTime = new Date(`1970-01-01T${wh.endTime}`);
+      const slots: AvailableSlot[] = generateSlots(
+        date,
+        workingHours,
+        duration,
+        existingAppointments
+      );
 
-        const currentTime = new Date(startTime);
+      // Convert AvailableSlot to TimeSlot shape used by this component
+      const uiSlots: TimeSlot[] = slots.map((s) => ({
+        time: s.time,
+        available: s.available,
+      }));
 
-        while (currentTime < endTime) {
-          const timeString = currentTime.toTimeString().slice(0, 5); // HH:MM format
-
-          // Verificar se há agendamento conflitante
-          const isAvailable = !existingAppointments.some((appointment) => {
-            const appointmentStart = new Date(appointment.startTime);
-            const appointmentEnd = new Date(appointment.endTime);
-
-            const slotStart = new Date(date);
-            slotStart.setHours(
-              currentTime.getHours(),
-              currentTime.getMinutes()
-            );
-
-            const slotEnd = new Date(slotStart);
-            slotEnd.setMinutes(
-              slotEnd.getMinutes() + (selectedService?.duration || 30)
-            );
-
-            // Verificar se o slot se sobrepõe com algum agendamento existente
-            return slotStart < appointmentEnd && slotEnd > appointmentStart;
-          });
-
-          slots.push({ time: timeString, available: isAvailable });
-
-          // Próximo slot de 30 minutos
-          currentTime.setMinutes(currentTime.getMinutes() + 30);
-        }
-      });
-
-      setAvailableSlots(slots);
+      setAvailableSlots(uiSlots);
     } catch (error) {
       console.error("Erro ao carregar horários:", error);
       setAvailableSlots([]);
