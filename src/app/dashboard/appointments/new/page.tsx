@@ -56,8 +56,9 @@ interface TimeSlot {
 interface WorkingHourFromApi {
   id: string;
   dayOfWeek: number;
-  startTime: string; // e.g. "08:00"
-  endTime: string; // e.g. "17:00"
+  // backend returns openTime/closeTime
+  openTime: string; // e.g. "08:00"
+  closeTime: string; // e.g. "17:00"
   companyId: string;
 }
 
@@ -136,8 +137,8 @@ export default function NewAppointmentPage() {
       // Mapear para o formato esperado por generateSlots (openTime/closeTime)
       const workingHours: SlotWorkingHour[] = workingHoursApi.map((wh) => ({
         dayOfWeek: wh.dayOfWeek,
-        openTime: wh.startTime,
-        closeTime: wh.endTime,
+        openTime: wh.openTime,
+        closeTime: wh.closeTime,
       }));
 
       // Buscar agendamentos existentes para a data selecionada (intervalo)
