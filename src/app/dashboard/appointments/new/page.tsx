@@ -24,7 +24,11 @@ import {
   User,
   Scissors,
 } from "lucide-react";
-import { generateSlots, WorkingHour as SlotWorkingHour, AvailableSlot } from "@/lib/slotGeneration";
+import {
+  generateSlots,
+  WorkingHour as SlotWorkingHour,
+  AvailableSlot,
+} from "@/lib/slotGeneration";
 import { UIAppointment } from "@/lib/appointments";
 
 interface Service {
@@ -122,9 +126,9 @@ export default function NewAppointmentPage() {
     try {
       // Buscar horários de trabalho da empresa (com param date)
       const workingHoursRes = await fetch(
-        `/api/working-hours?companyId=${user.companyId}&date=${date
-          .toISOString()
-          .split("T")[0]}`
+        `/api/working-hours?companyId=${user.companyId}&date=${
+          date.toISOString().split("T")[0]
+        }`
       );
       if (!workingHoursRes.ok) {
         throw new Error("Erro ao buscar horários de trabalho");
@@ -162,7 +166,6 @@ export default function NewAppointmentPage() {
           clientName: a.clientName || "",
           service: a.serviceId || "",
           serviceId: a.serviceId,
-          professionalId: a.professionalId,
           professionalName: undefined,
           price: 0,
           date: a.startTime,
@@ -352,7 +355,7 @@ export default function NewAppointmentPage() {
           </div>
 
           {/* Step Content */}
-          <div className="max-w-2xl mx-auto">
+          <div className="w-full mx-auto">
             {currentStep === 1 && (
               <Card>
                 <CardHeader>
@@ -462,7 +465,7 @@ export default function NewAppointmentPage() {
             )}
 
             {currentStep === 4 && (
-              <Card>
+              <Card className="w-full">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="h-5 w-5" />
