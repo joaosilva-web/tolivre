@@ -574,7 +574,7 @@ export default function Home() {
                 <Link href="/login">
                   <Button variant="ghost">Entrar</Button>
                 </Link>
-                <Link href="/register">
+                <Link href="/login?tab=register">
                   <Button className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90">
                     Começar Grátis
                   </Button>
@@ -607,7 +607,7 @@ export default function Home() {
                 seus clientes.
               </p>
               <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/register">
+                <Link href="/login?tab=register">
                   <Button
                     size="lg"
                     className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 hover:scale-110 transition-all duration-300"
@@ -880,7 +880,7 @@ export default function Home() {
                   com agendamentos. Se você marca horários com clientes, nós
                   temos a solução ideal para você!
                 </p>
-                <Link href="/register">
+                <Link href="/login?tab=register">
                   <Button
                     size="lg"
                     className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90"
@@ -1280,19 +1280,11 @@ export default function Home() {
                 Teste grátis por 14 dias
               </h3>
               <div className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="Seu melhor e-mail"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <input
-                  type="text"
-                  placeholder="Nome do seu negócio"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <Button size="lg" className="w-full text-lg">
-                  Começar agora <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
+                <Link href="/login?tab=register" className="w-full">
+                  <Button size="lg" className="w-full text-lg">
+                    Começar agora <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
               </div>
               <p className="text-xs text-muted-foreground mt-4">
                 Sem necessidade de cartão de crédito • Cancele quando quiser
@@ -1495,7 +1487,7 @@ export default function Home() {
                       <span>Suporte por email</span>
                     </li>
                   </ul>
-                  <Link href="/register" className="w-full">
+                  <Link href="/login?tab=register" className="w-full">
                     <Button variant="outline" className="w-full" size="lg">
                       Começar Grátis
                     </Button>
@@ -1556,7 +1548,7 @@ export default function Home() {
                       <span>Suporte prioritário</span>
                     </li>
                   </ul>
-                  <Link href="/register" className="w-full">
+                  <Link href="/login?tab=register" className="w-full">
                     <Button
                       className="w-full bg-gradient-to-r from-primary to-blue-600"
                       size="lg"
@@ -1615,7 +1607,7 @@ export default function Home() {
                       <span>Suporte 24/7</span>
                     </li>
                   </ul>
-                  <Link href="/register" className="w-full">
+                  <Link href="/login?tab=register" className="w-full">
                     <Button variant="outline" className="w-full" size="lg">
                       Falar com Vendas
                     </Button>
@@ -1691,7 +1683,7 @@ export default function Home() {
                   gestão de agendamentos
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/register">
+                  <Link href="/login?tab=register">
                     <Button
                       size="lg"
                       variant="secondary"
