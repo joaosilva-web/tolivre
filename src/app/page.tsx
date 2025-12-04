@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import IconLogo from "@/components/ui/icon-logo";
+import Lottie from "lottie-react";
 import {
   Calendar,
   MessageCircle,
@@ -536,8 +537,13 @@ export default function Home() {
       {loading && (
         <div className="loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-background">
           <div className="flex flex-col items-center justify-center">
-            <div className="loading-logo" style={{ width: 200, height: 200 }}>
-              <IconLogo />
+            <div className="loading-logo w-[200px] h-[200px] flex items-center justify-center mx-auto">
+              <Lottie
+                style={{ width: "100%", height: "100%" }}
+                animationData={require("@/assets/logoLottie.json")}
+                autoplay={true}
+                loop={false}
+              />
             </div>
             <p className="loading-text text-lg text-muted-foreground mt-4 opacity-0 translate-y-4">
               Carregando...
