@@ -525,7 +525,7 @@ export default function Home() {
       {/* Loading Screen */}
       {loading && (
         <div className="loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-background">
-          <div className="loading-logo w-[200px] h-[200px] flex items-center justify-center mx-auto">
+          <div className="loading-logo w-[200px] h-[200px]">
             <IconLogo width="100%" height="100%" />
           </div>
         </div>
