@@ -35,6 +35,8 @@ export default function Page() {
   });
   const [error, setError] = useState("");
   const [cnpjError, setCnpjError] = useState("");
+  const [exportingAppointments, setExportingAppointments] = useState(false);
+  const [exportingClients, setExportingClients] = useState(false);
 
   // Refs for animations
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -218,9 +220,6 @@ export default function Page() {
       </SidebarInset>
     );
   }
-
-  const [exportingAppointments, setExportingAppointments] = useState(false);
-  const [exportingClients, setExportingClients] = useState(false);
 
   const handleExportAppointments = async () => {
     try {

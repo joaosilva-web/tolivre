@@ -25,7 +25,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   Loader2,
-  DollarSign,
   TrendingUp,
   Clock,
   CheckCircle,

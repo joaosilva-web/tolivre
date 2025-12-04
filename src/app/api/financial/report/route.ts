@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 import { getUserFromCookie } from "@/app/libs/auth";
-import { startOfMonth, endOfMonth, subMonths, format } from "date-fns";
+import { startOfMonth, endOfMonth, format } from "date-fns";
 
 // GET - Relatório financeiro
 export async function GET(req: NextRequest) {
