@@ -3,6 +3,7 @@ import { Appointment as PrismaAppointment } from "@/generated/prisma";
 export interface UIAppointment {
   id: string;
   clientName: string;
+  clientId?: string;
   service: string; // service name (if relation expanded) or serviceId fallback
   serviceId?: string; // original serviceId from Prisma
   professionalId?: string;
@@ -66,6 +67,12 @@ export function prismaToUI(
   return {
     id: appt.id,
     clientName: appt.clientName ?? "",
+    clientId:
+      (appt as unknown as Record<string, unknown>).clientId !== undefined
+        ? (String(
+            (appt as unknown as Record<string, unknown>).clientId
+          ) as string)
+        : undefined,
     service: String(service),
     serviceId: appt.serviceId,
     price,

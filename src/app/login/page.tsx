@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import useSession from "@/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ import IconLogo from "@/components/ui/icon-logo";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refresh } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,6 +45,13 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
+        // refresh session context so SessionProvider fetches current user
+        try {
+          await refresh();
+        } catch (err) {
+          // if refresh fails, still navigate — a full reload will fetch session
+          console.warn("session refresh after login failed", err);
+        }
         router.push("/dashboard");
       } else {
         const data = await res.json();

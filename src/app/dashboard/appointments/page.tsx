@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -9,11 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Plus, Calendar, Clock, User } from "lucide-react";
 import useSession from "@/hooks/useSession";
+import { gsap } from "gsap";
 
 interface Appointment {
   id: string;
   startTime: string;
   clientName: string;
+  client?: { id: string; name: string } | null;
   service: {
     name: string;
     price: number;
@@ -32,10 +34,16 @@ export default function AppointmentsPage() {
 
   const loadAppointments = useCallback(async () => {
     try {
-      const res = await fetch(`/api/appointments?companyId=${user?.companyId}`);
+      const now = new Date();
+      const fromIso = encodeURIComponent(now.toISOString());
+      const res = await fetch(
+        `/api/appointments?companyId=${user?.companyId}&fromDatetime=${fromIso}`
+      );
       if (res.ok) {
-        const data = await res.json();
-        setAppointments(data.data);
+        const payload = await res.json();
+        const all = payload?.data ?? payload ?? [];
+        // API already returned appointments starting from `fromDatetime` ordered asc
+        setAppointments(all as Appointment[]);
       }
     } catch (error) {
       console.error("Erro ao carregar agendamentos:", error);
@@ -44,11 +52,45 @@ export default function AppointmentsPage() {
     }
   }, [user?.companyId]);
 
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (user?.companyId) {
       loadAppointments();
     }
   }, [user?.companyId, loadAppointments]);
+
+  // Animations
+  useEffect(() => {
+    if (loading) return;
+
+    const ctx = gsap.context(() => {
+      // Animate header
+      gsap.from(headerRef.current, {
+        opacity: 0,
+        y: -20,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+
+      // Animate cards
+      const cards =
+        cardsContainerRef.current?.querySelectorAll(".appointment-card");
+      if (cards && cards.length > 0) {
+        gsap.from(cards, {
+          opacity: 0,
+          y: 30,
+          duration: 0.5,
+          stagger: 0.1,
+          delay: 0.2,
+          ease: "power2.out",
+        });
+      }
+    });
+
+    return () => ctx.revert();
+  }, [loading, appointments]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("pt-BR");
@@ -78,7 +120,7 @@ export default function AppointmentsPage() {
     <SidebarInset>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="flex items-center justify-between">
+        <div ref={headerRef} className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
             <p className="text-muted-foreground">
@@ -91,7 +133,7 @@ export default function AppointmentsPage() {
           </Button>
         </div>
 
-        <div className="grid gap-4">
+        <div ref={cardsContainerRef} className="space-y-6">
           {appointments.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
@@ -111,41 +153,69 @@ export default function AppointmentsPage() {
               </CardContent>
             </Card>
           ) : (
-            appointments.map((appointment) => (
-              <Card key={appointment.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">
-                          {formatDate(appointment.startTime)}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span>{formatTime(appointment.startTime)}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span>{appointment.clientName}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <Badge variant="outline">
-                        {appointment.service.name}
-                      </Badge>
-                      <Badge variant="secondary">
-                        {appointment.professional.name}
-                      </Badge>
-                      <span className="font-medium">
-                        R$ {appointment.service.price.toFixed(2)}
-                      </span>
-                    </div>
+            // Group appointments by local date label (pt-BR)
+            (() => {
+              const groups: { date: string; items: Appointment[] }[] = [];
+              appointments.forEach((appointment) => {
+                const dateLabel = formatDate(appointment.startTime);
+                let g = groups.find((x) => x.date === dateLabel);
+                if (!g) {
+                  g = { date: dateLabel, items: [] };
+                  groups.push(g);
+                }
+                g.items.push(appointment);
+              });
+
+              return groups.map((g) => (
+                <div key={g.date}>
+                  <h2 className="text-lg font-semibold mb-2">{g.date}</h2>
+                  <div className="grid gap-4">
+                    {g.items.map((appointment) => (
+                      <Card key={appointment.id} className="appointment-card">
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                              <div className="flex items-center space-x-2">
+                                <Calendar className="h-4 w-4 text-muted-foreground" />
+                                <span className="font-medium">{g.date}</span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Clock className="h-4 w-4 text-muted-foreground" />
+                                <span>{formatTime(appointment.startTime)}</span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <User className="h-4 w-4 text-muted-foreground" />
+                                {appointment.client?.id ? (
+                                  <a
+                                    className="text-primary underline"
+                                    href={`/dashboard/clients/${appointment.client.id}`}
+                                  >
+                                    {appointment.client.name}
+                                  </a>
+                                ) : (
+                                  <span>{appointment.clientName}</span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                              <Badge variant="outline">
+                                {appointment.service.name}
+                              </Badge>
+                              <Badge variant="secondary">
+                                {appointment.professional.name}
+                              </Badge>
+                              <span className="font-medium">
+                                R$ {appointment.service.price.toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            ))
+                </div>
+              ));
+            })()
           )}
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import useSession from "@/hooks/useSession";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { gsap } from "gsap";
 
 import data from "./data.json";
 
@@ -34,6 +35,46 @@ export default function Page() {
   });
   const [error, setError] = useState("");
   const [cnpjError, setCnpjError] = useState("");
+
+  // Refs for animations
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  // Animations for dashboard elements
+  useEffect(() => {
+    if (!user?.companyId || loading) return;
+
+    const ctx = gsap.context(() => {
+      // Animate cards entrance
+      gsap.from(cardsRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: "power2.out",
+      });
+
+      // Animate chart entrance
+      gsap.from(chartRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 0.7,
+        delay: 0.2,
+        ease: "power2.out",
+      });
+
+      // Animate table entrance
+      gsap.from(tableRef.current, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: 0.4,
+        ease: "power2.out",
+      });
+    });
+
+    return () => ctx.revert();
+  }, [user?.companyId, loading]);
 
   if (loading) {
     return (
@@ -184,11 +225,15 @@ export default function Page() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <SectionCards />
-            <div className="px-4 lg:px-6">
+            <div ref={cardsRef}>
+              <SectionCards />
+            </div>
+            <div ref={chartRef} className="px-4 lg:px-6">
               <ChartAreaInteractive />
             </div>
-            <DataTable data={data} />
+            <div ref={tableRef}>
+              <DataTable data={data} />
+            </div>
           </div>
         </div>
       </div>

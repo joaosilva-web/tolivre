@@ -6,6 +6,8 @@ import { buildAppointmentWhere } from "@/lib/appointmentsRange";
 import * as api from "@/app/libs/apiResponse";
 import { checkRateLimit } from "@/app/libs/rateLimit";
 import { getUserFromCookie } from "@/app/libs/auth";
+import { sendText as sendUazText } from "@/lib/uazapi";
+import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
 
 // local helper error type for errors with codes (e.g. OVERLAP)
 type ErrorWithCode = Error & { code?: string };
@@ -14,7 +16,8 @@ type ErrorWithCode = Error & { code?: string };
 const createAppointmentSchema = z.object({
   companyId: z.string().min(1),
   professionalId: z.string().min(1),
-  clientName: z.string().min(1),
+  clientName: z.string().min(1).optional(),
+  clientId: z.string().optional(),
   serviceId: z.string().min(1),
   startTime: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
     message: "startTime deve ser uma ISO date válida",
@@ -76,6 +79,30 @@ export async function POST(req: NextRequest) {
 
     const end = new Date(start.getTime() + service.duration * 60_000);
 
+    // Check subscription limits
+    const subscription = await prisma.subscription.findUnique({
+      where: { companyId: parsed.companyId },
+    });
+
+    const appointmentsThisMonth = await prisma.appointment.count({
+      where: {
+        companyId: parsed.companyId,
+        startTime: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        },
+      },
+    });
+
+    const limitCheck = checkAppointmentLimit(
+      subscription,
+      appointmentsThisMonth
+    );
+    if (!limitCheck.allowed) {
+      return api.forbidden(
+        limitCheck.message || "Limite de agendamentos atingido"
+      );
+    }
+
     // Working hours
     const day = getDayOfWeekUTC(start);
     const wh = await prisma.workingHours.findFirst({
@@ -100,6 +127,18 @@ export async function POST(req: NextRequest) {
     const created = await prisma.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(${lock1}::int, ${lock2}::int)`;
 
+      // resolve clientName from clientId if provided
+      let clientNameToStore = parsed.clientName ?? "";
+      if (parsed.clientId) {
+        const c = await tx.client.findUnique({
+          where: { id: parsed.clientId },
+        });
+        if (!c || c.companyId !== parsed.companyId) {
+          throw new Error("Cliente inválido");
+        }
+        clientNameToStore = c.name;
+      }
+
       const overlapCount = await tx.appointment.count({
         where: {
           professionalId: parsed.professionalId,
@@ -119,13 +158,78 @@ export async function POST(req: NextRequest) {
         data: {
           companyId: parsed.companyId,
           professionalId: parsed.professionalId,
-          clientName: parsed.clientName,
+          clientName: clientNameToStore,
+          clientId: parsed.clientId ?? undefined,
           serviceId: parsed.serviceId,
           startTime: start,
           endTime: end,
         },
       });
     });
+
+    // try to send WhatsApp notification in background (non-blocking)
+    (async () => {
+      try {
+        // fetch company phone and name
+        const company = await prisma.company.findUnique({
+          where: { id: parsed.companyId },
+          select: { telefone: true, nomeFantasia: true },
+        });
+
+        // resolve client phone if possible
+        let clientPhone: string | undefined;
+        let clientNameToUse = parsed.clientName ?? "";
+        if (parsed.clientId) {
+          const c = await prisma.client.findUnique({
+            where: { id: parsed.clientId },
+            select: { phone: true, name: true },
+          });
+          if (c) {
+            clientPhone = c.phone ?? undefined;
+            clientNameToUse = c.name ?? clientNameToUse;
+          }
+        }
+
+        // fetch service name
+        const svc = await prisma.service.findUnique({
+          where: { id: parsed.serviceId },
+          select: { name: true },
+        });
+
+        if (company?.telefone && clientPhone) {
+          const startLocal = new Date(parsed.startTime).toLocaleString("pt-BR");
+          const message = `Olá ${clientNameToUse}, seu agendamento em ${
+            company.nomeFantasia || "sua empresa"
+          } para ${
+            svc?.name || "o serviço"
+          } está confirmado para ${startLocal}.`;
+          const result = await sendUazText({ to: clientPhone, message });
+          console.log(
+            "[appointments] WhatsApp send result for appointment",
+            created.id,
+            {
+              companyId: parsed.companyId,
+              clientId: parsed.clientId,
+              clientPhone,
+              payload: { to: clientPhone, from: company.telefone, message },
+              result,
+            }
+          );
+        } else {
+          console.log(
+            "[appointments] Skipping WhatsApp: missing company phone or client phone",
+            {
+              companyPhone: company?.telefone,
+              clientPhone,
+              companyId: parsed.companyId,
+              clientId: parsed.clientId,
+            }
+          );
+        }
+      } catch (err) {
+        console.error("Erro ao enviar notificação WhatsApp:", err);
+      }
+    })();
 
     return api.ok(created);
   } catch (err) {
@@ -150,23 +254,54 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const companyId = searchParams.get("companyId");
     const professionalId = searchParams.get("professionalId");
+    const clientId = searchParams.get("clientId");
     const from = searchParams.get("from");
     const to = searchParams.get("to");
+    const fromDatetime = searchParams.get("fromDatetime");
+    const pageParam = searchParams.get("page");
+    const pageSizeParam = searchParams.get("pageSize");
 
     if (!companyId) return api.badRequest("companyId é obrigatório");
 
     let where: Prisma.AppointmentWhereInput;
-    if (from || to) {
+    if (fromDatetime) {
+      // allow passing a full ISO datetime to filter appointments starting from that instant
+      const dt = new Date(fromDatetime);
+      if (isNaN(dt.getTime())) return api.badRequest("fromDatetime inválido");
+      where = {
+        companyId,
+        startTime: { gte: dt },
+      } as Prisma.AppointmentWhereInput;
+    } else if (from || to) {
       // buildAppointmentWhere returns a plain object but it matches AppointmentWhereInput shape
       where = buildAppointmentWhere(companyId, from ?? "", to ?? "");
     } else {
       where = { companyId };
     }
     if (professionalId) where = { ...where, professionalId };
+    if (clientId) where = { ...where, clientId };
+
+    // support optional pagination
+    const page = pageParam ? Math.max(1, Number(pageParam) || 1) : null;
+    const pageSize = pageSizeParam
+      ? Math.max(1, Number(pageSizeParam) || 10)
+      : 10;
+
+    if (page) {
+      const total = await prisma.appointment.count({ where });
+      const appointments = await prisma.appointment.findMany({
+        where,
+        include: { service: true, professional: true, client: true },
+        orderBy: { startTime: "asc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      });
+      return api.ok({ data: appointments, total, page, pageSize });
+    }
 
     const appointments = await prisma.appointment.findMany({
       where,
-      include: { service: true, professional: true },
+      include: { service: true, professional: true, client: true },
       orderBy: { startTime: "asc" },
     });
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import useSession from "@/hooks/useSession";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { gsap } from "gsap";
 import {
   Card,
   CardContent,
@@ -38,7 +39,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Trash2, Users, Building, Scissors } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Trash2,
+  Users,
+  Building,
+  Scissors,
+  Calendar as CalendarIcon,
+} from "lucide-react";
 
 interface Company {
   id: string;
@@ -71,14 +80,29 @@ interface ProfessionalService {
 }
 
 export default function CompanyPage() {
-  const { user, refresh } = useSession();
+  const { user } = useSession();
   const [loading, setLoading] = useState(true);
-  const [company, setCompany] = useState<Company | null>(null);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [professionalServices, setProfessionalServices] = useState<
     ProfessionalService[]
   >([]);
+  const [workingHours, setWorkingHours] = useState<
+    {
+      id: string;
+      companyId: string;
+      dayOfWeek: number;
+      openTime: string;
+      closeTime: string;
+    }[]
+  >([]);
+
+  const [creatingWorkingHour, setCreatingWorkingHour] = useState(false);
+  const [workingHourForm, setWorkingHourForm] = useState({
+    dayOfWeek: "1",
+    openTime: "08:00",
+    closeTime: "17:00",
+  });
 
   // Form states
   const [companyForm, setCompanyForm] = useState<Partial<Company>>({});
@@ -107,7 +131,6 @@ export default function CompanyPage() {
       const companyRes = await fetch(`/api/company/${user.companyId}`);
       if (companyRes.ok) {
         const companyData = await companyRes.json();
-        setCompany(companyData.data);
         setCompanyForm(companyData.data);
       }
 
@@ -134,6 +157,15 @@ export default function CompanyPage() {
       if (assocRes.ok) {
         const assocData = await assocRes.json();
         setProfessionalServices(assocData.data);
+      }
+      // Load working hours
+      const whRes = await fetch(
+        `/api/working-hours?companyId=${user.companyId}`
+      );
+      if (whRes.ok) {
+        const whData = await whRes.json();
+        // API returns openTime/closeTime fields
+        setWorkingHours(whData.data || []);
       }
     } catch {
       setError("Erro ao carregar dados");
@@ -269,6 +301,32 @@ export default function CompanyPage() {
     }
   };
 
+  const headerRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(headerRef.current, {
+        opacity: 0,
+        y: -20,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+
+      gsap.from(tabsRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        delay: 0.2,
+        ease: "power2.out",
+      });
+    });
+
+    return () => ctx.revert();
+  }, [loading]);
+
   if (loading) {
     return (
       <SidebarInset>
@@ -285,7 +343,7 @@ export default function CompanyPage() {
       <SiteHeader />
       <div className="flex flex-1 flex-col">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
-          <div className="flex items-center gap-2">
+          <div ref={headerRef} className="flex items-center gap-2">
             <Building className="h-6 w-6" />
             <h1 className="text-2xl font-bold">Configurações da Empresa</h1>
           </div>
@@ -296,8 +354,8 @@ export default function CompanyPage() {
             </div>
           )}
 
-          <Tabs defaultValue="company" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+          <Tabs ref={tabsRef} defaultValue="company" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="company" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
                 Empresa
@@ -308,6 +366,13 @@ export default function CompanyPage() {
               >
                 <Users className="h-4 w-4" />
                 Profissionais
+              </TabsTrigger>
+              <TabsTrigger
+                value="working-hours"
+                className="flex items-center gap-2"
+              >
+                <CalendarIcon className="h-4 w-4" />
+                Horários
               </TabsTrigger>
               <TabsTrigger value="services" className="flex items-center gap-2">
                 <Scissors className="h-4 w-4" />
@@ -415,6 +480,199 @@ export default function CompanyPage() {
                       Salvar Alterações
                     </Button>
                   </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="working-hours" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Horários de Funcionamento</CardTitle>
+                  <CardDescription>
+                    Configure os dias e períodos em que sua empresa atende
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <Sheet>
+                        <SheetTrigger asChild>
+                          <Button className="w-full">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Novo Horário
+                          </Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                          <SheetHeader>
+                            <SheetTitle>Criar Horário</SheetTitle>
+                            <SheetDescription>
+                              Defina um dia da semana e o período de atendimento
+                            </SheetDescription>
+                          </SheetHeader>
+                          <form
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              if (!user?.companyId) return;
+                              setCreatingWorkingHour(true);
+                              try {
+                                const res = await fetch(`/api/working-hours`, {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({
+                                    companyId: user.companyId,
+                                    dayOfWeek: parseInt(
+                                      workingHourForm.dayOfWeek
+                                    ),
+                                    openTime: workingHourForm.openTime,
+                                    closeTime: workingHourForm.closeTime,
+                                  }),
+                                });
+                                if (res.ok) {
+                                  await loadData();
+                                }
+                              } catch (err) {
+                                console.error(err);
+                              } finally {
+                                setCreatingWorkingHour(false);
+                              }
+                            }}
+                            className="space-y-4"
+                          >
+                            <div>
+                              <Label>Dia da Semana</Label>
+                              <Select
+                                value={workingHourForm.dayOfWeek}
+                                onValueChange={(v) =>
+                                  setWorkingHourForm({
+                                    ...workingHourForm,
+                                    dayOfWeek: v,
+                                  })
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="0">Domingo</SelectItem>
+                                  <SelectItem value="1">Segunda</SelectItem>
+                                  <SelectItem value="2">Terça</SelectItem>
+                                  <SelectItem value="3">Quarta</SelectItem>
+                                  <SelectItem value="4">Quinta</SelectItem>
+                                  <SelectItem value="5">Sexta</SelectItem>
+                                  <SelectItem value="6">Sábado</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label>Início</Label>
+                              <Input
+                                type="time"
+                                value={workingHourForm.openTime}
+                                onChange={(e) =>
+                                  setWorkingHourForm({
+                                    ...workingHourForm,
+                                    openTime: e.target.value,
+                                  })
+                                }
+                                required
+                              />
+                            </div>
+                            <div>
+                              <Label>Fim</Label>
+                              <Input
+                                type="time"
+                                value={workingHourForm.closeTime}
+                                onChange={(e) =>
+                                  setWorkingHourForm({
+                                    ...workingHourForm,
+                                    closeTime: e.target.value,
+                                  })
+                                }
+                                required
+                              />
+                            </div>
+                            <Button
+                              type="submit"
+                              className="w-full"
+                              disabled={creatingWorkingHour}
+                            >
+                              {creatingWorkingHour && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              )}
+                              Criar
+                            </Button>
+                          </form>
+                        </SheetContent>
+                      </Sheet>
+                    </div>
+
+                    <div>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Dia</TableHead>
+                            <TableHead>Início</TableHead>
+                            <TableHead>Fim</TableHead>
+                            <TableHead>Ações</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {workingHours.map((wh) => (
+                            <TableRow key={wh.id}>
+                              <TableCell>
+                                {
+                                  [
+                                    "Dom",
+                                    "Seg",
+                                    "Ter",
+                                    "Qua",
+                                    "Qui",
+                                    "Sex",
+                                    "Sáb",
+                                  ][wh.dayOfWeek]
+                                }
+                              </TableCell>
+                              <TableCell>{wh.openTime}</TableCell>
+                              <TableCell>{wh.closeTime}</TableCell>
+                              <TableCell>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={async () => {
+                                    if (!confirm("Excluir este horário?"))
+                                      return;
+                                    try {
+                                      const res = await fetch(
+                                        `/api/working-hours/${wh.id}`,
+                                        { method: "DELETE" }
+                                      );
+                                      if (res.ok) await loadData();
+                                    } catch (err) {
+                                      console.error(err);
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                          {workingHours.length === 0 && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={4}
+                                className="text-center text-muted-foreground"
+                              >
+                                Nenhum horário cadastrado
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

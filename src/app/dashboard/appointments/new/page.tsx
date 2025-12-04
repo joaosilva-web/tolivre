@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import useSession from "@/hooks/useSession";
 import { SiteHeader } from "@/components/site-header";
@@ -51,6 +51,13 @@ interface ProfessionalService {
   service: Service;
 }
 
+interface Client {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+}
+
 interface TimeSlot {
   time: string;
   available: boolean;
@@ -92,7 +99,18 @@ export default function NewAppointmentPage() {
   // Form data
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [clientName, setClientName] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  // clients state is intentionally omitted; we use server-side search and keep created client in selection
+  const [searchResults, setSearchResults] = useState<Client[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const [clientQuery, setClientQuery] = useState("");
+  const [creatingClient, setCreatingClient] = useState(false);
+  const [newClientName, setNewClientName] = useState("");
+  const [newClientEmail, setNewClientEmail] = useState("");
+  const [newClientPhone, setNewClientPhone] = useState("");
+  // store date as a YYYY-MM-DD string to avoid cross-browser UTC parsing differences
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
 
   // Data
@@ -113,9 +131,51 @@ export default function NewAppointmentPage() {
     }
   }, [user?.companyId]);
 
+  // server-side live search for clients (paginated)
+  const searchClients = useCallback(
+    async (q: string, page = 1) => {
+      if (!user?.companyId) return;
+      try {
+        const res = await fetch(
+          `/api/clients?companyId=${user.companyId}&q=${encodeURIComponent(
+            q
+          )}&page=${page}&pageSize=10`
+        );
+        if (res.ok) {
+          const payload = await res.json();
+          // payload is ApiEnvelope: { success: true, data: ... }
+          const body = payload?.data ?? payload;
+
+          // body may be either an array OR an object { data: clients[], total, page }
+          let clientsArr: Client[] = [];
+          if (Array.isArray(body)) {
+            clientsArr = body as Client[];
+          } else if (Array.isArray(body?.data)) {
+            clientsArr = body.data as Client[];
+          }
+
+          setSearchResults(clientsArr);
+          // open dropdown whenever there's a query (even if there are no results)
+          // so the user can create a new client when nothing matches
+          setDropdownOpen(q.trim().length > 0);
+        } else {
+          setSearchResults([]);
+          setDropdownOpen(false);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar clientes:", err);
+        setSearchResults([]);
+      }
+    },
+    [user?.companyId]
+  );
+
+  const searchDebounceRef = useRef<number | null>(null);
+
   useEffect(() => {
     if (user?.companyId) {
       loadServices();
+      // don't auto-load all clients; we will perform live search when user types
     }
   }, [user?.companyId, loadServices]);
 
@@ -124,11 +184,15 @@ export default function NewAppointmentPage() {
 
     setLoading(true);
     try {
+      // Build local YYYY-MM-DD string from the provided date (avoid UTC shift)
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+        date.getDate()
+      )}`;
+
       // Buscar horários de trabalho da empresa (com param date)
       const workingHoursRes = await fetch(
-        `/api/working-hours?companyId=${user.companyId}&date=${
-          date.toISOString().split("T")[0]
-        }`
+        `/api/working-hours?companyId=${user.companyId}&date=${dateStr}`
       );
       if (!workingHoursRes.ok) {
         throw new Error("Erro ao buscar horários de trabalho");
@@ -146,7 +210,7 @@ export default function NewAppointmentPage() {
       }));
 
       // Buscar agendamentos existentes para a data selecionada (intervalo)
-      const from = date.toISOString().split("T")[0];
+      const from = dateStr;
       const to = from;
       const appointmentsRes = await fetch(
         `/api/appointments?companyId=${user.companyId}&from=${from}&to=${to}`
@@ -166,7 +230,9 @@ export default function NewAppointmentPage() {
           clientName: a.clientName || "",
           service: a.serviceId || "",
           serviceId: a.serviceId,
-          professionalName: undefined,
+          professionalId: a.professionalId,
+          professionalName:
+            undefined as unknown as UIAppointment["professionalName"],
           price: 0,
           date: a.startTime,
           status: undefined as unknown as UIAppointment["status"],
@@ -214,9 +280,11 @@ export default function NewAppointmentPage() {
     handleNext();
   };
 
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
-    if (date && selectedService) {
+  const handleDateSelect = (dateStr: string | undefined) => {
+    setSelectedDate(dateStr || "");
+    if (dateStr && selectedService) {
+      const [y, m, d] = dateStr.split("-");
+      const date = new Date(Number(y), Number(m) - 1, Number(d));
       loadAvailableSlots(date);
     }
     handleNext();
@@ -228,16 +296,72 @@ export default function NewAppointmentPage() {
       !selectedService ||
       !selectedDate ||
       !selectedTime ||
-      !clientName
+      // allow creating a new client inline: either an existing clientName or a newClientName is required
+      !(clientName || newClientName)
     ) {
       return;
     }
 
     setLoading(true);
     try {
-      const startDateTime = new Date(selectedDate);
+      // If the user chose to create a new client inline but didn't press the "Criar Cliente" button,
+      // create it here before creating the appointment. This makes the flow more resilient.
+      let resolvedClientId =
+        selectedClientId && selectedClientId !== "__new"
+          ? selectedClientId
+          : undefined;
+
+      if (selectedClientId === "__new" && newClientName.trim()) {
+        setCreatingClient(true);
+        try {
+          const createRes = await fetch("/api/clients", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              companyId: user.companyId,
+              name: newClientName,
+              email: newClientEmail || undefined,
+              phone: newClientPhone || undefined,
+            }),
+          });
+          if (createRes.ok) {
+            const createdPayload = await createRes.json();
+            const createdClient = createdPayload.data || createdPayload;
+            resolvedClientId = createdClient.id;
+            setSelectedClientId(createdClient.id);
+            setClientName(createdClient.name);
+            setNewClientName("");
+            setNewClientEmail("");
+            setNewClientPhone("");
+          } else {
+            const err = await createRes.json().catch(() => null);
+            // If creating the client failed, stop and show error
+            alert(err?.error || "Erro ao criar cliente");
+            setCreatingClient(false);
+            return;
+          }
+        } catch (err) {
+          console.error("Erro ao criar cliente (inline):", err);
+          alert("Erro ao criar cliente");
+          setCreatingClient(false);
+          return;
+        } finally {
+          setCreatingClient(false);
+        }
+      }
+
+      // Build start Date in local time from YYYY-MM-DD + selectedTime to avoid UTC day-shift
+      const [y, m, d] = selectedDate.split("-");
       const [hours, minutes] = selectedTime.split(":").map(Number);
-      startDateTime.setHours(hours, minutes, 0, 0);
+      const startDateTime = new Date(
+        Number(y),
+        Number(m) - 1,
+        Number(d),
+        hours,
+        minutes,
+        0,
+        0
+      );
 
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(
@@ -270,6 +394,7 @@ export default function NewAppointmentPage() {
           companyId: user.companyId,
           professionalId: availableProfessional.professionalId,
           clientName,
+          clientId: resolvedClientId,
           serviceId: selectedService.id,
           startTime: startDateTime.toISOString(),
         }),
@@ -294,6 +419,9 @@ export default function NewAppointmentPage() {
       case 1:
         return selectedService !== null;
       case 2:
+        // if creating a new client inline, validate newClientName; otherwise validate clientName
+        if (selectedClientId === "__new")
+          return newClientName.trim().length > 0;
         return clientName.trim().length > 0;
       case 3:
         return selectedDate !== undefined;
@@ -410,15 +538,246 @@ export default function NewAppointmentPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="clientName">Nome do Cliente *</Label>
-                      <Input
-                        id="clientName"
-                        value={clientName}
-                        onChange={(e) => setClientName(e.target.value)}
-                        placeholder="Digite o nome completo"
-                        required
-                      />
+                      <Label htmlFor="existingClient">Procurar Cliente</Label>
+                      <div className="relative">
+                        <Input
+                          id="existingClient"
+                          placeholder="Pesquisar por nome ou email..."
+                          value={clientQuery}
+                          onChange={(e) => {
+                            const q = e.target.value;
+                            setClientQuery(q);
+                            // update visible name while typing
+                            setClientName(q);
+                            setSelectedClientId(null);
+                            if (searchDebounceRef.current)
+                              window.clearTimeout(searchDebounceRef.current);
+                            searchDebounceRef.current = window.setTimeout(
+                              () => {
+                                if (!q || q.trim().length === 0) {
+                                  setSearchResults([]);
+                                  setDropdownOpen(false);
+                                  return;
+                                }
+                                searchClients(q, 1);
+                                setFocusedIndex(-1);
+                              },
+                              250
+                            ) as unknown as number;
+                          }}
+                          onKeyDown={(e) => {
+                            if (!dropdownOpen) return;
+                            if (e.key === "ArrowDown") {
+                              e.preventDefault();
+                              setFocusedIndex((fi) =>
+                                Math.min(fi + 1, searchResults.length - 1)
+                              );
+                            } else if (e.key === "ArrowUp") {
+                              e.preventDefault();
+                              setFocusedIndex((fi) => Math.max(fi - 1, 0));
+                            } else if (e.key === "Enter") {
+                              if (
+                                focusedIndex >= 0 &&
+                                searchResults[focusedIndex]
+                              ) {
+                                const c = searchResults[focusedIndex];
+                                setSelectedClientId(c.id);
+                                setClientName(c.name);
+                                setClientQuery("");
+                                setDropdownOpen(false);
+                                setSearchResults([]);
+                              }
+                            } else if (e.key === "Escape") {
+                              setDropdownOpen(false);
+                            }
+                          }}
+                        />
+
+                        {dropdownOpen && (
+                          <div
+                            role="listbox"
+                            aria-labelledby="existingClient"
+                            className="absolute z-20 left-0 right-0 bg-popover border rounded mt-1 max-h-56 overflow-auto"
+                          >
+                            {searchResults.length > 0 ? (
+                              searchResults.map((c, idx) => {
+                                const isFocused = idx === focusedIndex;
+                                const q = clientQuery;
+                                const highlight = (text: string) => {
+                                  if (!q) return text;
+                                  const idx = text
+                                    .toLowerCase()
+                                    .indexOf(q.toLowerCase());
+                                  if (idx === -1) return text;
+                                  const before = text.slice(0, idx);
+                                  const match = text.slice(idx, idx + q.length);
+                                  const after = text.slice(idx + q.length);
+                                  return (
+                                    <>
+                                      {before}
+                                      <span className="bg-yellow-100 text-yellow-900 px-0.5">
+                                        {match}
+                                      </span>
+                                      {after}
+                                    </>
+                                  );
+                                };
+
+                                return (
+                                  <button
+                                    key={c.id}
+                                    role="option"
+                                    aria-selected={isFocused}
+                                    className={`w-full text-left px-3 py-2 hover:bg-muted-foreground/5 flex flex-col ${
+                                      isFocused ? "bg-muted-foreground/5" : ""
+                                    }`}
+                                    onMouseEnter={() => setFocusedIndex(idx)}
+                                    onClick={() => {
+                                      setSelectedClientId(c.id);
+                                      setClientName(c.name);
+                                      setClientQuery("");
+                                      setDropdownOpen(false);
+                                      setSearchResults([]);
+                                    }}
+                                  >
+                                    <div className="font-medium">
+                                      {highlight(c.name)}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      {highlight(c.email || "")}
+                                    </div>
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="px-3 py-2 text-sm text-muted-foreground">
+                                Nenhum cliente encontrado
+                              </div>
+                            )}
+
+                            <div className="px-3 py-2 border-t">
+                              <button
+                                className="text-sm text-primary"
+                                onClick={() => {
+                                  setSelectedClientId("__new");
+                                  setClientQuery("");
+                                  setDropdownOpen(false);
+                                }}
+                              >
+                                Criar novo cliente
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {selectedClientId && selectedClientId !== "__new" && (
+                          <div className="mt-2 text-sm text-muted-foreground">
+                            Cliente selecionado: {clientName}
+                            <a
+                              className="ml-2 text-primary underline"
+                              href={`/dashboard/clients/${selectedClientId}`}
+                            >
+                              Ver cliente
+                            </a>
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    {selectedClientId === "__new" || creatingClient ? (
+                      <div className="p-2 border rounded space-y-2">
+                        <Label htmlFor="newClientName">Nome *</Label>
+                        <Input
+                          id="newClientName"
+                          value={newClientName}
+                          onChange={(e) => setNewClientName(e.target.value)}
+                          placeholder="Nome do cliente"
+                        />
+                        <Label htmlFor="newClientEmail">Email</Label>
+                        <Input
+                          id="newClientEmail"
+                          value={newClientEmail}
+                          onChange={(e) => setNewClientEmail(e.target.value)}
+                          placeholder="email@exemplo.com"
+                        />
+                        <Label htmlFor="newClientPhone">Telefone</Label>
+                        <Input
+                          id="newClientPhone"
+                          value={newClientPhone}
+                          onChange={(e) => setNewClientPhone(e.target.value)}
+                          placeholder="(00) 00000-0000"
+                        />
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            onClick={async () => {
+                              if (!user?.companyId) return;
+                              if (!newClientName.trim()) {
+                                alert("Nome do cliente é obrigatório");
+                                return;
+                              }
+                              setCreatingClient(true);
+                              try {
+                                const res = await fetch("/api/clients", {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify({
+                                    companyId: user.companyId,
+                                    name: newClientName,
+                                    email: newClientEmail || undefined,
+                                    phone: newClientPhone || undefined,
+                                  }),
+                                });
+                                if (res.ok) {
+                                  const created = await res.json();
+                                  const client = created.data || created;
+                                  setSelectedClientId(client.id);
+                                  setClientName(client.name);
+                                  setNewClientName("");
+                                  setNewClientEmail("");
+                                  setNewClientPhone("");
+                                } else {
+                                  const err = await res
+                                    .json()
+                                    .catch(() => null);
+                                  alert(err?.error || "Erro ao criar cliente");
+                                }
+                              } catch (err) {
+                                console.error(err);
+                                alert("Erro ao criar cliente");
+                              } finally {
+                                setCreatingClient(false);
+                              }
+                            }}
+                          >
+                            Criar Cliente
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedClientId(null);
+                              setCreatingClient(false);
+                            }}
+                          >
+                            Cancelar
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+                    {!(selectedClientId === "__new" || creatingClient) && (
+                      <div>
+                        <Label htmlFor="clientName">Nome do Cliente *</Label>
+                        <Input
+                          id="clientName"
+                          value={clientName}
+                          onChange={(e) => setClientName(e.target.value)}
+                          placeholder="Digite o nome completo"
+                          required
+                        />
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -444,17 +803,8 @@ export default function NewAppointmentPage() {
                       <Input
                         id="appointmentDate"
                         type="date"
-                        value={
-                          selectedDate
-                            ? selectedDate.toISOString().split("T")[0]
-                            : ""
-                        }
-                        onChange={(e) => {
-                          const date = e.target.value
-                            ? new Date(e.target.value)
-                            : undefined;
-                          handleDateSelect(date);
-                        }}
+                        value={selectedDate || ""}
+                        onChange={(e) => handleDateSelect(e.target.value)}
                         min={new Date().toISOString().split("T")[0]}
                         required
                       />
