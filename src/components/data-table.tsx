@@ -1,25 +1,20 @@
 "use client"
 
 import * as React from "react"
-import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+// import {
+//   DndContext,
+//   type DragEndEvent,
+//   type UniqueIdentifier,
+// } from "@dnd-kit/core"
+// import { closestCenter } from "@dnd-kit/collision"
+// import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
+// import {
+//   arrayMove,
+//   SortableContext,
+//   useSortable,
+//   verticalListSortingStrategy,
+// } from "@dnd-kit/sortable"
+// import { CSS } from "@dnd-kit/utilities"
 import {
   IconChevronDown,
   IconChevronLeft,
@@ -117,31 +112,31 @@ export const schema = z.object({
 })
 
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
-  const { attributes, listeners } = useSortable({
-    id,
-  })
+// function DragHandle({ id }: { id: number }) {
+//   const { attributes, listeners } = useSortable({
+//     id,
+//   })
 
-  return (
-    <Button
-      {...attributes}
-      {...listeners}
-      variant="ghost"
-      size="icon"
-      className="text-muted-foreground size-7 hover:bg-transparent"
-    >
-      <IconGripVertical className="text-muted-foreground size-3" />
-      <span className="sr-only">Drag to reorder</span>
-    </Button>
-  )
-}
+//   return (
+//     <Button
+//       {...attributes}
+//       {...listeners}
+//       variant="ghost"
+//       size="icon"
+//       className="text-muted-foreground size-7 hover:bg-transparent"
+//     >
+//       <IconGripVertical className="text-muted-foreground size-3" />
+//       <span className="sr-only">Drag to reorder</span>
+//     </Button>
+//   )
+// }
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
-  {
-    id: "drag",
-    header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
-  },
+  // {
+  //   id: "drag",
+  //   header: () => null,
+  //   cell: ({ row }) => <DragHandle id={row.original.id} />,
+  // },
   {
     id: "select",
     header: ({ table }) => (
@@ -311,30 +306,30 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 ]
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
-  const { transform, transition, setNodeRef, isDragging } = useSortable({
-    id: row.original.id,
-  })
+// function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+//   const { transform, transition, setNodeRef, isDragging } = useSortable({
+//     id: row.original.id,
+//   })
 
-  return (
-    <TableRow
-      data-state={row.getIsSelected() && "selected"}
-      data-dragging={isDragging}
-      ref={setNodeRef}
-      className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition: transition,
-      }}
-    >
-      {row.getVisibleCells().map((cell) => (
-        <TableCell key={cell.id}>
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-        </TableCell>
-      ))}
-    </TableRow>
-  )
-}
+//   return (
+//     <TableRow
+//       data-state={row.getIsSelected() && "selected"}
+//       data-dragging={isDragging}
+//       ref={setNodeRef}
+//       className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
+//       style={{
+//         transform: CSS.Transform.toString(transform),
+//         transition: transition,
+//       }}
+//     >
+//       {row.getVisibleCells().map((cell) => (
+//         <TableCell key={cell.id}>
+//           {flexRender(cell.column.columnDef.cell, cell.getContext())}
+//         </TableCell>
+//       ))}
+//     </TableRow>
+//   )
+// }
 
 export function DataTable({
   data: initialData,
@@ -354,16 +349,14 @@ export function DataTable({
     pageSize: 10,
   })
   const sortableId = React.useId()
-  const sensors = useSensors(
-    useSensor(MouseSensor, {}),
-    useSensor(TouchSensor, {}),
-    useSensor(KeyboardSensor, {})
-  )
+  // const sensors = useSensors(
+  //   useSensor(PointerSensor, {})
+  // )
 
-  const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ id }) => id) || [],
-    [data]
-  )
+  // const dataIds = React.useMemo<UniqueIdentifier[]>(
+  //   () => data?.map(({ id }) => id) || [],
+  //   [data]
+  // )
 
   const table = useReactTable({
     data,
@@ -390,16 +383,16 @@ export function DataTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
-    if (active && over && active.id !== over.id) {
-      setData((data) => {
-        const oldIndex = dataIds.indexOf(active.id)
-        const newIndex = dataIds.indexOf(over.id)
-        return arrayMove(data, oldIndex, newIndex)
-      })
-    }
-  }
+  // function handleDragEnd(event: DragEndEvent) {
+  //   const { active, over } = event
+  //   if (active && over && active.id !== over.id) {
+  //     setData((data) => {
+  //       const oldIndex = dataIds.indexOf(active.id)
+  //       const newIndex = dataIds.indexOf(over.id)
+  //       return arrayMove(data, oldIndex, newIndex)
+  //     })
+  //   }
+  // }
 
   return (
     <Tabs
@@ -480,55 +473,54 @@ export function DataTable({
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="overflow-hidden rounded-lg border">
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-            id={sortableId}
-          >
-            <Table>
-              <TableHeader className="bg-muted sticky top-0 z-10">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      )
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                {table.getRowModel().rows?.length ? (
-                  <SortableContext
-                    items={dataIds}
-                    strategy={verticalListSortingStrategy}
+          <Table>
+            <TableHeader className="bg-muted sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody className="**:data-[slot=table-cell]:first:w-8">
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
                   >
-                    {table.getRowModel().rows.map((row) => (
-                      <DraggableRow key={row.id} row={row} />
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
                     ))}
-                  </SortableContext>
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">

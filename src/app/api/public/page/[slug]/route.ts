@@ -5,10 +5,10 @@ import * as api from "@/app/libs/apiResponse";
 // GET público - Obter página da empresa pelo slug
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     const companyPage = await prisma.companyPage.findUnique({
       where: { slug },

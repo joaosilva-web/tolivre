@@ -42,6 +42,7 @@ interface CompanyData {
   id: string;
   slug: string;
   title: string;
+  logo?: string | null;
   primaryColor: string;
   accentColor: string;
   companyId: string;

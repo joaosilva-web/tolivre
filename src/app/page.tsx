@@ -535,8 +535,8 @@ export default function Home() {
       {/* Loading Screen */}
       {loading && (
         <div className="loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-background">
-          <div className="loading-logo">
-            <IconLogo style={{ width: 500, height: 500 }} />
+          <div className="loading-logo" style={{ width: 500, height: 500 }}>
+            <IconLogo />
           </div>
         </div>
       )}
@@ -563,7 +563,9 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center gap-2">
-                <IconLogo style={{ width: 32, height: 32 }} />
+                <div style={{ width: 32, height: 32 }}>
+                  <IconLogo />
+                </div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                   ToLivre
                 </span>
@@ -1720,7 +1722,9 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <IconLogo style={{ width: 24, height: 24 }} />
+                  <div style={{ width: 24, height: 24 }}>
+                    <IconLogo />
+                  </div>
                   <span className="text-xl font-bold">ToLivre</span>
                 </div>
                 <p className="text-muted-foreground">

@@ -14,6 +14,7 @@ export const PLANS = {
       support: "email",
     },
     description: "Ideal para começar",
+    popular: false,
   },
   PROFESSIONAL: {
     name: "PROFESSIONAL",
@@ -43,6 +44,7 @@ export const PLANS = {
       support: "24/7",
     },
     description: "Para grandes operações",
+    popular: false,
   },
 } as const;
 

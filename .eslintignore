@@ -1,0 +1,4 @@
+# Prisma generated files
+src/generated/
+.next/
+node_modules/
