@@ -86,24 +86,27 @@ export async function POST(
       return api.forbidden("Você não pode editar este cliente");
     }
 
-    const body = await req.json();
-    const parsed = ClientTagSchema.parse(body);
-
-    // Verificar se tag pertence à empresa
-    const tag = await prisma.tag.findUnique({
-      where: { id: parsed.tagId },
-      select: { companyId: true },
-    });
-
-    if (!tag) {
-      return api.notFound("Tag não encontrada");
-    }
-
-    if (tag.companyId !== user.companyId) {
-      return api.forbidden("Você não pode usar esta tag");
-    }
-
     // TODO: Uncomment after running migration for tags system
+    return api.ok({ message: "Client tags endpoint ready. Run migration to activate." });
+
+    // const body = await req.json();
+    // const parsed = ClientTagSchema.parse(body);
+
+    // // Verificar se tag pertence à empresa
+    // const tag = await prisma.tag.findUnique({
+    //   where: { id: parsed.tagId },
+    //   select: { companyId: true },
+    // });
+
+    // if (!tag) {
+    //   return api.notFound("Tag não encontrada");
+    // }
+
+    // if (tag.companyId !== user.companyId) {
+    //   return api.forbidden("Você não pode usar esta tag");
+    // }
+
+    // // TODO: Uncomment after running migration for tags system
     // // Verificar se já existe
     // const existing = await prisma.clientTag.findUnique({
     //   where: {
