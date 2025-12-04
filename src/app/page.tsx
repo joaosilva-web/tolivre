@@ -250,10 +250,10 @@ export default function Home() {
           {
             scrollTrigger: {
               trigger: card,
-              start: "top 80%",
-              end: "top 40%",
+              start: "top 75%",
+              end: "top 50%",
               toggleActions: "play reverse play reverse",
-              scrub: 0.5,
+              scrub: 0.3,
             },
             opacity: 1,
             x: 0,
@@ -443,10 +443,10 @@ export default function Home() {
           {
             scrollTrigger: {
               trigger: member,
-              start: "top 80%",
-              end: "top 40%",
+              start: "top 75%",
+              end: "top 50%",
               toggleActions: "play reverse play reverse",
-              scrub: 0.5,
+              scrub: 0.3,
             },
             opacity: 1,
             y: 0,
