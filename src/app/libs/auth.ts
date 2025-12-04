@@ -14,23 +14,28 @@ export interface JWTPayload {
   companyId?: string | null;
 }
 
-if (!process.env.JWT_SECRET) {
-  console.warn(
-    "JWT_SECRET is not set. Set it in your environment for secure tokens."
-  );
-}
-
 export function signToken(payload: JWTPayload) {
-  // If JWT_SECRET is missing, jwt.sign will still create a token when given an empty string,
-  // but this is insecure. We deliberately allow it so dev environments without env var keep working,
-  // while warning above notifies the developer.
-  const secret = process.env.JWT_SECRET || "";
+  const secret = process.env.JWT_SECRET;
+  
+  if (!secret) {
+    throw new Error(
+      "JWT_SECRET is not defined in environment variables. Please set JWT_SECRET in your .env file or deployment environment."
+    );
+  }
+  
   return jwt.sign(payload as object, secret, { expiresIn: EXPIRES_IN });
 }
 
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    const secret = process.env.JWT_SECRET || "";
+    const secret = process.env.JWT_SECRET;
+    
+    if (!secret) {
+      throw new Error(
+        "JWT_SECRET is not defined in environment variables. Please set JWT_SECRET in your .env file or deployment environment."
+      );
+    }
+    
     const decoded = jwt.verify(token, secret) as JWTPayload;
     return decoded;
   } catch {
