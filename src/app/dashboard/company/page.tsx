@@ -47,7 +47,9 @@ import {
   Building,
   Scissors,
   Calendar as CalendarIcon,
+  QrCode,
 } from "lucide-react";
+import { BookingQRCode } from "@/components/booking-qrcode";
 
 interface Company {
   id: string;
@@ -87,6 +89,7 @@ export default function CompanyPage() {
   const [professionalServices, setProfessionalServices] = useState<
     ProfessionalService[]
   >([]);
+  const [companyPage, setCompanyPage] = useState<{ slug: string } | null>(null);
   const [workingHours, setWorkingHours] = useState<
     {
       id: string;
@@ -148,6 +151,13 @@ export default function CompanyPage() {
       if (servRes.ok) {
         const servData = await servRes.json();
         setServices(servData.data);
+      }
+
+      // Load company page
+      const pageRes = await fetch(`/api/company/${user.companyId}/page`);
+      if (pageRes.ok) {
+        const pageData = await pageRes.json();
+        setCompanyPage(pageData.data);
       }
 
       // Load professional-service associations
@@ -355,7 +365,7 @@ export default function CompanyPage() {
           )}
 
           <Tabs ref={tabsRef} defaultValue="company" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="company" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
                 Empresa
@@ -377,6 +387,10 @@ export default function CompanyPage() {
               <TabsTrigger value="services" className="flex items-center gap-2">
                 <Scissors className="h-4 w-4" />
                 Serviços
+              </TabsTrigger>
+              <TabsTrigger value="booking" className="flex items-center gap-2">
+                <QrCode className="h-4 w-4" />
+                Agendamento
               </TabsTrigger>
             </TabsList>
 
@@ -975,6 +989,64 @@ export default function CompanyPage() {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            <TabsContent value="booking" className="space-y-4">
+              {companyPage?.slug ? (
+                <div className="space-y-4">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Página Pública de Agendamento</CardTitle>
+                      <CardDescription>
+                        Sua página pública está ativa! Compartilhe o link ou QR Code para que clientes possam agendar online.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                        <code className="text-sm flex-1">
+                          {typeof window !== "undefined"
+                            ? `${window.location.origin}/${companyPage.slug}/agendar`
+                            : `/${companyPage.slug}/agendar`}
+                        </code>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (typeof window !== "undefined") {
+                              window.open(`/${companyPage.slug}/agendar`, "_blank");
+                            }
+                          }}
+                        >
+                          Abrir Página
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <BookingQRCode
+                    bookingUrl={
+                      typeof window !== "undefined"
+                        ? `${window.location.origin}/${companyPage.slug}/agendar`
+                        : `/${companyPage.slug}/agendar`
+                    }
+                    professionalName={user?.name || "Profissional"}
+                  />
+                </div>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Configure sua Página Pública</CardTitle>
+                    <CardDescription>
+                      Para gerar o QR Code de agendamento, você precisa primeiro criar sua página pública.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button onClick={() => window.location.href = "/dashboard/company/page-settings"}>
+                      Criar Página Pública
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
           </Tabs>
         </div>

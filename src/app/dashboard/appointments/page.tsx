@@ -7,7 +7,16 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Calendar, Clock, User, Download } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, Plus, Calendar, Clock, User, Download, Filter, X } from "lucide-react";
 import useSession from "@/hooks/useSession";
 import { gsap } from "gsap";
 
@@ -32,6 +41,14 @@ export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filtros
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [professionals, setProfessionals] = useState<{ id: string; name: string }[]>([]);
+  const [professionalFilter, setProfessionalFilter] = useState("all");
 
   const handleExportCSV = async () => {
     try {
@@ -57,15 +74,38 @@ export default function AppointmentsPage() {
 
   const loadAppointments = useCallback(async () => {
     try {
-      const now = new Date();
-      const fromIso = encodeURIComponent(now.toISOString());
-      const res = await fetch(
-        `/api/appointments?companyId=${user?.companyId}&fromDatetime=${fromIso}`
-      );
+      const params = new URLSearchParams();
+      
+      if (user?.companyId) {
+        params.append("companyId", user.companyId);
+      }
+      
+      // Filtro de data
+      if (startDate) {
+        params.append("fromDatetime", new Date(startDate).toISOString());
+      } else {
+        params.append("fromDatetime", new Date().toISOString());
+      }
+      
+      if (endDate) {
+        params.append("toDatetime", new Date(endDate + "T23:59:59").toISOString());
+      }
+      
+      // Filtro de profissional
+      if (professionalFilter && professionalFilter !== "all") {
+        params.append("professionalId", professionalFilter);
+      }
+      
+      const res = await fetch(`/api/appointments?${params.toString()}`);
       if (res.ok) {
         const payload = await res.json();
-        const all = payload?.data ?? payload ?? [];
-        // API already returned appointments starting from `fromDatetime` ordered asc
+        let all = payload?.data ?? payload ?? [];
+        
+        // Filtro de status (client-side por enquanto)
+        if (statusFilter && statusFilter !== "all") {
+          all = all.filter((apt: Appointment & { status?: string }) => apt.status === statusFilter);
+        }
+        
         setAppointments(all as Appointment[]);
       }
     } catch (error) {
@@ -73,13 +113,27 @@ export default function AppointmentsPage() {
     } finally {
       setLoading(false);
     }
-  }, [user?.companyId]);
+  }, [user?.companyId, startDate, endDate, statusFilter, professionalFilter]);
 
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const loadProfessionals = async () => {
+      if (!user?.companyId) return;
+      try {
+        const res = await fetch(`/api/company/${user.companyId}/professionals`);
+        if (res.ok) {
+          const data = await res.json();
+          setProfessionals(data.data || []);
+        }
+      } catch (err) {
+        console.error("Erro ao carregar profissionais:", err);
+      }
+    };
+
     if (user?.companyId) {
+      loadProfessionals();
       loadAppointments();
     }
   }, [user?.companyId, loadAppointments]);
@@ -143,27 +197,116 @@ export default function AppointmentsPage() {
     <SidebarInset>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div ref={headerRef} className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
-            <p className="text-muted-foreground">
-              Gerencie os agendamentos da sua empresa
-            </p>
+        <div ref={headerRef} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
+              <p className="text-muted-foreground">
+                Gerencie os agendamentos da sua empresa
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <Filter className="mr-2 h-4 w-4" />
+                Filtros
+              </Button>
+              <Button variant="outline" onClick={handleExportCSV} disabled={exporting}>
+                {exporting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="mr-2 h-4 w-4" />
+                )}
+                Exportar CSV
+              </Button>
+              <Button onClick={() => router.push("/dashboard/appointments/new")}>
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Agendamento
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExportCSV} disabled={exporting}>
-              {exporting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="mr-2 h-4 w-4" />
-              )}
-              Exportar CSV
-            </Button>
-            <Button onClick={() => router.push("/dashboard/appointments/new")}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Agendamento
-            </Button>
-          </div>
+
+          {showFilters && (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="startDate">Data Início</Label>
+                    <Input
+                      id="startDate"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="endDate">Data Fim</Label>
+                    <Input
+                      id="endDate"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="professional">Profissional</Label>
+                    <Select value={professionalFilter} onValueChange={setProfessionalFilter}>
+                      <SelectTrigger id="professional">
+                        <SelectValue placeholder="Todos" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos</SelectItem>
+                        {professionals.map((prof) => (
+                          <SelectItem key={prof.id} value={prof.id}>
+                            {prof.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger id="status">
+                        <SelectValue placeholder="Todos" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos</SelectItem>
+                        <SelectItem value="PENDING">Pendente</SelectItem>
+                        <SelectItem value="CONFIRMED">Confirmado</SelectItem>
+                        <SelectItem value="COMPLETED">Concluído</SelectItem>
+                        <SelectItem value="CANCELED">Cancelado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <Button onClick={() => {
+                    setLoading(true);
+                    loadAppointments();
+                  }}>
+                    Aplicar Filtros
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setStartDate(\"\");
+                      setEndDate(\"\");
+                      setStatusFilter(\"all\");
+                      setProfessionalFilter(\"all\");
+                      setLoading(true);
+                      setTimeout(() => loadAppointments(), 100);
+                    }}
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Limpar Filtros
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div ref={cardsContainerRef} className="space-y-6">
