@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     // Criar agendamento pai
     const parentAppointment = await prisma.appointment.create({
       data: {
-        companyId: user.companyId,
+        companyId: user.companyId!,
         professionalId: parsed.professionalId,
         clientName: parsed.clientName,
         clientId: parsed.clientId,
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       dates.slice(1).map((date) =>
         prisma.appointment.create({
           data: {
-            companyId: user.companyId,
+            companyId: user.companyId!,
             professionalId: parsed.professionalId,
             clientName: parsed.clientName,
             clientId: parsed.clientId,
