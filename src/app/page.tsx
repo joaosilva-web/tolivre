@@ -535,8 +535,13 @@ export default function Home() {
       {/* Loading Screen */}
       {loading && (
         <div className="loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-background">
-          <div className="loading-logo" style={{ width: 500, height: 500 }}>
-            <IconLogo />
+          <div className="flex flex-col items-center justify-center">
+            <div className="loading-logo" style={{ width: 200, height: 200 }}>
+              <IconLogo />
+            </div>
+            <p className="loading-text text-lg text-muted-foreground mt-4 opacity-0 translate-y-4">
+              Carregando...
+            </p>
           </div>
         </div>
       )}
