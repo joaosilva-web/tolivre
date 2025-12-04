@@ -140,8 +140,22 @@ model Appointment {
   endTime        DateTime
   status         AppointmentStatus @default(PENDING)
 
+  // Controle Financeiro
+  paymentStatus  PaymentStatusType @default(PENDING)
+  paidAmount     Float?            @default(0) // Valor já pago
+  paymentMethod  String? // pix, dinheiro, cartao_credito, cartao_debito, etc
+  paymentDate    DateTime? // Data do pagamento
+  notes          String?           @db.Text // Observações sobre pagamento ou agendamento
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatusType {
+  PENDING // Aguardando pagamento
+  PAID // Pago completamente
+  PARTIAL // Pagamento parcial
+  CANCELED // Cancelado (não cobrar)
 }
 
 enum AppointmentStatus {
