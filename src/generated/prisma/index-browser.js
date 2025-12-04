@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+ * Prisma Client JS version: 6.17.1
+ * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
+  client: "6.17.1",
+  engine: "272a37d34178c2894197e17273bf937f25acdeac"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -191,11 +191,86 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   companyId: 'companyId',
   professionalId: 'professionalId',
   clientName: 'clientName',
+  clientId: 'clientId',
   serviceId: 'serviceId',
   price: 'price',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ClientScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CompanyPageScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  slug: 'slug',
+  title: 'title',
+  description: 'description',
+  logo: 'logo',
+  coverImage: 'coverImage',
+  primaryColor: 'primaryColor',
+  accentColor: 'accentColor',
+  whatsapp: 'whatsapp',
+  instagram: 'instagram',
+  facebook: 'facebook',
+  address: 'address',
+  showServices: 'showServices',
+  showTestimonials: 'showTestimonials',
+  showAbout: 'showAbout',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PageTestimonialScalarFieldEnum = {
+  id: 'id',
+  companyPageId: 'companyPageId',
+  authorName: 'authorName',
+  authorAvatar: 'authorAvatar',
+  rating: 'rating',
+  text: 'text',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  plan: 'plan',
+  status: 'status',
+  mpSubscriptionId: 'mpSubscriptionId',
+  mpPreapprovalPlanId: 'mpPreapprovalPlanId',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
+  canceledAt: 'canceledAt',
+  trialEndsAt: 'trialEndsAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  mpPaymentId: 'mpPaymentId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  paidAt: 'paidAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -240,6 +315,31 @@ exports.AppointmentStatus = exports.$Enums.AppointmentStatus = {
   CANCELED: 'CANCELED'
 };
 
+exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
+  FREE: 'FREE',
+  PROFESSIONAL: 'PROFESSIONAL',
+  ENTERPRISE: 'ENTERPRISE'
+};
+
+exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  PAST_DUE: 'PAST_DUE',
+  CANCELED: 'CANCELED',
+  TRIALING: 'TRIALING'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  AUTHORIZED: 'AUTHORIZED',
+  IN_PROCESS: 'IN_PROCESS',
+  IN_MEDIATION: 'IN_MEDIATION',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+  CHARGED_BACK: 'CHARGED_BACK'
+};
+
 exports.Prisma.ModelName = {
   Lead: 'Lead',
   RateLimit: 'RateLimit',
@@ -248,7 +348,12 @@ exports.Prisma.ModelName = {
   Service: 'Service',
   ProfessionalService: 'ProfessionalService',
   User: 'User',
-  Appointment: 'Appointment'
+  Appointment: 'Appointment',
+  Client: 'Client',
+  CompanyPage: 'CompanyPage',
+  PageTestimonial: 'PageTestimonial',
+  Subscription: 'Subscription',
+  Payment: 'Payment'
 };
 
 /**

@@ -54,8 +54,11 @@ model Company {
 
   users        User[]
   appointments Appointment[]
+  clients      Client[]
   workingHours WorkingHours[]
   services     Service[]
+  companyPage  CompanyPage?
+  subscription Subscription?
 }
 
 enum ContractType {
@@ -127,6 +130,8 @@ model Appointment {
   professionalId String
   professional   User              @relation("UserAppointments", fields: [professionalId], references: [id])
   clientName     String
+  clientId       String?
+  client         Client?           @relation(fields: [clientId], references: [id])
   serviceId      String
   service        Service           @relation(fields: [serviceId], references: [id])
   price          Float?
@@ -143,4 +148,116 @@ enum AppointmentStatus {
   CONFIRMED
   COMPLETED
   CANCELED
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  name      String
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+}
+
+model CompanyPage {
+  id               String   @id @default(cuid())
+  companyId        String   @unique
+  company          Company  @relation(fields: [companyId], references: [id])
+  slug             String   @unique // URL amigável: /slug
+  title            String // Nome da empresa na página
+  description      String?  @db.Text // Descrição/história
+  logo             String? // URL do logo
+  coverImage       String? // Imagem de capa
+  primaryColor     String   @default("#6366f1") // Cor primária da marca
+  accentColor      String   @default("#3b82f6") // Cor de acento
+  whatsapp         String? // Número do WhatsApp
+  instagram        String? // URL do Instagram
+  facebook         String? // URL do Facebook
+  address          String? // Endereço físico
+  showServices     Boolean  @default(true)
+  showTestimonials Boolean  @default(true)
+  showAbout        Boolean  @default(true)
+  metaTitle        String? // SEO
+  metaDescription  String? // SEO
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  testimonials PageTestimonial[]
+}
+
+model PageTestimonial {
+  id            String      @id @default(cuid())
+  companyPageId String
+  companyPage   CompanyPage @relation(fields: [companyPageId], references: [id], onDelete: Cascade)
+  authorName    String
+  authorAvatar  String? // Iniciais ou URL
+  rating        Int         @default(5) // 1-5 estrelas
+  text          String      @db.Text
+  position      Int         @default(0) // Ordem de exibição
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Subscription {
+  id                  String             @id @default(cuid())
+  companyId           String             @unique
+  company             Company            @relation(fields: [companyId], references: [id])
+  plan                SubscriptionPlan   @default(FREE)
+  status              SubscriptionStatus @default(ACTIVE)
+  mpSubscriptionId    String?            @unique // ID da assinatura no Mercado Pago
+  mpPreapprovalPlanId String? // ID do plano de assinatura no MP
+  currentPeriodStart  DateTime           @default(now())
+  currentPeriodEnd    DateTime? // Null para plano FREE
+  cancelAtPeriodEnd   Boolean            @default(false)
+  canceledAt          DateTime?
+  trialEndsAt         DateTime? // Para trial de 14 dias
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  payments Payment[]
+}
+
+enum SubscriptionPlan {
+  FREE // 50 agendamentos/mês, 1 profissional
+  PROFESSIONAL // Ilimitado, 3 profissionais, WhatsApp
+  ENTERPRISE // Ilimitado, profissionais ilimitados, API
+}
+
+enum SubscriptionStatus {
+  ACTIVE // Assinatura ativa
+  PAST_DUE // Pagamento atrasado
+  CANCELED // Cancelada
+  TRIALING // Em período de teste
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
+  mpPaymentId    String        @unique // ID do pagamento no Mercado Pago
+  amount         Float
+  currency       String        @default("BRL")
+  status         PaymentStatus @default(PENDING)
+  paymentMethod  String? // pix, credit_card, debit_card, boleto
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([subscriptionId])
+}
+
+enum PaymentStatus {
+  PENDING // Aguardando pagamento
+  APPROVED // Pagamento aprovado
+  AUTHORIZED // Autorizado (cartão)
+  IN_PROCESS // Em processamento
+  IN_MEDIATION // Em mediação
+  REJECTED // Rejeitado
+  CANCELLED // Cancelado
+  REFUNDED // Reembolsado
+  CHARGED_BACK // Chargeback
 }

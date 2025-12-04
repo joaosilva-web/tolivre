@@ -444,7 +444,7 @@ export default function Home() {
             scrollTrigger: {
               trigger: member,
               start: "top 80%",
-              end: "top 10%",
+              end: "top 40%",
               toggleActions: "play reverse play reverse",
               scrub: 0.5,
             },
