@@ -251,7 +251,7 @@ export default function Home() {
             scrollTrigger: {
               trigger: card,
               start: "top 80%",
-              end: "top 10%",
+              end: "top 40%",
               toggleActions: "play reverse play reverse",
               scrub: 0.5,
             },
@@ -415,7 +415,7 @@ export default function Home() {
             scrollTrigger: {
               trigger: badge,
               start: "top 85%",
-              end: "top 15%",
+              end: "top 45%",
               toggleActions: "play reverse play reverse",
               scrub: 0.5,
             },
