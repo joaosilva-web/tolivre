@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Calendar, Users } from "lucide-react";
 import { gsap } from "gsap";
 
 import data from "./data.json";
@@ -219,6 +219,53 @@ export default function Page() {
     );
   }
 
+  const [exportingAppointments, setExportingAppointments] = useState(false);
+  const [exportingClients, setExportingClients] = useState(false);
+
+  const handleExportAppointments = async () => {
+    try {
+      setExportingAppointments(true);
+      const res = await fetch("/api/appointments/export");
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `agendamentos_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error("Erro ao exportar:", error);
+    } finally {
+      setExportingAppointments(false);
+    }
+  };
+
+  const handleExportClients = async () => {
+    try {
+      setExportingClients(true);
+      const res = await fetch("/api/clients/export");
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `clientes_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error("Erro ao exportar:", error);
+    } finally {
+      setExportingClients(false);
+    }
+  };
+
   return (
     <SidebarInset>
       <SiteHeader />
@@ -228,6 +275,45 @@ export default function Page() {
             <div ref={cardsRef}>
               <SectionCards />
             </div>
+            
+            {/* Quick Actions */}
+            <div className="px-4 lg:px-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Ações Rápidas</CardTitle>
+                  <CardDescription>
+                    Exporte seus dados para análise externa
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-wrap gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleExportAppointments}
+                    disabled={exportingAppointments}
+                  >
+                    {exportingAppointments ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Calendar className="mr-2 h-4 w-4" />
+                    )}
+                    Exportar Agendamentos (CSV)
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleExportClients}
+                    disabled={exportingClients}
+                  >
+                    {exportingClients ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Users className="mr-2 h-4 w-4" />
+                    )}
+                    Exportar Clientes (CSV)
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
             <div ref={chartRef} className="px-4 lg:px-6">
               <ChartAreaInteractive />
             </div>

@@ -7,7 +7,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Calendar, Clock, User } from "lucide-react";
+import { Loader2, Plus, Calendar, Clock, User, Download } from "lucide-react";
 import useSession from "@/hooks/useSession";
 import { gsap } from "gsap";
 
@@ -31,6 +31,29 @@ export default function AppointmentsPage() {
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportCSV = async () => {
+    try {
+      setExporting(true);
+      const res = await fetch("/api/appointments/export");
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `agendamentos_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error("Erro ao exportar:", error);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const loadAppointments = useCallback(async () => {
     try {
@@ -127,10 +150,20 @@ export default function AppointmentsPage() {
               Gerencie os agendamentos da sua empresa
             </p>
           </div>
-          <Button onClick={() => router.push("/dashboard/appointments/new")}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Agendamento
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleExportCSV} disabled={exporting}>
+              {exporting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="mr-2 h-4 w-4" />
+              )}
+              Exportar CSV
+            </Button>
+            <Button onClick={() => router.push("/dashboard/appointments/new")}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Agendamento
+            </Button>
+          </div>
         </div>
 
         <div ref={cardsContainerRef} className="space-y-6">
