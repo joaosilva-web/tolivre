@@ -4,10 +4,15 @@ import Lottie from "lottie-react";
 
 import animationData from "../../assets/logoLottie.json";
 
-export default function IconLogo() {
+interface IconLogoProps {
+  width?: number | string;
+  height?: number | string;
+}
+
+export default function IconLogo({ width = 26, height = 26 }: IconLogoProps = {}) {
   return (
     <Lottie
-      style={{ width: 26, height: 26 }}
+      style={{ width, height }}
       animationData={animationData}
       autoplay={true}
       loop={false}
