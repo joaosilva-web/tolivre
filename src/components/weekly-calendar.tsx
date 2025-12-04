@@ -9,8 +9,6 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-reac
 import {
   DndContext,
   DragOverlay,
-  DragStartEvent,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import { AppointmentCard } from "./appointment-card";
 import { TimeSlot } from "./time-slot";
@@ -46,11 +44,11 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
   // Gerar dias da semana
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeek, i));
 
-  const handleDragStart = (event: DragStartEvent) => {
+  const handleDragStart = (event: any) => {
     setActiveId(event.active.id as string);
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
     if (!over) {
