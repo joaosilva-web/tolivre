@@ -60,66 +60,52 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    // TODO: After migration, use paymentStatus field. For now, use status as fallback
     // Calcular totais
     const totalReceived = appointments
-      .filter((apt) => apt.paymentStatus === "PAID")
-      .reduce((sum, apt) => sum + (apt.paidAmount || apt.price || 0), 0);
-
-    const totalPending = appointments
-      .filter((apt) => apt.paymentStatus === "PENDING")
+      .filter((apt) => apt.status === "COMPLETED")
       .reduce((sum, apt) => sum + (apt.price || 0), 0);
 
-    const totalPartial = appointments
-      .filter((apt) => apt.paymentStatus === "PARTIAL")
-      .reduce(
-        (sum, apt) => sum + ((apt.price || 0) - (apt.paidAmount || 0)),
-        0
-      );
+    const totalPending = appointments
+      .filter((apt) => apt.status === "PENDING" || apt.status === "CONFIRMED")
+      .reduce((sum, apt) => sum + (apt.price || 0), 0);
+
+    const totalPartial = 0; // Will be available after migration
 
     const totalExpected = appointments
-      .filter((apt) => apt.status !== "CANCELED" && apt.paymentStatus !== "CANCELED")
+      .filter((apt) => apt.status !== "CANCELED")
       .reduce((sum, apt) => sum + (apt.price || 0), 0);
 
     const totalCanceled = appointments
-      .filter((apt) => apt.status === "CANCELED" || apt.paymentStatus === "CANCELED")
+      .filter((apt) => apt.status === "CANCELED")
       .reduce((sum, apt) => sum + (apt.price || 0), 0);
 
-    // Agrupamento por método de pagamento
-    const byPaymentMethod = appointments
-      .filter((apt) => apt.paymentStatus === "PAID" && apt.paymentMethod)
-      .reduce((acc, apt) => {
-        const method = apt.paymentMethod || "Não informado";
-        if (!acc[method]) {
-          acc[method] = { count: 0, total: 0 };
-        }
-        acc[method].count++;
-        acc[method].total += apt.paidAmount || apt.price || 0;
-        return acc;
-      }, {} as Record<string, { count: number; total: number }>);
+    // Agrupamento por método de pagamento (will be available after migration)
+    const byPaymentMethod = {} as Record<string, { count: number; total: number }>;
 
     // Agrupamento por profissional
     const byProfessional = appointments
-      .filter((apt) => apt.paymentStatus === "PAID")
+      .filter((apt) => apt.status === "COMPLETED")
       .reduce((acc, apt) => {
         const profName = apt.professional.name;
         if (!acc[profName]) {
           acc[profName] = { count: 0, total: 0 };
         }
         acc[profName].count++;
-        acc[profName].total += apt.paidAmount || apt.price || 0;
+        acc[profName].total += apt.price || 0;
         return acc;
       }, {} as Record<string, { count: number; total: number }>);
 
     // Agrupamento por serviço
     const byService = appointments
-      .filter((apt) => apt.paymentStatus === "PAID")
+      .filter((apt) => apt.status === "COMPLETED")
       .reduce((acc, apt) => {
         const serviceName = apt.service.name;
         if (!acc[serviceName]) {
           acc[serviceName] = { count: 0, total: 0 };
         }
         acc[serviceName].count++;
-        acc[serviceName].total += apt.paidAmount || apt.price || 0;
+        acc[serviceName].total += apt.price || 0;
         return acc;
       }, {} as Record<string, { count: number; total: number }>);
 
@@ -135,8 +121,8 @@ export async function GET(req: NextRequest) {
         totalExpected: Math.round(totalExpected * 100) / 100,
         totalCanceled: Math.round(totalCanceled * 100) / 100,
         totalAppointments: appointments.length,
-        paidAppointments: appointments.filter((apt) => apt.paymentStatus === "PAID").length,
-        pendingAppointments: appointments.filter((apt) => apt.paymentStatus === "PENDING").length,
+        paidAppointments: appointments.filter((apt) => apt.status === "COMPLETED").length,
+        pendingAppointments: appointments.filter((apt) => apt.status === "PENDING" || apt.status === "CONFIRMED").length,
       },
       byPaymentMethod,
       byProfessional,
@@ -149,10 +135,10 @@ export async function GET(req: NextRequest) {
         professional: apt.professional.name,
         service: apt.service.name,
         price: apt.price,
-        paymentStatus: apt.paymentStatus,
-        paidAmount: apt.paidAmount,
-        paymentMethod: apt.paymentMethod,
-        paymentDate: apt.paymentDate ? format(new Date(apt.paymentDate), "yyyy-MM-dd") : null,
+        paymentStatus: apt.status, // Using status until migration is run
+        paidAmount: apt.status === "COMPLETED" ? apt.price : 0,
+        paymentMethod: null, // Will be available after migration
+        paymentDate: apt.status === "COMPLETED" ? format(new Date(apt.startTime), "yyyy-MM-dd") : null,
       })),
     });
   } catch (err) {
