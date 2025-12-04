@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import IconLogo from "@/components/ui/icon-logo";
 import Lottie from "lottie-react";
+import logoLottie from "@/assets/logoLottie.json";
 import {
   Calendar,
   MessageCircle,
@@ -540,7 +541,7 @@ export default function Home() {
             <div className="loading-logo w-[200px] h-[200px] flex items-center justify-center mx-auto">
               <Lottie
                 style={{ width: "100%", height: "100%" }}
-                animationData={require("@/assets/logoLottie.json")}
+                animationData={logoLottie}
                 autoplay={true}
                 loop={false}
               />
