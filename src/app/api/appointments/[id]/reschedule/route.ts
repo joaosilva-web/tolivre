@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 const RescheduleSchema = z.object({
   startTime: z.string(), // ISO date string
