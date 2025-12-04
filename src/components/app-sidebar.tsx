@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+  IconPlug,
   IconBuilding,
   IconCalendar,
   IconCamera,
@@ -11,12 +12,13 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
+  IconWorld,
+  IconCreditCard,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -57,14 +59,24 @@ const data = {
       icon: IconCalendar,
     },
     {
+      title: "Public Page",
+      url: "/dashboard/company/page-settings",
+      icon: IconWorld,
+    },
+    {
       title: "Analytics",
       url: "#",
       icon: IconChartBar,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
+      title: "Integrations",
+      url: "/dashboard/integrations",
+      icon: IconPlug,
+    },
+    {
+      title: "Assinatura",
+      url: "/dashboard/assinatura",
+      icon: IconCreditCard,
     },
     {
       title: "Team",
@@ -170,7 +182,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span>
                   <IconLogo />
                 </span>
-                <span className="text-base font-semibold text-primary">
+                <span className="text-base font-semibold bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
                   TôLivre
                 </span>
               </a>
