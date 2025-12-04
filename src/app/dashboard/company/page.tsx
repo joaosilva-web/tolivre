@@ -154,10 +154,13 @@ export default function CompanyPage() {
       }
 
       // Load company page
-      const pageRes = await fetch(`/api/company/${user.companyId}/page`);
+      const pageRes = await fetch(`/api/company/page`);
       if (pageRes.ok) {
         const pageData = await pageRes.json();
         setCompanyPage(pageData.data);
+      } else if (pageRes.status === 404) {
+        // Página não existe ainda, manter como null
+        setCompanyPage(null);
       }
 
       // Load professional-service associations
