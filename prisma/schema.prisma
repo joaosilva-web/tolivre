@@ -79,6 +79,28 @@ model WorkingHours {
   closeTime String // formato HH:mm
 }
 
+model WorkingHourException {
+  id             String               @id @default(cuid())
+  companyId      String
+  professionalId String? // Null = aplica para toda empresa
+  date           DateTime // Data específica da exceção
+  type           ExceptionType
+  reason         String? // Motivo (feriado, férias, etc)
+  openTime       String? // Para tipo CUSTOM: horário de abertura
+  closeTime      String? // Para tipo CUSTOM: horário de fechamento
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([companyId, date])
+  @@index([professionalId, date])
+}
+
+enum ExceptionType {
+  BLOCKED // Dia totalmente bloqueado
+  CUSTOM // Horário customizado para o dia
+  HOLIDAY // Feriado
+}
+
 model Service {
   id        String   @id @default(cuid())
   companyId String
@@ -147,6 +169,13 @@ model Appointment {
   paymentMethod  String? // pix, dinheiro, cartao_credito, cartao_debito, etc
   paymentDate    DateTime? // Data do pagamento
   notes          String?           @db.Text // Observações sobre pagamento ou agendamento
+
+  // Agendamentos Recorrentes
+  recurrenceRule      String? // RRULE format: FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR ou "WEEKLY" | "BIWEEKLY" | "MONTHLY"
+  recurrenceEndDate   DateTime? // Data final da recorrência
+  parentAppointmentId String? // ID do agendamento pai (para rastrear série)
+  parentAppointment   Appointment?  @relation("RecurringAppointments", fields: [parentAppointmentId], references: [id], onDelete: Cascade)
+  childAppointments   Appointment[] @relation("RecurringAppointments")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

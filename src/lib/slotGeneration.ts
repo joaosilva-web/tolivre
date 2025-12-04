@@ -6,6 +6,13 @@ export interface WorkingHour {
   closeTime: string; // "HH:mm"
 }
 
+export interface WorkingHourException {
+  date: Date | string;
+  type: "BLOCKED" | "CUSTOM" | "HOLIDAY";
+  openTime?: string;
+  closeTime?: string;
+}
+
 export interface AvailableSlot {
   time: string; // "HH:mm"
   available: boolean;
@@ -17,6 +24,7 @@ export interface AvailableSlot {
  * - workingHours: list of WorkingHour (server shape)
  * - durationMinutes: service duration in minutes
  * - existingAppointments: UIAppointments with full ISO date strings
+ * - exceptions: list of WorkingHourException for the selected date
  */
 export function generateSlots(
   selectedDate: Date,
@@ -24,17 +32,44 @@ export function generateSlots(
   durationMinutes: number,
   existingAppointments: UIAppointment[],
   serviceDurationMap?: Record<string, number>,
+  exceptions?: WorkingHourException[],
   debug: boolean = false
 ): AvailableSlot[] {
   const slots: AvailableSlot[] = [];
   const dayIndex = selectedDate.getDay();
-  const todaysWorkingHours = workingHours.filter(
-    (wh) => wh?.dayOfWeek === dayIndex
-  );
+  
+  // Verificar se há exceção para este dia
+  const dayException = exceptions?.find((exc) => {
+    const excDate = new Date(exc.date);
+    return (
+      excDate.getFullYear() === selectedDate.getFullYear() &&
+      excDate.getMonth() === selectedDate.getMonth() &&
+      excDate.getDate() === selectedDate.getDate()
+    );
+  });
 
-  if (todaysWorkingHours.length === 0) return slots;
+  // Se dia está bloqueado ou é feriado, retornar vazio
+  if (dayException && (dayException.type === "BLOCKED" || dayException.type === "HOLIDAY")) {
+    return slots;
+  }
 
-  todaysWorkingHours.forEach((wh) => {
+  // Se há exceção CUSTOM, usar horários customizados
+  let effectiveWorkingHours: WorkingHour[];
+  if (dayException && dayException.type === "CUSTOM" && dayException.openTime && dayException.closeTime) {
+    effectiveWorkingHours = [{
+      dayOfWeek: dayIndex,
+      openTime: dayException.openTime,
+      closeTime: dayException.closeTime,
+    }];
+  } else {
+    effectiveWorkingHours = workingHours.filter(
+      (wh) => wh?.dayOfWeek === dayIndex
+    );
+  }
+
+  if (effectiveWorkingHours.length === 0) return slots;
+
+  effectiveWorkingHours.forEach((wh) => {
     const [startHour, startMinute] = wh.openTime.split(":").map(Number);
     const [endHour, endMinute] = wh.closeTime.split(":").map(Number);
 

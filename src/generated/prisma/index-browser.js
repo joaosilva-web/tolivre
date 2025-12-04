@@ -159,6 +159,19 @@ exports.Prisma.WorkingHoursScalarFieldEnum = {
   closeTime: 'closeTime'
 };
 
+exports.Prisma.WorkingHourExceptionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  professionalId: 'professionalId',
+  date: 'date',
+  type: 'type',
+  reason: 'reason',
+  openTime: 'openTime',
+  closeTime: 'closeTime',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ServiceScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -197,6 +210,14 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  paymentStatus: 'paymentStatus',
+  paidAmount: 'paidAmount',
+  paymentMethod: 'paymentMethod',
+  paymentDate: 'paymentDate',
+  notes: 'notes',
+  recurrenceRule: 'recurrenceRule',
+  recurrenceEndDate: 'recurrenceEndDate',
+  parentAppointmentId: 'parentAppointmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -209,6 +230,22 @@ exports.Prisma.ClientScalarFieldEnum = {
   phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  color: 'color',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ClientTagScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  tagId: 'tagId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CompanyPageScalarFieldEnum = {
@@ -302,6 +339,12 @@ exports.ContractType = exports.$Enums.ContractType = {
   ENTERPRISE: 'ENTERPRISE'
 };
 
+exports.ExceptionType = exports.$Enums.ExceptionType = {
+  BLOCKED: 'BLOCKED',
+  CUSTOM: 'CUSTOM',
+  HOLIDAY: 'HOLIDAY'
+};
+
 exports.Role = exports.$Enums.Role = {
   OWNER: 'OWNER',
   MANAGER: 'MANAGER',
@@ -312,6 +355,13 @@ exports.AppointmentStatus = exports.$Enums.AppointmentStatus = {
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
   COMPLETED: 'COMPLETED',
+  CANCELED: 'CANCELED'
+};
+
+exports.PaymentStatusType = exports.$Enums.PaymentStatusType = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  PARTIAL: 'PARTIAL',
   CANCELED: 'CANCELED'
 };
 
@@ -345,11 +395,14 @@ exports.Prisma.ModelName = {
   RateLimit: 'RateLimit',
   Company: 'Company',
   WorkingHours: 'WorkingHours',
+  WorkingHourException: 'WorkingHourException',
   Service: 'Service',
   ProfessionalService: 'ProfessionalService',
   User: 'User',
   Appointment: 'Appointment',
   Client: 'Client',
+  Tag: 'Tag',
+  ClientTag: 'ClientTag',
   CompanyPage: 'CompanyPage',
   PageTestimonial: 'PageTestimonial',
   Subscription: 'Subscription',
