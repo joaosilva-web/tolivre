@@ -9,7 +9,6 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-reac
 import {
   DndContext,
   DragOverlay,
-  closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -150,7 +149,6 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
       {/* Grid do calendário */}
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
