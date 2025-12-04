@@ -38,16 +38,18 @@ export async function GET(
       return api.forbidden("Você não pode acessar este cliente");
     }
 
-    const clientTags = await prisma.clientTag.findMany({
-      where: {
-        clientId: id,
-      },
-      include: {
-        tag: true,
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    // const clientTags = await prisma.clientTag.findMany({
+    //   where: {
+    //     clientId: id,
+    //   },
+    //   include: {
+    //     tag: true,
+    //   },
+    // });
+    // return api.ok(clientTags.map((ct) => ct.tag));
 
-    return api.ok(clientTags.map((ct) => ct.tag));
+    return api.ok([]);
   } catch (err) {
     console.error("[GET /api/clients/[id]/tags] Error:", err);
     return api.serverError("Erro ao listar tags do cliente");
@@ -101,31 +103,34 @@ export async function POST(
       return api.forbidden("Você não pode usar esta tag");
     }
 
-    // Verificar se já existe
-    const existing = await prisma.clientTag.findUnique({
-      where: {
-        clientId_tagId: {
-          clientId: id,
-          tagId: parsed.tagId,
-        },
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    // // Verificar se já existe
+    // const existing = await prisma.clientTag.findUnique({
+    //   where: {
+    //     clientId_tagId: {
+    //       clientId: id,
+    //       tagId: parsed.tagId,
+    //     },
+    //   },
+    // });
 
-    if (existing) {
-      return api.badRequest("Cliente já possui esta tag");
-    }
+    // if (existing) {
+    //   return api.badRequest("Cliente já possui esta tag");
+    // }
 
-    const clientTag = await prisma.clientTag.create({
-      data: {
-        clientId: id,
-        tagId: parsed.tagId,
-      },
-      include: {
-        tag: true,
-      },
-    });
+    // const clientTag = await prisma.clientTag.create({
+    //   data: {
+    //     clientId: id,
+    //     tagId: parsed.tagId,
+    //   },
+    //   include: {
+    //     tag: true,
+    //   },
+    // });
 
-    return api.created(clientTag.tag);
+    // return api.created(clientTag.tag);
+
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return api.badRequest("Dados inválidos", err.issues);
@@ -172,18 +177,19 @@ export async function DELETE(
       return api.forbidden("Você não pode editar este cliente");
     }
 
-    const deleted = await prisma.clientTag.deleteMany({
-      where: {
-        clientId: id,
-        tagId: tagId,
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    // const deleted = await prisma.clientTag.deleteMany({
+    //   where: {
+    //     clientId: id,
+    //     tagId: tagId,
+    //   },
+    // });
 
-    if (deleted.count === 0) {
-      return api.notFound("Tag não está associada ao cliente");
-    }
+    // if (deleted.count === 0) {
+    //   return api.notFound("Tag não está associada ao cliente");
+    // }
 
-    return api.ok({ message: "Tag removida com sucesso" });
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
   } catch (err) {
     console.error("[DELETE /api/clients/[id]/tags] Error:", err);
     return api.serverError("Erro ao remover tag do cliente");

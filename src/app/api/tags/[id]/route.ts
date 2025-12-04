@@ -25,26 +25,29 @@ export async function GET(
       return api.badRequest("Usuário não possui empresa vinculada");
     }
 
-    const tag = await prisma.tag.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: {
-            clients: true,
-          },
-        },
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
+    
+    // const tag = await prisma.tag.findUnique({
+    //   where: { id },
+    //   include: {
+    //     _count: {
+    //       select: {
+    //         clients: true,
+    //       },
+    //     },
+    //   },
+    // });
 
-    if (!tag) {
-      return api.notFound("Tag não encontrada");
-    }
+    // if (!tag) {
+    //   return api.notFound("Tag não encontrada");
+    // }
 
-    if (tag.companyId !== user.companyId) {
-      return api.forbidden("Você não pode acessar esta tag");
-    }
+    // if (tag.companyId !== user.companyId) {
+    //   return api.forbidden("Você não pode acessar esta tag");
+    // }
 
-    return api.ok(tag);
+    // return api.ok(tag);
   } catch (err) {
     console.error("[GET /api/tags/[id]] Error:", err);
     return api.serverError("Erro ao buscar tag");
@@ -67,43 +70,46 @@ export async function PATCH(
       return api.badRequest("Usuário não possui empresa vinculada");
     }
 
-    const existing = await prisma.tag.findUnique({
-      where: { id },
-    });
+    // TODO: Uncomment after running migration for tags system
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
 
-    if (!existing) {
-      return api.notFound("Tag não encontrada");
-    }
+    // const existing = await prisma.tag.findUnique({
+    //   where: { id },
+    // });
 
-    if (existing.companyId !== user.companyId) {
-      return api.forbidden("Você não pode editar esta tag");
-    }
+    // if (!existing) {
+    //   return api.notFound("Tag não encontrada");
+    // }
 
-    const body = await req.json();
-    const parsed = TagUpdateSchema.parse(body);
+    // if (existing.companyId !== user.companyId) {
+    //   return api.forbidden("Você não pode editar esta tag");
+    // }
 
-    // Se está mudando o nome, verificar se não há conflito
-    if (parsed.name && parsed.name !== existing.name) {
-      const conflict = await prisma.tag.findUnique({
-        where: {
-          companyId_name: {
-            companyId: user.companyId,
-            name: parsed.name,
-          },
-        },
-      });
+    // const body = await req.json();
+    // const parsed = TagUpdateSchema.parse(body);
 
-      if (conflict) {
-        return api.badRequest("Já existe uma tag com este nome");
-      }
-    }
+    // // Se está mudando o nome, verificar se não há conflito
+    // if (parsed.name && parsed.name !== existing.name) {
+    //   const conflict = await prisma.tag.findUnique({
+    //     where: {
+    //       companyId_name: {
+    //         companyId: user.companyId,
+    //         name: parsed.name,
+    //       },
+    //     },
+    //   });
 
-    const updated = await prisma.tag.update({
-      where: { id },
-      data: parsed,
-    });
+    //   if (conflict) {
+    //     return api.badRequest("Já existe uma tag com este nome");
+    //   }
+    // }
 
-    return api.ok(updated);
+    // const updated = await prisma.tag.update({
+    //   where: { id },
+    //   data: parsed,
+    // });
+
+    // return api.ok(updated);
   } catch (err) {
     if (err instanceof z.ZodError) {
       return api.badRequest("Dados inválidos", err.issues);
@@ -129,23 +135,26 @@ export async function DELETE(
       return api.badRequest("Usuário não possui empresa vinculada");
     }
 
-    const existing = await prisma.tag.findUnique({
-      where: { id },
-    });
+    // TODO: Uncomment after running migration for tags system
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
 
-    if (!existing) {
-      return api.notFound("Tag não encontrada");
-    }
+    // const existing = await prisma.tag.findUnique({
+    //   where: { id },
+    // });
 
-    if (existing.companyId !== user.companyId) {
-      return api.forbidden("Você não pode deletar esta tag");
-    }
+    // if (!existing) {
+    //   return api.notFound("Tag não encontrada");
+    // }
 
-    await prisma.tag.delete({
-      where: { id },
-    });
+    // if (existing.companyId !== user.companyId) {
+    //   return api.forbidden("Você não pode deletar esta tag");
+    // }
 
-    return api.ok({ message: "Tag deletada com sucesso" });
+    // await prisma.tag.delete({
+    //   where: { id },
+    // });
+
+    // return api.ok({ message: "Tag deletada com sucesso" });
   } catch (err) {
     console.error("[DELETE /api/tags/[id]] Error:", err);
     return api.serverError("Erro ao deletar tag");

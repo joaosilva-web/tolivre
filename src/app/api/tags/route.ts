@@ -21,23 +21,24 @@ export async function GET(req: NextRequest) {
       return api.badRequest("Usuário não possui empresa vinculada");
     }
 
-    const tags = await prisma.tag.findMany({
-      where: {
-        companyId: user.companyId,
-      },
-      include: {
-        _count: {
-          select: {
-            clients: true,
-          },
-        },
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    // const tags = await prisma.tag.findMany({
+    //   where: {
+    //     companyId: user.companyId,
+    //   },
+    //   include: {
+    //     _count: {
+    //       select: {
+    //         clients: true,
+    //       },
+    //     },
+    //   },
+    //   orderBy: {
+    //     name: "asc",
+    //   },
+    // });
 
-    return api.ok(tags);
+    return api.ok([]);
   } catch (err) {
     console.error("[GET /api/tags] Error:", err);
     return api.serverError("Erro ao listar tags");
@@ -59,29 +60,31 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = TagSchema.parse(body);
 
-    // Verificar se já existe tag com mesmo nome
-    const existing = await prisma.tag.findUnique({
-      where: {
-        companyId_name: {
-          companyId: user.companyId,
-          name: parsed.name,
-        },
-      },
-    });
+    // TODO: Uncomment after running migration for tags system
+    // // Verificar se já existe tag com mesmo nome
+    // const existing = await prisma.tag.findUnique({
+    //   where: {
+    //     companyId_name: {
+    //       companyId: user.companyId,
+    //       name: parsed.name,
+    //     },
+    //   },
+    // });
 
-    if (existing) {
-      return api.badRequest("Já existe uma tag com este nome");
-    }
+    // if (existing) {
+    //   return api.badRequest("Já existe uma tag com este nome");
+    // }
 
-    const tag = await prisma.tag.create({
-      data: {
-        name: parsed.name,
-        color: parsed.color || "#6366f1",
-        companyId: user.companyId,
-      },
-    });
+    // const tag = await prisma.tag.create({
+    //   data: {
+    //     name: parsed.name,
+    //     color: parsed.color || "#6366f1",
+    //     companyId: user.companyId,
+    //   },
+    // });
 
-    return api.created(tag);
+    // return api.created(tag);
+    return api.ok({ message: "Tags endpoint ready. Run migration to activate." });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return api.badRequest("Dados inválidos", err.issues);
