@@ -50,16 +50,6 @@ export default function Home() {
         repeat: 1,
         yoyo: true,
       })
-      .to(
-        ".loading-text",
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: "power2.out",
-        },
-        "-=0.4"
-      )
       .to(".loading-screen", {
         opacity: 0,
         duration: 0.8,
@@ -535,13 +525,8 @@ export default function Home() {
       {/* Loading Screen */}
       {loading && (
         <div className="loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-background">
-          <div className="flex flex-col items-center justify-center">
-            <div className="loading-logo w-[200px] h-[200px] flex items-center justify-center mx-auto">
-              <IconLogo width="100%" height="100%" />
-            </div>
-            <p className="loading-text text-lg text-muted-foreground mt-4 opacity-0 translate-y-4">
-              Carregando...
-            </p>
+          <div className="loading-logo w-[200px] h-[200px] flex items-center justify-center mx-auto">
+            <IconLogo width="100%" height="100%" />
           </div>
         </div>
       )}
