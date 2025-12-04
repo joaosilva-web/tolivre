@@ -9,10 +9,6 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-reac
 import {
   DndContext,
   DragOverlay,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
   DragStartEvent,
   DragEndEvent,
 } from "@dnd-kit/core";
@@ -39,15 +35,6 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
   const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { locale: ptBR }));
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isRescheduling, setIsRescheduling] = useState(false);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor)
-  );
 
   // Gerar slots de horário (8h às 20h com intervalos de 30min)
   const timeSlots = [];
@@ -148,7 +135,6 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
 
       {/* Grid do calendário */}
       <DndContext
-        sensors={sensors}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
