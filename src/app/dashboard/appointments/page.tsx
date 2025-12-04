@@ -292,10 +292,10 @@ export default function AppointmentsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setStartDate(\"\");
-                      setEndDate(\"\");
-                      setStatusFilter(\"all\");
-                      setProfessionalFilter(\"all\");
+                      setStartDate("");
+                      setEndDate("");
+                      setStatusFilter("all");
+                      setProfessionalFilter("all");
                       setLoading(true);
                       setTimeout(() => loadAppointments(), 100);
                     }}
