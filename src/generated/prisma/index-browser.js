@@ -312,9 +312,83 @@ exports.Prisma.PaymentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LoginHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  device: 'device',
+  browser: 'browser',
+  os: 'os',
+  location: 'location',
+  success: 'success',
+  failReason: 'failReason',
+  sessionToken: 'sessionToken',
+  loggedOutAt: 'loggedOutAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  ip: 'ip',
+  success: 'success',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.UserSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  device: 'device',
+  browser: 'browser',
+  os: 'os',
+  lastActivity: 'lastActivity',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  companyId: 'companyId',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  changes: 'changes',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  success: 'success',
+  errorMsg: 'errorMsg',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.UserSecuritySettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  twoFactorEnabled: 'twoFactorEnabled',
+  twoFactorSecret: 'twoFactorSecret',
+  backupCodes: 'backupCodes',
+  loginNotifications: 'loginNotifications',
+  suspiciousActivityAlert: 'suspiciousActivityAlert',
+  lastPasswordChange: 'lastPasswordChange',
+  passwordExpiryDays: 'passwordExpiryDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -325,6 +399,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.Interest = exports.$Enums.Interest = {
   sim: 'sim',
@@ -406,7 +486,12 @@ exports.Prisma.ModelName = {
   CompanyPage: 'CompanyPage',
   PageTestimonial: 'PageTestimonial',
   Subscription: 'Subscription',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  LoginHistory: 'LoginHistory',
+  LoginAttempt: 'LoginAttempt',
+  UserSession: 'UserSession',
+  AuditLog: 'AuditLog',
+  UserSecuritySettings: 'UserSecuritySettings'
 };
 
 /**
