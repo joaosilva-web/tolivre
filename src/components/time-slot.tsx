@@ -6,10 +6,11 @@ import { AppointmentCard } from "./appointment-card";
 interface Appointment {
   id: string;
   startTime: string;
-  endTime: string;
   clientName: string;
-  serviceName: string;
-  status: string;
+  service: {
+    name: string;
+    duration: number;
+  };
 }
 
 interface TimeSlotProps {

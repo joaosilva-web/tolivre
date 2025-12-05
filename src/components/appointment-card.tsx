@@ -9,10 +9,11 @@ import { format } from "date-fns";
 interface Appointment {
   id: string;
   startTime: string;
-  endTime: string;
   clientName: string;
-  serviceName: string;
-  status: string;
+  service: {
+    name: string;
+    duration: number;
+  };
 }
 
 interface AppointmentCardProps {
@@ -31,19 +32,8 @@ export function AppointmentCard({ appointment, isDragging }: AppointmentCardProp
       }
     : undefined;
 
-  const statusColors = {
-    PENDING: "bg-yellow-100 text-yellow-800 border-yellow-200",
-    CONFIRMED: "bg-blue-100 text-blue-800 border-blue-200",
-    COMPLETED: "bg-green-100 text-green-800 border-green-200",
-    CANCELED: "bg-gray-100 text-gray-800 border-gray-200",
-  };
-
-  const statusLabels = {
-    PENDING: "Pendente",
-    CONFIRMED: "Confirmado",
-    COMPLETED: "Concluído",
-    CANCELED: "Cancelado",
-  };
+  // Calculate end time based on duration
+  const endTime = new Date(new Date(appointment.startTime).getTime() + appointment.service.duration * 60000);
 
   return (
     <Card
@@ -53,7 +43,7 @@ export function AppointmentCard({ appointment, isDragging }: AppointmentCardProp
       {...attributes}
       className={`
         p-2 cursor-grab active:cursor-grabbing
-        ${statusColors[appointment.status as keyof typeof statusColors] || "bg-gray-100"}
+        bg-blue-100 text-blue-800 border-blue-200
         ${isDragging ? "opacity-50 shadow-lg" : ""}
         hover:shadow-md transition-shadow
         border-l-4
@@ -64,17 +54,15 @@ export function AppointmentCard({ appointment, isDragging }: AppointmentCardProp
           <Clock className="h-3 w-3" />
           <span className="font-medium">
             {format(new Date(appointment.startTime), "HH:mm")} -{" "}
-            {format(new Date(appointment.endTime), "HH:mm")}
+            {format(endTime, "HH:mm")}
           </span>
         </div>
         <div className="flex items-center gap-1 text-xs">
           <User className="h-3 w-3" />
           <span className="font-medium truncate">{appointment.clientName}</span>
         </div>
-        <p className="text-xs text-gray-600 truncate">{appointment.serviceName}</p>
-        <Badge variant="outline" className="text-[10px] px-1 py-0">
-          {statusLabels[appointment.status as keyof typeof statusLabels]}
-        </Badge>
+        <p className="text-xs text-gray-600 truncate">{appointment.service.name}</p>
+        <p className="text-[10px] text-gray-500">{appointment.service.duration} min</p>
       </div>
     </Card>
   );

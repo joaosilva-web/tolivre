@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { format, startOfWeek, addDays, isSameDay, addWeeks, subWeeks } from "date-fns";
+import { format, addDays, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -16,21 +13,24 @@ import { TimeSlot } from "./time-slot";
 interface Appointment {
   id: string;
   startTime: string;
-  endTime: string;
   clientName: string;
-  serviceName: string;
-  status: string;
-  professionalId: string;
+  service: {
+    name: string;
+    duration: number;
+  };
+  professional: {
+    id: string;
+    name: string;
+  };
 }
 
 interface WeeklyCalendarProps {
   appointments: Appointment[];
-  professionalId: string;
-  onReschedule: (appointmentId: string, newStartTime: string) => Promise<void>;
+  weekStart: Date;
+  onReschedule: (appointmentId: string, newStartTime: Date) => Promise<void>;
 }
 
-export function WeeklyCalendar({ appointments, professionalId, onReschedule }: WeeklyCalendarProps) {
-  const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { locale: ptBR }));
+export function WeeklyCalendar({ appointments, weekStart, onReschedule }: WeeklyCalendarProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isRescheduling, setIsRescheduling] = useState(false);
 
@@ -42,7 +42,7 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
   }
 
   // Gerar dias da semana
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeek, i));
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   const handleDragStart = (event: any) => {
     setActiveId(event.active.id as string);
@@ -64,7 +64,7 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
       const dateStr = `${parts[1]}-${parts[2]}-${parts[3]}`; // YYYY-MM-DD
       const timeStr = `${parts[5]}:${parts[6]}`; // HH:mm
 
-      const newStartTime = new Date(`${dateStr}T${timeStr}:00`).toISOString();
+      const newStartTime = new Date(`${dateStr}T${timeStr}:00`);
 
       setIsRescheduling(true);
       try {
@@ -96,41 +96,7 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
     : null;
 
   return (
-    <Card className="p-6">
-      {/* Header com navegação de semana */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="h-5 w-5" />
-          <h2 className="text-xl font-semibold">
-            {format(currentWeek, "dd MMM", { locale: ptBR })} -{" "}
-            {format(addDays(currentWeek, 6), "dd MMM yyyy", { locale: ptBR })}
-          </h2>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentWeek(startOfWeek(new Date(), { locale: ptBR }))}
-          >
-            Hoje
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
+    <div>
       {/* Grid do calendário */}
       <DndContext
         onDragStart={handleDragStart}
@@ -192,6 +158,6 @@ export function WeeklyCalendar({ appointments, professionalId, onReschedule }: W
           ) : null}
         </DragOverlay>
       </DndContext>
-    </Card>
+    </div>
   );
 }
