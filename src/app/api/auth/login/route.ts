@@ -9,7 +9,7 @@ import { parseUserAgent, generateSessionToken, isNewDevice, isIpSuspicious, calc
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
+  const { email, password, twoFactorToken } = await req.json();
   
   // Extrair informações da requisição
   const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
@@ -73,6 +73,58 @@ export async function POST(req: Request) {
   if (!isValid) {
     await logLoginAttempt(false, "Senha inválida");
     return api.unauthorized("Senha inválida");
+  }
+
+  // Verificar 2FA se estiver habilitado
+  const securitySettings = await prisma.userSecuritySettings.findUnique({
+    where: { userId: user.id },
+  });
+
+  if (securitySettings?.twoFactorEnabled) {
+    if (!twoFactorToken) {
+      // Senha correta mas falta o código 2FA
+      return api.ok({
+        requires2FA: true,
+        message: "Digite o código do seu aplicativo autenticador",
+      });
+    }
+
+    // Verificar código 2FA
+    const { verifyTOTPToken, verifyBackupCode } = await import("@/lib/twoFactor");
+    
+    let twoFactorValid = false;
+    
+    // Primeiro tenta TOTP
+    if (securitySettings.twoFactorSecret) {
+      twoFactorValid = verifyTOTPToken(twoFactorToken, securitySettings.twoFactorSecret);
+    }
+    
+    // Se não for válido, tenta código de backup
+    if (!twoFactorValid && securitySettings.backupCodes.length > 0) {
+      const backupResult = await verifyBackupCode(
+        twoFactorToken,
+        securitySettings.backupCodes as string[]
+      );
+      
+      if (backupResult.valid) {
+        twoFactorValid = true;
+        
+        // Remover código usado
+        const updatedCodes = (securitySettings.backupCodes as string[]).filter(
+          (_, index) => index !== backupResult.usedIndex
+        );
+        
+        await prisma.userSecuritySettings.update({
+          where: { userId: user.id },
+          data: { backupCodes: updatedCodes },
+        });
+      }
+    }
+    
+    if (!twoFactorValid) {
+      await logLoginAttempt(false, "Código 2FA inválido");
+      return api.unauthorized("Código 2FA inválido ou expirado");
+    }
   }
 
   // Analisar contexto de segurança
