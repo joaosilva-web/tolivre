@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Output standalone para Docker (produção otimizada)
+  output: 'standalone',
+  
   eslint: {
     // Ignore generated Prisma files during build
     ignoreDuringBuilds: false,

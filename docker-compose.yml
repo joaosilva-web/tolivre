@@ -1,9 +1,206 @@
 version: "3.9"
+
+# Docker Compose para Produção - KVM 4 Hostinger
+# 4 vCPU, 8 GB RAM, 80 GB SSD
+
 services:
+  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
+    container_name: tolivre-postgres
+    restart: unless-stopped
+    
+    # Limites de recursos (30% da RAM total = 2.4 GB)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2400M
+        reservations:
+          cpus: '0.5'
+          memory: 1200M
+    
     ports:
       - "5432:5432"
+    
     environment:
-      POSTGRES_DB: tolivre-dev
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: ${POSTGRES_DB:-tolivre_prod}
+      POSTGRES_USER: ${POSTGRES_USER:-tolivre}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=pt_BR.UTF-8"
+      # Configurações de performance
+      POSTGRES_SHARED_BUFFERS: 512MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1536MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 256MB
+      POSTGRES_CHECKPOINT_COMPLETION_TARGET: 0.9
+      POSTGRES_WAL_BUFFERS: 16MB
+      POSTGRES_DEFAULT_STATISTICS_TARGET: 100
+      POSTGRES_RANDOM_PAGE_COST: 1.1
+      POSTGRES_EFFECTIVE_IO_CONCURRENCY: 200
+      POSTGRES_WORK_MEM: 10485kB
+      POSTGRES_MIN_WAL_SIZE: 1GB
+      POSTGRES_MAX_WAL_SIZE: 4GB
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    
+    networks:
+      - tolivre-network
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tolivre} -d ${POSTGRES_DB:-tolivre_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Configurações extras do PostgreSQL
+    command: >
+      postgres
+      -c shared_buffers=512MB
+      -c effective_cache_size=1536MB
+      -c maintenance_work_mem=256MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=10485kB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c max_connections=100
+      -c log_connections=on
+      -c log_disconnections=on
+      -c log_duration=on
+      -c log_line_prefix='%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    
+    container_name: tolivre-app
+    restart: unless-stopped
+    
+    # Limites de recursos (50% da RAM = 4 GB)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.5'
+          memory: 4096M
+        reservations:
+          cpus: '1.0'
+          memory: 2048M
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      # Database
+      POSTGRES_URL: postgresql://${POSTGRES_USER:-tolivre}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-tolivre_prod}?schema=public&connection_limit=50
+      
+      # Node.js
+      NODE_ENV: production
+      PORT: 3000
+      
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      
+      # URLs
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://ocupae.com.br}
+      
+      # Uazapi (WhatsApp)
+      UAZAPI_URL: ${UAZAPI_URL}
+      UAZAPI_TOKEN: ${UAZAPI_TOKEN}
+      UAZAPI_HEADER: ${UAZAPI_HEADER}
+      
+      # Mercado Pago
+      MERCADO_PAGO_ACCESS_TOKEN: ${MERCADO_PAGO_ACCESS_TOKEN}
+      
+      # reCAPTCHA
+      RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
+      NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+    
+    volumes:
+      - ./uploads:/app/uploads
+      - app_logs:/app/logs
+    
+    networks:
+      - tolivre-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+    # Health check interno do container (localhost = dentro do container)
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Nginx Reverse Proxy (Opcional mas recomendado)
+  nginx:
+    image: nginx:alpine
+    container_name: tolivre-nginx
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    
+    networks:
+      - tolivre-network
+    
+    depends_on:
+      - app
+    
+    # Health check interno do Nginx (localhost = dentro do container)
+    # Externamente o site estará disponível em https://ocupae.com.br
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Certbot para SSL (Let's Encrypt)
+  certbot:
+    image: certbot/certbot:latest
+    container_name: tolivre-certbot
+    
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    
+    # Renovação automática (a cada 12 horas)
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  postgres_data:
+    driver: local
+  app_logs:
+    driver: local
+
+networks:
+  tolivre-network:
+    driver: bridge
