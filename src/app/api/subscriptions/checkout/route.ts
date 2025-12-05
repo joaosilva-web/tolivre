@@ -102,8 +102,10 @@ export async function POST(req: NextRequest) {
       return api.badRequest("Empresa não encontrada");
     }
 
-    // Validar URL base
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    // Validar URL base e remover barra final se existir
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    baseUrl = baseUrl.replace(/\/+$/, ""); // Remove todas as barras do final
+    
     if (!baseUrl) {
       console.error("[Checkout] NEXT_PUBLIC_APP_URL não configurado");
       return api.serverError("Configuração de URL inválida");
