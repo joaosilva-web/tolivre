@@ -3,6 +3,7 @@ import { z, ZodError } from "zod";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 import { getUserFromCookie } from "@/app/libs/auth";
+import { emitNewClient } from "@/lib/websocket";
 
 const clientSchema = z.object({
   companyId: z.string(),
@@ -60,6 +61,21 @@ export async function POST(req: NextRequest) {
       return api.forbidden("Você não pode criar clientes para esta empresa");
 
     const created = await prisma.client.create({ data: parsed });
+
+    // Emit WebSocket notification
+    (async () => {
+      try {
+        emitNewClient(parsed.companyId, {
+          id: created.id,
+          name: created.name,
+          email: created.email ?? undefined,
+          phone: created.phone ?? undefined,
+        });
+      } catch (err) {
+        console.error("[WebSocket] Failed to emit new client:", err);
+      }
+    })();
+
     return api.created(created);
   } catch (err) {
     if (err instanceof ZodError) {

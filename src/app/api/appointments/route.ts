@@ -8,6 +8,7 @@ import { checkRateLimit } from "@/app/libs/rateLimit";
 import { getUserFromCookie } from "@/app/libs/auth";
 import { sendText as sendUazText } from "@/lib/uazapi";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
+import { emitAppointmentCreated, emitAppointmentUpdated, emitAppointmentCanceled } from "@/lib/websocket";
 
 // local helper error type for errors with codes (e.g. OVERLAP)
 type ErrorWithCode = Error & { code?: string };
@@ -231,6 +232,32 @@ export async function POST(req: NextRequest) {
       }
     })();
 
+    // Emit WebSocket notification
+    (async () => {
+      try {
+        const appointment = await prisma.appointment.findUnique({
+          where: { id: created.id },
+          include: {
+            service: { select: { name: true } },
+            professional: { select: { name: true } },
+          },
+        });
+
+        if (appointment) {
+          emitAppointmentCreated(parsed.companyId, {
+            id: appointment.id,
+            clientName: appointment.clientName,
+            serviceName: appointment.service.name,
+            professionalName: appointment.professional.name,
+            startTime: appointment.startTime.toISOString(),
+            action: "created",
+          });
+        }
+      } catch (err) {
+        console.error("[WebSocket] Failed to emit appointment created:", err);
+      }
+    })();
+
     return api.ok(created);
   } catch (err) {
     if (err instanceof ZodError) {
@@ -364,6 +391,32 @@ export async function PUT(req: NextRequest) {
       });
     });
 
+    // Emit WebSocket notification
+    (async () => {
+      try {
+        const appointment = await prisma.appointment.findUnique({
+          where: { id: updated.id },
+          include: {
+            service: { select: { name: true } },
+            professional: { select: { name: true } },
+          },
+        });
+
+        if (appointment) {
+          emitAppointmentUpdated(appointment.companyId, {
+            id: appointment.id,
+            clientName: appointment.clientName,
+            serviceName: appointment.service.name,
+            professionalName: appointment.professional.name,
+            startTime: appointment.startTime.toISOString(),
+            action: "updated",
+          });
+        }
+      } catch (err) {
+        console.error("[WebSocket] Failed to emit appointment updated:", err);
+      }
+    })();
+
     return api.ok(updated);
   } catch (err) {
     if (err instanceof ZodError) {
@@ -394,7 +447,34 @@ export async function DELETE(req: NextRequest) {
 
     if (!id) return api.badRequest("id é obrigatório");
 
+    const appointment = await prisma.appointment.findUnique({
+      where: { id },
+      include: {
+        service: { select: { name: true } },
+        professional: { select: { name: true } },
+      },
+    });
+
+    if (!appointment) return api.notFound("Agendamento não encontrado");
+
     await prisma.appointment.delete({ where: { id } });
+
+    // Emit WebSocket notification
+    (async () => {
+      try {
+        emitAppointmentCanceled(appointment.companyId, {
+          id: appointment.id,
+          clientName: appointment.clientName,
+          serviceName: appointment.service.name,
+          professionalName: appointment.professional.name,
+          startTime: appointment.startTime.toISOString(),
+          action: "canceled",
+        });
+      } catch (err) {
+        console.error("[WebSocket] Failed to emit appointment canceled:", err);
+      }
+    })();
+
     return api.ok({ id });
   } catch (err) {
     return api.serverError((err as Error).message || "Erro ao deletar");
