@@ -137,8 +137,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  appointments Appointment[]         @relation("UserAppointments")
-  services     ProfessionalService[]
+  appointments       Appointment[]         @relation("UserAppointments")
+  services           ProfessionalService[]
+  loginHistory       LoginHistory[]
+  sessions           UserSession[]
+  auditLogs          AuditLog[]
+  securitySettings   UserSecuritySettings?
 }
 
 enum Role {
@@ -331,4 +335,100 @@ enum PaymentStatus {
   CANCELLED // Cancelado
   REFUNDED // Reembolsado
   CHARGED_BACK // Chargeback
+}
+
+// Histórico de logins para auditoria e segurança
+model LoginHistory {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ip           String
+  userAgent    String
+  device       String? // Mobile, Desktop, Tablet
+  browser      String? // Chrome, Firefox, Safari, etc
+  os           String? // Windows, macOS, Linux, iOS, Android
+  location     String? // Cidade/País (se disponível)
+  success      Boolean // Se o login foi bem-sucedido
+  failReason   String? // Motivo da falha (se aplicável)
+  sessionToken String? // Token da sessão (para rastreamento)
+  loggedOutAt  DateTime? // Quando fez logout
+  createdAt    DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([ip])
+  @@index([sessionToken])
+}
+
+// Tentativas de login falhadas (para proteção contra brute force)
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
+// Sessões ativas dos usuários
+model UserSession {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token        String    @unique // JWT token
+  ip           String
+  userAgent    String
+  device       String?
+  browser      String?
+  os           String?
+  lastActivity DateTime  @default(now())
+  expiresAt    DateTime
+  revokedAt    DateTime? // Para logout manual
+  createdAt    DateTime  @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+// Logs de auditoria para ações sensíveis
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  companyId   String?
+  action      String // CREATE, UPDATE, DELETE, LOGIN, LOGOUT, etc
+  entity      String // User, Appointment, Client, etc
+  entityId    String?
+  changes     Json? // Objeto com as mudanças (before/after)
+  ip          String
+  userAgent   String
+  success     Boolean  @default(true)
+  errorMsg    String?
+  metadata    Json? // Dados adicionais contextuais
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([companyId, createdAt])
+  @@index([entity, entityId])
+  @@index([action, createdAt])
+}
+
+// Configurações de segurança por usuário
+model UserSecuritySettings {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twoFactorEnabled      Boolean  @default(false)
+  twoFactorSecret       String? // Segredo do TOTP
+  backupCodes           String[] // Códigos de backup (hasheados)
+  loginNotifications    Boolean  @default(true) // Notificar novos logins
+  suspiciousActivityAlert Boolean @default(true)
+  lastPasswordChange    DateTime @default(now())
+  passwordExpiryDays    Int      @default(90) // Dias para expirar senha
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([userId])
 }
