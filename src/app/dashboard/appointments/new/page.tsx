@@ -112,6 +112,11 @@ export default function NewAppointmentPage() {
   // store date as a YYYY-MM-DD string to avoid cross-browser UTC parsing differences
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
+  
+  // Recurrence fields
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurrenceRule, setRecurrenceRule] = useState<"WEEKLY" | "BIWEEKLY" | "MONTHLY">("WEEKLY");
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<string>("");
 
   // Data
   const [services, setServices] = useState<Service[]>([]);
@@ -387,20 +392,38 @@ export default function NewAppointmentPage() {
         throw new Error("Nenhum profissional disponível para este serviço");
       }
 
-      const res = await fetch("/api/appointments", {
+      // Use recurring API if recurrence is enabled
+      const apiUrl = isRecurring ? "/api/appointments/recurring" : "/api/appointments";
+      
+      const payload: any = {
+        companyId: user.companyId,
+        professionalId: availableProfessional.professionalId,
+        clientName,
+        clientId: resolvedClientId,
+        serviceId: selectedService.id,
+        startTime: startDateTime.toISOString(),
+      };
+
+      // Add recurrence fields if enabled
+      if (isRecurring && recurrenceEndDate) {
+        const [endY, endM, endD] = recurrenceEndDate.split("-");
+        const endDate = new Date(Number(endY), Number(endM) - 1, Number(endD), 23, 59, 59, 999);
+        payload.recurrenceRule = recurrenceRule;
+        payload.recurrenceEndDate = endDate.toISOString();
+      }
+
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          companyId: user.companyId,
-          professionalId: availableProfessional.professionalId,
-          clientName,
-          clientId: resolvedClientId,
-          serviceId: selectedService.id,
-          startTime: startDateTime.toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
+        const data = await res.json();
+        const message = isRecurring 
+          ? `${data.data.totalCreated || 1} agendamentos criados com sucesso!`
+          : "Agendamento criado com sucesso!";
+        alert(message);
         router.push("/dashboard");
       } else {
         const data = await res.json();
@@ -426,7 +449,9 @@ export default function NewAppointmentPage() {
       case 3:
         return selectedDate !== undefined;
       case 4:
-        return selectedTime !== "";
+        if (!selectedTime) return false;
+        if (isRecurring && !recurrenceEndDate) return false;
+        return true;
       default:
         return false;
     }
@@ -845,6 +870,62 @@ export default function NewAppointmentPage() {
                           {slot.time}
                         </Button>
                       ))}
+                    </div>
+                  )}
+                  
+                  {/* Recurrence Options */}
+                  {selectedTime && (
+                    <div className="mt-6 space-y-4 border-t pt-4">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="recurring"
+                          checked={isRecurring}
+                          onChange={(e) => setIsRecurring(e.target.checked)}
+                          className="h-4 w-4 rounded border-gray-300"
+                        />
+                        <Label htmlFor="recurring" className="cursor-pointer">
+                          Agendamento recorrente
+                        </Label>
+                      </div>
+                      
+                      {isRecurring && (
+                        <div className="space-y-4 pl-6">
+                          <div>
+                            <Label htmlFor="recurrenceRule">Frequência</Label>
+                            <select
+                              id="recurrenceRule"
+                              value={recurrenceRule}
+                              onChange={(e) => setRecurrenceRule(e.target.value as any)}
+                              className="w-full mt-1 rounded-md border border-gray-300 p-2"
+                            >
+                              <option value="WEEKLY">Semanal</option>
+                              <option value="BIWEEKLY">Quinzenal</option>
+                              <option value="MONTHLY">Mensal</option>
+                            </select>
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor="recurrenceEndDate">Repetir até</Label>
+                            <Input
+                              id="recurrenceEndDate"
+                              type="date"
+                              value={recurrenceEndDate}
+                              onChange={(e) => setRecurrenceEndDate(e.target.value)}
+                              min={selectedDate}
+                              required={isRecurring}
+                              className="mt-1"
+                            />
+                          </div>
+                          
+                          <p className="text-sm text-gray-600">
+                            {recurrenceRule === "WEEKLY" && "O agendamento será repetido toda semana"}
+                            {recurrenceRule === "BIWEEKLY" && "O agendamento será repetido a cada 2 semanas"}
+                            {recurrenceRule === "MONTHLY" && "O agendamento será repetido todo mês"}
+                            {recurrenceEndDate && ` até ${new Date(recurrenceEndDate).toLocaleDateString("pt-BR")}`}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
