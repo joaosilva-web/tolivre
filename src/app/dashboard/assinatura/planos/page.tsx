@@ -234,18 +234,16 @@ export default function PlansPage() {
                         "Assinar"
                       )}
                     </Button>
-                    {process.env.NODE_ENV === "development" && (
-                      <Button
-                        className="w-full"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleSimulatePayment(key as PlanName)}
-                        disabled={!!processingPlan}
-                      >
-                        <Zap className="mr-2 h-3 w-3" />
-                        Simular Pagamento (Dev)
-                      </Button>
-                    )}
+                    <Button
+                      className="w-full"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleSimulatePayment(key as PlanName)}
+                      disabled={!!processingPlan}
+                    >
+                      <Zap className="mr-2 h-3 w-3" />
+                      Simular Pagamento (Teste)
+                    </Button>
                   </>
                 )}
               </CardFooter>

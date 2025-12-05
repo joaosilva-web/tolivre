@@ -392,7 +392,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Myse\\AndroidStudioProjects\\Myse Smart Market\\tolivre\\src\\generated\\prisma",
+      "value": "C:\\Users\\joaog\\empresa\\tolivre\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -410,11 +410,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Myse\\AndroidStudioProjects\\Myse Smart Market\\tolivre\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\joaog\\empresa\\tolivre\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.17.1",
@@ -423,7 +424,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

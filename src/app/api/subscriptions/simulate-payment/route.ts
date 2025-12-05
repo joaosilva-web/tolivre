@@ -3,13 +3,8 @@ import { getUserFromCookie } from "@/app/libs/auth";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 
-// POST - Simular pagamento aprovado (apenas desenvolvimento)
+// POST - Simular pagamento aprovado (para testes)
 export async function POST(req: NextRequest) {
-  // Apenas permitir em desenvolvimento
-  if (process.env.NODE_ENV === "production") {
-    return api.forbidden("Endpoint disponível apenas em desenvolvimento");
-  }
-
   try {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
