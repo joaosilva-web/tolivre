@@ -64,8 +64,10 @@ export default function PlansPage() {
 
       if (res.ok) {
         const data = await res.json();
-        // Redirecionar para página de pagamento do Mercado Pago
-        window.location.href = data.data.initPoint;
+        // Usar sandboxInitPoint em desenvolvimento/teste, initPoint em produção
+        const checkoutUrl = data.data.sandboxInitPoint || data.data.initPoint;
+        console.log("[Checkout] Redirecting to:", checkoutUrl);
+        window.location.href = checkoutUrl;
       } else {
         const error = await res.json();
         alert(error.error || "Erro ao processar upgrade");
