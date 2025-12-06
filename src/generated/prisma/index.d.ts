@@ -10945,8 +10945,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    commissionRate: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    commissionRate: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -10956,6 +10966,9 @@ export namespace Prisma {
     password: string | null
     role: $Enums.Role | null
     companyId: string | null
+    photoUrl: string | null
+    bio: string | null
+    commissionRate: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10967,6 +10980,9 @@ export namespace Prisma {
     password: string | null
     role: $Enums.Role | null
     companyId: string | null
+    photoUrl: string | null
+    bio: string | null
+    commissionRate: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10978,11 +10994,22 @@ export namespace Prisma {
     password: number
     role: number
     companyId: number
+    photoUrl: number
+    bio: number
+    commissionRate: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    commissionRate?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    commissionRate?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -10991,6 +11018,9 @@ export namespace Prisma {
     password?: true
     role?: true
     companyId?: true
+    photoUrl?: true
+    bio?: true
+    commissionRate?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11002,6 +11032,9 @@ export namespace Prisma {
     password?: true
     role?: true
     companyId?: true
+    photoUrl?: true
+    bio?: true
+    commissionRate?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11013,6 +11046,9 @@ export namespace Prisma {
     password?: true
     role?: true
     companyId?: true
+    photoUrl?: true
+    bio?: true
+    commissionRate?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11056,6 +11092,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -11086,6 +11134,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -11097,9 +11147,14 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     companyId: string | null
+    photoUrl: string | null
+    bio: string | null
+    commissionRate: number | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -11125,6 +11180,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     companyId?: boolean
+    photoUrl?: boolean
+    bio?: boolean
+    commissionRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11144,6 +11202,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     companyId?: boolean
+    photoUrl?: boolean
+    bio?: boolean
+    commissionRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11156,6 +11217,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     companyId?: boolean
+    photoUrl?: boolean
+    bio?: boolean
+    commissionRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11168,11 +11232,14 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     companyId?: boolean
+    photoUrl?: boolean
+    bio?: boolean
+    commissionRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "companyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "companyId" | "photoUrl" | "bio" | "commissionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | User$companyArgs<ExtArgs>
     appointments?: boolean | User$appointmentsArgs<ExtArgs>
@@ -11208,6 +11275,9 @@ export namespace Prisma {
       password: string
       role: $Enums.Role
       companyId: string | null
+      photoUrl: string | null
+      bio: string | null
+      commissionRate: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -11646,6 +11716,9 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly companyId: FieldRef<"User", 'String'>
+    readonly photoUrl: FieldRef<"User", 'String'>
+    readonly bio: FieldRef<"User", 'String'>
+    readonly commissionRate: FieldRef<"User", 'Float'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -12235,11 +12308,15 @@ export namespace Prisma {
   export type AppointmentAvgAggregateOutputType = {
     price: number | null
     paidAmount: number | null
+    commissionRate: number | null
+    commissionAmount: number | null
   }
 
   export type AppointmentSumAggregateOutputType = {
     price: number | null
     paidAmount: number | null
+    commissionRate: number | null
+    commissionAmount: number | null
   }
 
   export type AppointmentMinAggregateOutputType = {
@@ -12257,6 +12334,10 @@ export namespace Prisma {
     paidAmount: number | null
     paymentMethod: string | null
     paymentDate: Date | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    commissionPaid: boolean | null
+    commissionPaidAt: Date | null
     notes: string | null
     recurrenceRule: string | null
     recurrenceEndDate: Date | null
@@ -12280,6 +12361,10 @@ export namespace Prisma {
     paidAmount: number | null
     paymentMethod: string | null
     paymentDate: Date | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    commissionPaid: boolean | null
+    commissionPaidAt: Date | null
     notes: string | null
     recurrenceRule: string | null
     recurrenceEndDate: Date | null
@@ -12303,6 +12388,10 @@ export namespace Prisma {
     paidAmount: number
     paymentMethod: number
     paymentDate: number
+    commissionRate: number
+    commissionAmount: number
+    commissionPaid: number
+    commissionPaidAt: number
     notes: number
     recurrenceRule: number
     recurrenceEndDate: number
@@ -12316,11 +12405,15 @@ export namespace Prisma {
   export type AppointmentAvgAggregateInputType = {
     price?: true
     paidAmount?: true
+    commissionRate?: true
+    commissionAmount?: true
   }
 
   export type AppointmentSumAggregateInputType = {
     price?: true
     paidAmount?: true
+    commissionRate?: true
+    commissionAmount?: true
   }
 
   export type AppointmentMinAggregateInputType = {
@@ -12338,6 +12431,10 @@ export namespace Prisma {
     paidAmount?: true
     paymentMethod?: true
     paymentDate?: true
+    commissionRate?: true
+    commissionAmount?: true
+    commissionPaid?: true
+    commissionPaidAt?: true
     notes?: true
     recurrenceRule?: true
     recurrenceEndDate?: true
@@ -12361,6 +12458,10 @@ export namespace Prisma {
     paidAmount?: true
     paymentMethod?: true
     paymentDate?: true
+    commissionRate?: true
+    commissionAmount?: true
+    commissionPaid?: true
+    commissionPaidAt?: true
     notes?: true
     recurrenceRule?: true
     recurrenceEndDate?: true
@@ -12384,6 +12485,10 @@ export namespace Prisma {
     paidAmount?: true
     paymentMethod?: true
     paymentDate?: true
+    commissionRate?: true
+    commissionAmount?: true
+    commissionPaid?: true
+    commissionPaidAt?: true
     notes?: true
     recurrenceRule?: true
     recurrenceEndDate?: true
@@ -12494,6 +12599,10 @@ export namespace Prisma {
     paidAmount: number | null
     paymentMethod: string | null
     paymentDate: Date | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    commissionPaid: boolean
+    commissionPaidAt: Date | null
     notes: string | null
     recurrenceRule: string | null
     recurrenceEndDate: Date | null
@@ -12536,6 +12645,10 @@ export namespace Prisma {
     paidAmount?: boolean
     paymentMethod?: boolean
     paymentDate?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    commissionPaid?: boolean
+    commissionPaidAt?: boolean
     notes?: boolean
     recurrenceRule?: boolean
     recurrenceEndDate?: boolean
@@ -12566,6 +12679,10 @@ export namespace Prisma {
     paidAmount?: boolean
     paymentMethod?: boolean
     paymentDate?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    commissionPaid?: boolean
+    commissionPaidAt?: boolean
     notes?: boolean
     recurrenceRule?: boolean
     recurrenceEndDate?: boolean
@@ -12594,6 +12711,10 @@ export namespace Prisma {
     paidAmount?: boolean
     paymentMethod?: boolean
     paymentDate?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    commissionPaid?: boolean
+    commissionPaidAt?: boolean
     notes?: boolean
     recurrenceRule?: boolean
     recurrenceEndDate?: boolean
@@ -12622,6 +12743,10 @@ export namespace Prisma {
     paidAmount?: boolean
     paymentMethod?: boolean
     paymentDate?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    commissionPaid?: boolean
+    commissionPaidAt?: boolean
     notes?: boolean
     recurrenceRule?: boolean
     recurrenceEndDate?: boolean
@@ -12630,7 +12755,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "commissionRate" | "commissionAmount" | "commissionPaid" | "commissionPaidAt" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
   export type AppointmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
@@ -12680,6 +12805,10 @@ export namespace Prisma {
       paidAmount: number | null
       paymentMethod: string | null
       paymentDate: Date | null
+      commissionRate: number | null
+      commissionAmount: number | null
+      commissionPaid: boolean
+      commissionPaidAt: Date | null
       notes: string | null
       recurrenceRule: string | null
       recurrenceEndDate: Date | null
@@ -13129,6 +13258,10 @@ export namespace Prisma {
     readonly paidAmount: FieldRef<"Appointment", 'Float'>
     readonly paymentMethod: FieldRef<"Appointment", 'String'>
     readonly paymentDate: FieldRef<"Appointment", 'DateTime'>
+    readonly commissionRate: FieldRef<"Appointment", 'Float'>
+    readonly commissionAmount: FieldRef<"Appointment", 'Float'>
+    readonly commissionPaid: FieldRef<"Appointment", 'Boolean'>
+    readonly commissionPaidAt: FieldRef<"Appointment", 'DateTime'>
     readonly notes: FieldRef<"Appointment", 'String'>
     readonly recurrenceRule: FieldRef<"Appointment", 'String'>
     readonly recurrenceEndDate: FieldRef<"Appointment", 'DateTime'>
@@ -27442,6 +27575,9 @@ export namespace Prisma {
     password: 'password',
     role: 'role',
     companyId: 'companyId',
+    photoUrl: 'photoUrl',
+    bio: 'bio',
+    commissionRate: 'commissionRate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -27464,6 +27600,10 @@ export namespace Prisma {
     paidAmount: 'paidAmount',
     paymentMethod: 'paymentMethod',
     paymentDate: 'paymentDate',
+    commissionRate: 'commissionRate',
+    commissionAmount: 'commissionAmount',
+    commissionPaid: 'commissionPaid',
+    commissionPaidAt: 'commissionPaidAt',
     notes: 'notes',
     recurrenceRule: 'recurrenceRule',
     recurrenceEndDate: 'recurrenceEndDate',
@@ -28407,6 +28547,9 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     companyId?: StringNullableFilter<"User"> | string | null
+    photoUrl?: StringNullableFilter<"User"> | string | null
+    bio?: StringNullableFilter<"User"> | string | null
+    commissionRate?: FloatNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -28425,6 +28568,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     companyId?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
@@ -28446,6 +28592,9 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     companyId?: StringNullableFilter<"User"> | string | null
+    photoUrl?: StringNullableFilter<"User"> | string | null
+    bio?: StringNullableFilter<"User"> | string | null
+    commissionRate?: FloatNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -28464,11 +28613,16 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     companyId?: SortOrderInput | SortOrder
+    photoUrl?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -28481,6 +28635,9 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     companyId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    photoUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    bio?: StringNullableWithAggregatesFilter<"User"> | string | null
+    commissionRate?: FloatNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -28503,6 +28660,10 @@ export namespace Prisma {
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
     paymentDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    commissionRate?: FloatNullableFilter<"Appointment"> | number | null
+    commissionAmount?: FloatNullableFilter<"Appointment"> | number | null
+    commissionPaid?: BoolFilter<"Appointment"> | boolean
+    commissionPaidAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     recurrenceRule?: StringNullableFilter<"Appointment"> | string | null
     recurrenceEndDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
@@ -28532,6 +28693,10 @@ export namespace Prisma {
     paidAmount?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
     paymentDate?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
+    commissionAmount?: SortOrderInput | SortOrder
+    commissionPaid?: SortOrder
+    commissionPaidAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     recurrenceRule?: SortOrderInput | SortOrder
     recurrenceEndDate?: SortOrderInput | SortOrder
@@ -28564,6 +28729,10 @@ export namespace Prisma {
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
     paymentDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    commissionRate?: FloatNullableFilter<"Appointment"> | number | null
+    commissionAmount?: FloatNullableFilter<"Appointment"> | number | null
+    commissionPaid?: BoolFilter<"Appointment"> | boolean
+    commissionPaidAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     recurrenceRule?: StringNullableFilter<"Appointment"> | string | null
     recurrenceEndDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
@@ -28593,6 +28762,10 @@ export namespace Prisma {
     paidAmount?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
     paymentDate?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
+    commissionAmount?: SortOrderInput | SortOrder
+    commissionPaid?: SortOrder
+    commissionPaidAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     recurrenceRule?: SortOrderInput | SortOrder
     recurrenceEndDate?: SortOrderInput | SortOrder
@@ -28624,6 +28797,10 @@ export namespace Prisma {
     paidAmount?: FloatNullableWithAggregatesFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     paymentDate?: DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
+    commissionRate?: FloatNullableWithAggregatesFilter<"Appointment"> | number | null
+    commissionAmount?: FloatNullableWithAggregatesFilter<"Appointment"> | number | null
+    commissionPaid?: BoolWithAggregatesFilter<"Appointment"> | boolean
+    commissionPaidAt?: DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
     notes?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     recurrenceRule?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     recurrenceEndDate?: DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
@@ -30142,6 +30319,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -30160,6 +30340,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -30176,6 +30359,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -30194,6 +30380,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -30211,6 +30400,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30221,6 +30413,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30232,6 +30427,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30247,6 +30445,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -30275,6 +30477,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -30295,6 +30501,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30323,6 +30533,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30347,6 +30561,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -30366,6 +30584,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30388,6 +30610,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32065,6 +32291,17 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type CompanyNullableScalarRelationFilter = {
     is?: CompanyWhereInput | null
     isNot?: CompanyWhereInput | null
@@ -32112,8 +32349,15 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     companyId?: SortOrder
+    photoUrl?: SortOrder
+    bio?: SortOrder
+    commissionRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    commissionRate?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -32123,6 +32367,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     companyId?: SortOrder
+    photoUrl?: SortOrder
+    bio?: SortOrder
+    commissionRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32134,8 +32381,15 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     companyId?: SortOrder
+    photoUrl?: SortOrder
+    bio?: SortOrder
+    commissionRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    commissionRate?: SortOrder
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -32148,7 +32402,7 @@ export namespace Prisma {
     _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -32156,7 +32410,12 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumAppointmentStatusFilter<$PrismaModel = never> = {
@@ -32184,6 +32443,11 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type ClientNullableScalarRelationFilter = {
     is?: ClientWhereInput | null
     isNot?: ClientWhereInput | null
@@ -32209,6 +32473,10 @@ export namespace Prisma {
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentDate?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    commissionPaid?: SortOrder
+    commissionPaidAt?: SortOrder
     notes?: SortOrder
     recurrenceRule?: SortOrder
     recurrenceEndDate?: SortOrder
@@ -32220,6 +32488,8 @@ export namespace Prisma {
   export type AppointmentAvgOrderByAggregateInput = {
     price?: SortOrder
     paidAmount?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
   }
 
   export type AppointmentMaxOrderByAggregateInput = {
@@ -32237,6 +32507,10 @@ export namespace Prisma {
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentDate?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    commissionPaid?: SortOrder
+    commissionPaidAt?: SortOrder
     notes?: SortOrder
     recurrenceRule?: SortOrder
     recurrenceEndDate?: SortOrder
@@ -32260,6 +32534,10 @@ export namespace Prisma {
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentDate?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    commissionPaid?: SortOrder
+    commissionPaidAt?: SortOrder
     notes?: SortOrder
     recurrenceRule?: SortOrder
     recurrenceEndDate?: SortOrder
@@ -32271,22 +32549,8 @@ export namespace Prisma {
   export type AppointmentSumOrderByAggregateInput = {
     price?: SortOrder
     paidAmount?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
   }
 
   export type EnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -32321,6 +32585,14 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type ClientTagListRelationFilter = {
@@ -32431,11 +32703,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type PageTestimonialListRelationFilter = {
     every?: PageTestimonialWhereInput
     some?: PageTestimonialWhereInput
@@ -32513,14 +32780,6 @@ export namespace Prisma {
     metaDescription?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type CompanyPageScalarRelationFilter = {
@@ -33594,6 +33853,14 @@ export namespace Prisma {
     set?: $Enums.Role
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type CompanyUpdateOneWithoutUsersNestedInput = {
     create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
@@ -33808,14 +34075,6 @@ export namespace Prisma {
     connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type EnumAppointmentStatusFieldUpdateOperationsInput = {
     set?: $Enums.AppointmentStatus
   }
@@ -33826,6 +34085,10 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type CompanyUpdateOneRequiredWithoutAppointmentsNestedInput = {
@@ -34100,10 +34363,6 @@ export namespace Prisma {
     connectOrCreate?: PageTestimonialCreateOrConnectWithoutCompanyPageInput | PageTestimonialCreateOrConnectWithoutCompanyPageInput[]
     createMany?: PageTestimonialCreateManyCompanyPageInputEnvelope
     connect?: PageTestimonialWhereUniqueInput | PageTestimonialWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type CompanyUpdateOneRequiredWithoutCompanyPageNestedInput = {
@@ -34515,6 +34774,17 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -34525,7 +34795,7 @@ export namespace Prisma {
     _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -34533,7 +34803,12 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumAppointmentStatusFilter<$PrismaModel = never> = {
@@ -34561,20 +34836,9 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -34609,11 +34873,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -34704,6 +34963,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentCreateNestedManyWithoutProfessionalInput
@@ -34720,6 +34982,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -34751,6 +35016,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -34777,6 +35046,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -35026,6 +35299,9 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     companyId?: StringNullableFilter<"User"> | string | null
+    photoUrl?: StringNullableFilter<"User"> | string | null
+    bio?: StringNullableFilter<"User"> | string | null
+    commissionRate?: FloatNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
@@ -35064,6 +35340,10 @@ export namespace Prisma {
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
     paymentDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    commissionRate?: FloatNullableFilter<"Appointment"> | number | null
+    commissionAmount?: FloatNullableFilter<"Appointment"> | number | null
+    commissionPaid?: BoolFilter<"Appointment"> | boolean
+    commissionPaidAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     recurrenceRule?: StringNullableFilter<"Appointment"> | string | null
     recurrenceEndDate?: DateTimeNullableFilter<"Appointment"> | Date | string | null
@@ -35437,6 +35717,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -35463,6 +35747,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -35600,6 +35888,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -35617,6 +35908,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -35675,6 +35969,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -35692,6 +35989,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -35790,6 +36090,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -35816,6 +36120,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36279,6 +36587,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -36296,6 +36607,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     services?: ProfessionalServiceUncheckedCreateNestedManyWithoutProfessionalInput
@@ -36375,6 +36689,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36402,6 +36720,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36426,6 +36748,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36453,6 +36779,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36539,6 +36869,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -36556,6 +36889,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: ProfessionalServiceUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -36653,6 +36989,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36680,6 +37020,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36760,6 +37104,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -36786,6 +37134,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -37681,6 +38033,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -37698,6 +38053,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -37729,6 +38087,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -37746,6 +38107,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -37761,6 +38125,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -37778,6 +38145,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -37809,6 +38179,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -37826,6 +38199,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -37841,6 +38217,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -37858,6 +38237,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -37889,6 +38271,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -37906,6 +38291,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -37921,6 +38309,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -37938,6 +38329,9 @@ export namespace Prisma {
     password: string
     role?: $Enums.Role
     companyId?: string | null
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -37969,6 +38363,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -37986,6 +38383,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38001,6 +38401,9 @@ export namespace Prisma {
     email: string
     password: string
     role?: $Enums.Role
+    photoUrl?: string | null
+    bio?: string | null
+    commissionRate?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38019,6 +38422,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -38066,6 +38473,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUpdateManyWithoutProfessionalNestedInput
@@ -38082,6 +38492,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38098,6 +38511,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38113,6 +38529,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38139,6 +38559,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38162,6 +38586,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38293,6 +38721,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -38317,6 +38749,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38343,6 +38779,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38366,6 +38806,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38403,6 +38847,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -38471,6 +38919,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38497,6 +38949,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38520,6 +38976,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38690,6 +39150,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -38708,6 +39172,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38735,6 +39203,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38758,6 +39230,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38779,6 +39255,10 @@ export namespace Prisma {
     paidAmount?: number | null
     paymentMethod?: string | null
     paymentDate?: Date | string | null
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    commissionPaid?: boolean
+    commissionPaidAt?: Date | string | null
     notes?: string | null
     recurrenceRule?: string | null
     recurrenceEndDate?: Date | string | null
@@ -38804,6 +39284,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38830,6 +39314,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38853,6 +39341,10 @@ export namespace Prisma {
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
+    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
     recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

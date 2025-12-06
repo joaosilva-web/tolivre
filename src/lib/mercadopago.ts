@@ -12,8 +12,8 @@ const isProduction = process.env.NODE_ENV === "production";
 if (isTestCredential && isProduction) {
   console.warn(
     "[MercadoPago] ⚠️ AVISO: Usando credenciais TEST em ambiente de PRODUÇÃO. " +
-    "O checkout pode não funcionar corretamente. " +
-    "Use credenciais de produção para domínios públicos."
+      "O checkout pode não funcionar corretamente. " +
+      "Use credenciais de produção para domínios públicos."
   );
 }
 

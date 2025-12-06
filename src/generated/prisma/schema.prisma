@@ -134,6 +134,12 @@ model User {
   role      Role     @default(OWNER)
   companyId String?
   company   Company? @relation(fields: [companyId], references: [id])
+
+  // Perfil do Profissional
+  photoUrl       String? // URL da foto do profissional
+  bio            String? @db.Text // Biografia/descrição do profissional
+  commissionRate Float?  @default(0) // Taxa de comissão em % (ex: 30.5 = 30.5%)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -172,7 +178,14 @@ model Appointment {
   paidAmount    Float?            @default(0) // Valor já pago
   paymentMethod String? // pix, dinheiro, cartao_credito, cartao_debito, etc
   paymentDate   DateTime? // Data do pagamento
-  notes         String?           @db.Text // Observações sobre pagamento ou agendamento
+
+  // Comissões
+  commissionRate   Float?    @default(0) // Taxa de comissão aplicada no momento (%)
+  commissionAmount Float?    @default(0) // Valor da comissão calculada
+  commissionPaid   Boolean   @default(false) // Comissão já foi paga ao profissional?
+  commissionPaidAt DateTime? // Data do pagamento da comissão
+
+  notes String? @db.Text // Observações sobre pagamento ou agendamento
 
   // Agendamentos Recorrentes
   recurrenceRule      String? // RRULE format: FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR ou "WEEKLY" | "BIWEEKLY" | "MONTHLY"

@@ -195,6 +195,9 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   companyId: 'companyId',
+  photoUrl: 'photoUrl',
+  bio: 'bio',
+  commissionRate: 'commissionRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -214,6 +217,10 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   paidAmount: 'paidAmount',
   paymentMethod: 'paymentMethod',
   paymentDate: 'paymentDate',
+  commissionRate: 'commissionRate',
+  commissionAmount: 'commissionAmount',
+  commissionPaid: 'commissionPaid',
+  commissionPaidAt: 'commissionPaidAt',
   notes: 'notes',
   recurrenceRule: 'recurrenceRule',
   recurrenceEndDate: 'recurrenceEndDate',

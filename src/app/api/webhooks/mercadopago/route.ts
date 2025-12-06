@@ -8,11 +8,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    console.log("[Mercado Pago Webhook] Received:", JSON.stringify(body, null, 2));
+    console.log(
+      "[Mercado Pago Webhook] Received:",
+      JSON.stringify(body, null, 2)
+    );
 
     // Tipos de notificação: payment, merchant_order
     if (body.type !== "payment") {
-      console.log("[Mercado Pago Webhook] Ignoring non-payment notification:", body.type);
+      console.log(
+        "[Mercado Pago Webhook] Ignoring non-payment notification:",
+        body.type
+      );
       return api.ok({ received: true });
     }
 
@@ -22,7 +28,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Buscar detalhes do pagamento no Mercado Pago
-    console.log("[Mercado Pago Webhook] Fetching payment details for ID:", paymentId);
+    console.log(
+      "[Mercado Pago Webhook] Fetching payment details for ID:",
+      paymentId
+    );
     const payment = await paymentClient.get({ id: paymentId });
 
     if (!payment) {
@@ -30,7 +39,10 @@ export async function POST(req: NextRequest) {
       return api.badRequest("Pagamento não encontrado");
     }
 
-    console.log("[Mercado Pago Webhook] Payment details:", JSON.stringify(payment, null, 2));
+    console.log(
+      "[Mercado Pago Webhook] Payment details:",
+      JSON.stringify(payment, null, 2)
+    );
 
     const companyId = payment.external_reference;
     const planName = payment.metadata?.plan;
