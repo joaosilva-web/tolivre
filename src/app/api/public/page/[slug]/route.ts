@@ -52,7 +52,7 @@ export async function GET(
       });
     }
 
-    // Buscar profissionais disponíveis
+    // Buscar profissionais disponíveis com fotos e bio
     const professionals = await prisma.user.findMany({
       where: {
         companyId: companyPage.companyId,
@@ -63,11 +63,16 @@ export async function GET(
       select: {
         id: true,
         name: true,
+        photoUrl: true,
+        bio: true,
         services: {
           include: {
             service: true,
           },
         },
+      },
+      orderBy: {
+        name: "asc",
       },
     });
 

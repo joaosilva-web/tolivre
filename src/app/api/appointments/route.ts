@@ -155,6 +155,21 @@ export async function POST(req: NextRequest) {
         throw e;
       }
 
+      // Buscar taxa de comissão do profissional e preço do serviço
+      const professional = await tx.user.findUnique({
+        where: { id: parsed.professionalId },
+        select: { commissionRate: true },
+      });
+
+      const serviceWithPrice = await tx.service.findUnique({
+        where: { id: parsed.serviceId },
+        select: { price: true },
+      });
+
+      const price = serviceWithPrice?.price || 0;
+      const commissionRate = professional?.commissionRate || 0;
+      const commissionAmount = price * (commissionRate / 100);
+
       return await tx.appointment.create({
         data: {
           companyId: parsed.companyId,
@@ -164,6 +179,9 @@ export async function POST(req: NextRequest) {
           serviceId: parsed.serviceId,
           startTime: start,
           endTime: end,
+          price,
+          commissionRate,
+          commissionAmount,
         },
       });
     });

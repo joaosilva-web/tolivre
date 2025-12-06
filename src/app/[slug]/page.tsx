@@ -27,6 +27,8 @@ interface Service {
 interface Professional {
   id: string;
   name: string;
+  photoUrl: string | null;
+  bio: string | null;
   services: Array<{
     service: Service;
   }>;
@@ -314,6 +316,78 @@ export default function PublicCompanyPage() {
                 Ver Horários Disponíveis
                 <Calendar className="ml-2 w-5 h-5" />
               </button>
+            </div>
+          </section>
+        )}
+
+        {/* Professionals Section */}
+        {data.professionals.length > 0 && (
+          <section className="mb-20">
+            <h2 className="text-4xl font-bold mb-8 text-center">
+              Nossa Equipe
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {data.professionals.map((prof) => (
+                <div
+                  key={prof.id}
+                  className="bg-card border rounded-xl p-6 text-center hover:shadow-xl transition-all duration-300 hover:scale-105"
+                >
+                  <div className="flex flex-col items-center mb-4">
+                    <div
+                      className="w-32 h-32 rounded-full mb-4 overflow-hidden border-4 border-white shadow-lg"
+                      style={{ borderColor: `${data.primaryColor}40` }}
+                    >
+                      {prof.photoUrl ? (
+                        <img
+                          src={prof.photoUrl}
+                          alt={prof.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center text-3xl font-bold text-white"
+                          style={{ backgroundColor: data.primaryColor }}
+                        >
+                          {prof.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="text-2xl font-bold">{prof.name}</h3>
+                  </div>
+                  {prof.bio && (
+                    <p className="text-muted-foreground mb-4 text-sm">
+                      {prof.bio}
+                    </p>
+                  )}
+                  {prof.services.length > 0 && (
+                    <div className="mt-4 pt-4 border-t">
+                      <p className="text-sm font-semibold mb-2">Especialidades:</p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {prof.services.map((ps) => (
+                          <span
+                            key={ps.service.id}
+                            className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                            style={{ backgroundColor: data.primaryColor }}
+                          >
+                            {ps.service.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      router.push(`/${slug}/agendar?professional=${prof.id}`);
+                    }}
+                    className="mt-4 w-full px-6 h-10 hover:opacity-90 transition-all text-white inline-flex items-center justify-center rounded-md font-medium gap-2 cursor-pointer"
+                    style={{
+                      backgroundColor: data.primaryColor,
+                    }}
+                  >
+                    Agendar com {prof.name.split(" ")[0]}
+                  </button>
+                </div>
+              ))}
             </div>
           </section>
         )}
