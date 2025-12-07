@@ -20,7 +20,15 @@ export async function GET(req: NextRequest) {
   try {
     const users = await prisma.user.findMany({
       where: { companyId: id },
-      select: { id: true, name: true }, // só o necessário para o frontend
+      select: { 
+        id: true, 
+        name: true,
+        email: true,
+        role: true,
+        photoUrl: true,
+        bio: true,
+        commissionRate: true,
+      },
     });
 
     return api.ok(users);

@@ -64,14 +64,22 @@ export default function TeamManagementPage() {
     try {
       const formData = new FormData();
       formData.append("photo", file);
+      formData.append("userId", userId);
 
-      // Upload temporário - depois atualizar para rota correta
       const res = await fetch("/api/users/photo", {
         method: "POST",
         body: formData,
       });
 
       if (res.ok) {
+        const result = await res.json();
+        // Atualizar localmente o estado para refletir a mudança imediatamente
+        setProfessionals((prev) =>
+          prev.map((p) =>
+            p.id === userId ? { ...p, photoUrl: result.data.photoUrl } : p
+          )
+        );
+        // Recarregar para garantir sincronização
         await loadProfessionals();
       } else {
         const error = await res.json();
