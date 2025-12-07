@@ -47,7 +47,6 @@ import {
   Building,
   Scissors,
   Calendar as CalendarIcon,
-  QrCode,
 } from "lucide-react";
 import { BookingQRCode } from "@/components/booking-qrcode";
 
@@ -368,7 +367,7 @@ export default function CompanyPage() {
           )}
 
           <Tabs ref={tabsRef} defaultValue="company" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="company" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
                 Empresa
@@ -390,10 +389,6 @@ export default function CompanyPage() {
               <TabsTrigger value="services" className="flex items-center gap-2">
                 <Scissors className="h-4 w-4" />
                 Serviços
-              </TabsTrigger>
-              <TabsTrigger value="booking" className="flex items-center gap-2">
-                <QrCode className="h-4 w-4" />
-                Agendamento
               </TabsTrigger>
             </TabsList>
 
@@ -1001,7 +996,8 @@ export default function CompanyPage() {
                     <CardHeader>
                       <CardTitle>Página Pública de Agendamento</CardTitle>
                       <CardDescription>
-                        Sua página pública está ativa! Compartilhe o link ou QR Code para que clientes possam agendar online.
+                        Sua página pública está ativa! Compartilhe o link ou QR
+                        Code para que clientes possam agendar online.
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -1016,7 +1012,10 @@ export default function CompanyPage() {
                           size="sm"
                           onClick={() => {
                             if (typeof window !== "undefined") {
-                              window.open(`/${companyPage.slug}/agendar`, "_blank");
+                              window.open(
+                                `/${companyPage.slug}/agendar`,
+                                "_blank"
+                              );
                             }
                           }}
                         >
@@ -1040,11 +1039,17 @@ export default function CompanyPage() {
                   <CardHeader>
                     <CardTitle>Configure sua Página Pública</CardTitle>
                     <CardDescription>
-                      Para gerar o QR Code de agendamento, você precisa primeiro criar sua página pública.
+                      Para gerar o QR Code de agendamento, você precisa primeiro
+                      criar sua página pública.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button onClick={() => window.location.href = "/dashboard/company/page-settings"}>
+                    <Button
+                      onClick={() =>
+                        (window.location.href =
+                          "/dashboard/company/page-settings")
+                      }
+                    >
                       Criar Página Pública
                     </Button>
                   </CardContent>

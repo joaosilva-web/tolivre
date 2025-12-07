@@ -6,7 +6,6 @@ import {
   IconBuilding,
   IconCalendar,
   IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -16,8 +15,6 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
-  IconWorld,
   IconCreditCard,
 } from "@tabler/icons-react";
 
@@ -49,39 +46,93 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Company",
-      url: "/dashboard/company",
-      icon: IconBuilding,
-    },
-    {
       title: "Appointments",
       url: "/dashboard/appointments",
       icon: IconCalendar,
+      items: [
+        {
+          title: "Lista",
+          url: "/dashboard/appointments",
+        },
+        {
+          title: "Calendário",
+          url: "/dashboard/appointments/calendar",
+        },
+        {
+          title: "Novo Agendamento",
+          url: "/dashboard/appointments/new",
+        },
+      ],
     },
     {
-      title: "Public Page",
-      url: "/dashboard/company/page-settings",
-      icon: IconWorld,
+      title: "Company",
+      url: "/dashboard/company",
+      icon: IconBuilding,
+      items: [
+        {
+          title: "Visão Geral",
+          url: "/dashboard/company",
+        },
+        {
+          title: "Equipe",
+          url: "/dashboard/company/team",
+        },
+        {
+          title: "Página Pública",
+          url: "/dashboard/company/page-settings",
+        },
+      ],
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
+      title: "Relatórios",
+      url: "/dashboard/financial",
+      icon: IconReport,
+      items: [
+        {
+          title: "Financeiro",
+          url: "/dashboard/financial",
+        },
+        {
+          title: "Comissões",
+          url: "/dashboard/reports/commissions",
+        },
+      ],
     },
     {
-      title: "Integrations",
+      title: "Integrações",
       url: "/dashboard/integrations",
       icon: IconPlug,
+    },
+    {
+      title: "Segurança",
+      url: "/dashboard/security",
+      icon: IconSettings,
+      items: [
+        {
+          title: "Visão Geral",
+          url: "/dashboard/security",
+        },
+        {
+          title: "Autenticação 2FA",
+          url: "/dashboard/security/2fa",
+        },
+      ],
+    },
+    {
+      title: "Configurações",
+      url: "/dashboard/settings/exceptions",
+      icon: IconSettings,
+      items: [
+        {
+          title: "Exceções de Horários",
+          url: "/dashboard/settings/exceptions",
+        },
+      ],
     },
     {
       title: "Assinatura",
       url: "/dashboard/assinatura",
       icon: IconCreditCard,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
     },
   ],
   navClouds: [
