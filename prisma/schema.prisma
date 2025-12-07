@@ -80,7 +80,7 @@ model WorkingHours {
 }
 
 model WorkingHourException {
-  id             String               @id @default(cuid())
+  id             String        @id @default(cuid())
   companyId      String
   professionalId String? // Null = aplica para toda empresa
   date           DateTime // Data específica da exceção
@@ -88,8 +88,8 @@ model WorkingHourException {
   reason         String? // Motivo (feriado, férias, etc)
   openTime       String? // Para tipo CUSTOM: horário de abertura
   closeTime      String? // Para tipo CUSTOM: horário de fechamento
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([companyId, date])
   @@index([professionalId, date])
@@ -134,21 +134,21 @@ model User {
   role      Role     @default(OWNER)
   companyId String?
   company   Company? @relation(fields: [companyId], references: [id])
-  
+
   // Perfil do Profissional
-  photoUrl        String?  // URL da foto do profissional
-  bio             String?  @db.Text // Biografia/descrição do profissional
-  commissionRate  Float?   @default(0) // Taxa de comissão em % (ex: 30.5 = 30.5%)
-  
+  photoUrl       String? // URL da foto do profissional
+  bio            String? @db.Text // Biografia/descrição do profissional
+  commissionRate Float?  @default(0) // Taxa de comissão em % (ex: 30.5 = 30.5%)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  appointments       Appointment[]         @relation("UserAppointments")
-  services           ProfessionalService[]
-  loginHistory       LoginHistory[]
-  sessions           UserSession[]
-  auditLogs          AuditLog[]
-  securitySettings   UserSecuritySettings?
+  appointments     Appointment[]         @relation("UserAppointments")
+  services         ProfessionalService[]
+  loginHistory     LoginHistory[]
+  sessions         UserSession[]
+  auditLogs        AuditLog[]
+  securitySettings UserSecuritySettings?
 }
 
 enum Role {
@@ -174,18 +174,18 @@ model Appointment {
   status         AppointmentStatus @default(PENDING)
 
   // Controle Financeiro
-  paymentStatus     PaymentStatusType @default(PENDING)
-  paidAmount        Float?            @default(0) // Valor já pago
-  paymentMethod     String? // pix, dinheiro, cartao_credito, cartao_debito, etc
-  paymentDate       DateTime? // Data do pagamento
-  
+  paymentStatus PaymentStatusType @default(PENDING)
+  paidAmount    Float?            @default(0) // Valor já pago
+  paymentMethod String? // pix, dinheiro, cartao_credito, cartao_debito, etc
+  paymentDate   DateTime? // Data do pagamento
+
   // Comissões
-  commissionRate    Float?  @default(0) // Taxa de comissão aplicada no momento (%)
-  commissionAmount  Float?  @default(0) // Valor da comissão calculada
-  commissionPaid    Boolean @default(false) // Comissão já foi paga ao profissional?
-  commissionPaidAt  DateTime? // Data do pagamento da comissão
-  
-  notes          String?           @db.Text // Observações sobre pagamento ou agendamento
+  commissionRate   Float?    @default(0) // Taxa de comissão aplicada no momento (%)
+  commissionAmount Float?    @default(0) // Valor da comissão calculada
+  commissionPaid   Boolean   @default(false) // Comissão já foi paga ao profissional?
+  commissionPaidAt DateTime? // Data do pagamento da comissão
+
+  notes String? @db.Text // Observações sobre pagamento ou agendamento
 
   // Agendamentos Recorrentes
   recurrenceRule      String? // RRULE format: FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR ou "WEEKLY" | "BIWEEKLY" | "MONTHLY"
@@ -352,9 +352,9 @@ enum PaymentStatus {
 
 // Histórico de logins para auditoria e segurança
 model LoginHistory {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   ip           String
   userAgent    String
   device       String? // Mobile, Desktop, Tablet
@@ -365,7 +365,7 @@ model LoginHistory {
   failReason   String? // Motivo da falha (se aplicável)
   sessionToken String? // Token da sessão (para rastreamento)
   loggedOutAt  DateTime? // Quando fez logout
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
   @@index([userId, createdAt])
   @@index([ip])
@@ -407,20 +407,20 @@ model UserSession {
 
 // Logs de auditoria para ações sensíveis
 model AuditLog {
-  id          String   @id @default(cuid())
-  userId      String?
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  companyId   String?
-  action      String // CREATE, UPDATE, DELETE, LOGIN, LOGOUT, etc
-  entity      String // User, Appointment, Client, etc
-  entityId    String?
-  changes     Json? // Objeto com as mudanças (before/after)
-  ip          String
-  userAgent   String
-  success     Boolean  @default(true)
-  errorMsg    String?
-  metadata    Json? // Dados adicionais contextuais
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  companyId String?
+  action    String // CREATE, UPDATE, DELETE, LOGIN, LOGOUT, etc
+  entity    String // User, Appointment, Client, etc
+  entityId  String?
+  changes   Json? // Objeto com as mudanças (before/after)
+  ip        String
+  userAgent String
+  success   Boolean  @default(true)
+  errorMsg  String?
+  metadata  Json? // Dados adicionais contextuais
+  createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
   @@index([companyId, createdAt])
@@ -430,18 +430,18 @@ model AuditLog {
 
 // Configurações de segurança por usuário
 model UserSecuritySettings {
-  id                    String   @id @default(cuid())
-  userId                String   @unique
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  twoFactorEnabled      Boolean  @default(false)
-  twoFactorSecret       String? // Segredo do TOTP
-  backupCodes           String[] // Códigos de backup (hasheados)
-  loginNotifications    Boolean  @default(true) // Notificar novos logins
-  suspiciousActivityAlert Boolean @default(true)
-  lastPasswordChange    DateTime @default(now())
-  passwordExpiryDays    Int      @default(90) // Dias para expirar senha
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twoFactorEnabled        Boolean  @default(false)
+  twoFactorSecret         String? // Segredo do TOTP
+  backupCodes             String[] // Códigos de backup (hasheados)
+  loginNotifications      Boolean  @default(true) // Notificar novos logins
+  suspiciousActivityAlert Boolean  @default(true)
+  lastPasswordChange      DateTime @default(now())
+  passwordExpiryDays      Int      @default(90) // Dias para expirar senha
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
   @@index([userId])
 }

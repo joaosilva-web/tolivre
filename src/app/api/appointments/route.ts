@@ -8,7 +8,11 @@ import { checkRateLimit } from "@/app/libs/rateLimit";
 import { getUserFromCookie } from "@/app/libs/auth";
 import { sendText as sendUazText } from "@/lib/uazapi";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
-import { emitAppointmentCreated, emitAppointmentUpdated, emitAppointmentCanceled } from "@/lib/websocket";
+import {
+  emitAppointmentCreated,
+  emitAppointmentUpdated,
+  emitAppointmentCanceled,
+} from "@/lib/websocket";
 
 // local helper error type for errors with codes (e.g. OVERLAP)
 type ErrorWithCode = Error & { code?: string };

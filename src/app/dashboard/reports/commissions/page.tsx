@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Loader2, DollarSign, TrendingUp, Users, CheckCircle2 } from "lucide-react";
+import {
+  Loader2,
+  DollarSign,
+  TrendingUp,
+  Users,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -65,9 +71,9 @@ export default function CommissionsReportPage() {
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [selectedProfessional, setSelectedProfessional] = useState<string | null>(
-    null
-  );
+  const [selectedProfessional, setSelectedProfessional] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
     if (!userLoading && user) {
@@ -230,14 +236,18 @@ export default function CommissionsReportPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage src={prof.professional.photoUrl || undefined} />
+                        <AvatarImage
+                          src={prof.professional.photoUrl || undefined}
+                        />
                         <AvatarFallback>
                           {prof.professional.name.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <CardTitle>{prof.professional.name}</CardTitle>
-                        <CardDescription>{prof.professional.email}</CardDescription>
+                        <CardDescription>
+                          {prof.professional.email}
+                        </CardDescription>
                       </div>
                     </div>
                     <div className="text-right">
@@ -253,13 +263,17 @@ export default function CommissionsReportPage() {
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Receita Gerada</p>
+                      <p className="text-sm text-muted-foreground">
+                        Receita Gerada
+                      </p>
                       <p className="text-xl font-bold text-green-600">
                         {formatCurrency(prof.totalRevenue)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Comissões Pagas</p>
+                      <p className="text-sm text-muted-foreground">
+                        Comissões Pagas
+                      </p>
                       <p className="text-xl font-bold text-blue-600">
                         {formatCurrency(prof.commissionPaid)}
                       </p>
@@ -301,7 +315,9 @@ export default function CommissionsReportPage() {
                             <TableHead>Serviço</TableHead>
                             <TableHead className="text-right">Valor</TableHead>
                             <TableHead className="text-right">Taxa</TableHead>
-                            <TableHead className="text-right">Comissão</TableHead>
+                            <TableHead className="text-right">
+                              Comissão
+                            </TableHead>
                             <TableHead>Status</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -309,7 +325,10 @@ export default function CommissionsReportPage() {
                           {prof.appointments.map((apt) => (
                             <TableRow key={apt.id}>
                               <TableCell>
-                                {format(new Date(apt.startTime), "dd/MM/yyyy HH:mm")}
+                                {format(
+                                  new Date(apt.startTime),
+                                  "dd/MM/yyyy HH:mm"
+                                )}
                               </TableCell>
                               <TableCell>{apt.client}</TableCell>
                               <TableCell>{apt.service.name}</TableCell>

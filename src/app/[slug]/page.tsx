@@ -361,7 +361,9 @@ export default function PublicCompanyPage() {
                   )}
                   {prof.services.length > 0 && (
                     <div className="mt-4 pt-4 border-t">
-                      <p className="text-sm font-semibold mb-2">Especialidades:</p>
+                      <p className="text-sm font-semibold mb-2">
+                        Especialidades:
+                      </p>
                       <div className="flex flex-wrap gap-2 justify-center">
                         {prof.services.map((ps) => (
                           <span

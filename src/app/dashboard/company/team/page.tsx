@@ -17,6 +17,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import useSession from "@/hooks/useSession";
+import { toast } from "sonner";
 
 interface Professional {
   id: string;
@@ -56,10 +57,7 @@ export default function TeamManagementPage() {
     }
   };
 
-  const handlePhotoUpload = async (
-    userId: string,
-    file: File
-  ) => {
+  const handlePhotoUpload = async (userId: string, file: File) => {
     setUploading(userId);
     try {
       const formData = new FormData();
@@ -81,13 +79,14 @@ export default function TeamManagementPage() {
         );
         // Recarregar para garantir sincronização
         await loadProfessionals();
+        toast.success("Foto atualizada com sucesso!");
       } else {
         const error = await res.json();
-        alert(error.error || "Erro ao fazer upload");
+        toast.error(error.error || "Erro ao fazer upload");
       }
     } catch (err) {
       console.error("Erro no upload:", err);
-      alert("Erro ao fazer upload da foto");
+      toast.error("Erro ao fazer upload da foto");
     } finally {
       setUploading(null);
     }
@@ -121,13 +120,14 @@ export default function TeamManagementPage() {
 
       if (res.ok) {
         await loadProfessionals();
+        toast.success("Perfil atualizado com sucesso!");
       } else {
         const error = await res.json();
-        alert(error.error || "Erro ao atualizar");
+        toast.error(error.error || "Erro ao atualizar");
       }
     } catch (err) {
       console.error("Erro ao atualizar:", err);
-      alert("Erro ao atualizar perfil");
+      toast.error("Erro ao atualizar perfil");
     } finally {
       setSaving(null);
     }
@@ -141,7 +141,11 @@ export default function TeamManagementPage() {
     );
   }
 
-  if (user?.roles?.includes("EMPLOYEE") && !user?.roles?.includes("OWNER") && !user?.roles?.includes("MANAGER")) {
+  if (
+    user?.roles?.includes("EMPLOYEE") &&
+    !user?.roles?.includes("OWNER") &&
+    !user?.roles?.includes("MANAGER")
+  ) {
     return (
       <div className="container mx-auto max-w-7xl px-4 py-8">
         <div className="text-center">
@@ -276,7 +280,8 @@ export default function TeamManagementPage() {
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Esta taxa será aplicada automaticamente em novos agendamentos
+                    Esta taxa será aplicada automaticamente em novos
+                    agendamentos
                   </p>
                 </div>
               )}

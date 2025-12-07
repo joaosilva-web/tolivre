@@ -34,9 +34,11 @@ export async function POST(req: NextRequest) {
     if (targetUserId && targetUserId !== user.id) {
       // Apenas OWNER ou MANAGER podem atualizar fotos de outros
       const isOwnerOrManager = user.role === "OWNER" || user.role === "MANAGER";
-      
+
       if (!isOwnerOrManager) {
-        return api.forbidden("Você não pode atualizar fotos de outros usuários");
+        return api.forbidden(
+          "Você não pode atualizar fotos de outros usuários"
+        );
       }
 
       // Verificar se o usuário alvo pertence à mesma empresa
@@ -46,7 +48,9 @@ export async function POST(req: NextRequest) {
       });
 
       if (!targetUser || targetUser.companyId !== user.companyId) {
-        return api.forbidden("Você não pode atualizar fotos de usuários de outra empresa");
+        return api.forbidden(
+          "Você não pode atualizar fotos de usuários de outra empresa"
+        );
       }
 
       userIdToUpdate = targetUserId;
@@ -63,7 +67,9 @@ export async function POST(req: NextRequest) {
       data: { photoUrl },
     });
 
-    console.log(`[Photo Upload] User ${user.id} uploaded photo for user ${userIdToUpdate}`);
+    console.log(
+      `[Photo Upload] User ${user.id} uploaded photo for user ${userIdToUpdate}`
+    );
 
     return api.ok({
       message: "Foto atualizada com sucesso",

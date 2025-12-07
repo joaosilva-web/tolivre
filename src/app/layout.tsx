@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/context/SessionProvider";
 import { WebSocketProvider } from "@/context/WebSocketProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <SessionProvider>
           <WebSocketProvider>{children}</WebSocketProvider>
         </SessionProvider>
+        <Toaster />
       </body>
     </html>
   );

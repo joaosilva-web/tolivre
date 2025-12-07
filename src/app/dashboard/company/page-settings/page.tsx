@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Testimonial {
   id?: string;
@@ -54,8 +55,6 @@ export default function CompanyPageSettings() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [pageExists, setPageExists] = useState(false);
 
   const [config, setConfig] = useState<PageConfig>({
@@ -102,11 +101,11 @@ export default function CompanyPageSettings() {
         // Deixar campos em branco para o usuário preencher
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "Erro ao carregar configurações");
+        toast.error(errorData.error || "Erro ao carregar configurações");
       }
     } catch (err) {
       console.error("Erro ao carregar configurações:", err);
-      setError("Erro ao carregar configurações");
+      toast.error("Erro ao carregar configurações");
     } finally {
       setLoading(false);
     }
@@ -115,8 +114,6 @@ export default function CompanyPageSettings() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      setError("");
-      setSuccess("");
 
       const payload = {
         ...config,
@@ -131,16 +128,15 @@ export default function CompanyPageSettings() {
       });
 
       if (res.ok) {
-        setSuccess("Configurações salvas com sucesso!");
+        toast.success("Configurações salvas com sucesso!");
         setPageExists(true);
-        setTimeout(() => setSuccess(""), 3000);
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "Erro ao salvar configurações");
+        toast.error(errorData.error || "Erro ao salvar configurações");
       }
     } catch (err) {
       console.error("Erro ao salvar:", err);
-      setError("Erro ao salvar configurações");
+      toast.error("Erro ao salvar configurações");
     } finally {
       setSaving(false);
     }
@@ -238,18 +234,6 @@ export default function CompanyPageSettings() {
           </Button>
         </div>
       </div>
-
-      {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 rounded-lg p-4 mb-6">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-500/10 border border-green-500 text-green-500 rounded-lg p-4 mb-6">
-          {success}
-        </div>
-      )}
 
       <div className="space-y-8">
         {/* Informações Básicas */}

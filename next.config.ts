@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Output standalone para Docker (produção otimizada)
-  output: 'standalone',
-  
+  output: "standalone",
+
   typescript: {
     // Only type-check source files, not generated
     ignoreBuildErrors: false,

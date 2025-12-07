@@ -15,7 +15,9 @@ export async function GET(req: NextRequest) {
 
     // Apenas OWNER e MANAGER podem ver relatório completo
     if (user.role === "EMPLOYEE") {
-      return api.forbidden("Você não tem permissão para acessar este relatório");
+      return api.forbidden(
+        "Você não tem permissão para acessar este relatório"
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -57,8 +59,9 @@ export async function GET(req: NextRequest) {
       confirmedAppointments: appointments.filter(
         (a) => a.status === "CONFIRMED"
       ).length,
-      completedAppointments: appointments.filter((a) => a.status === "COMPLETED")
-        .length,
+      completedAppointments: appointments.filter(
+        (a) => a.status === "COMPLETED"
+      ).length,
       canceledAppointments: appointments.filter((a) => a.status === "CANCELED")
         .length,
 
@@ -98,21 +101,18 @@ export async function GET(req: NextRequest) {
     // Por método de pagamento
     const paymentMethods = appointments
       .filter((a) => a.paymentMethod)
-      .reduce(
-        (acc, a) => {
-          const method = a.paymentMethod || "Não informado";
-          if (!acc[method]) {
-            acc[method] = {
-              count: 0,
-              total: 0,
-            };
-          }
-          acc[method].count++;
-          acc[method].total += a.paidAmount || 0;
-          return acc;
-        },
-        {} as Record<string, { count: number; total: number }>
-      );
+      .reduce((acc, a) => {
+        const method = a.paymentMethod || "Não informado";
+        if (!acc[method]) {
+          acc[method] = {
+            count: 0,
+            total: 0,
+          };
+        }
+        acc[method].count++;
+        acc[method].total += a.paidAmount || 0;
+        return acc;
+      }, {} as Record<string, { count: number; total: number }>);
 
     // Por profissional
     const byProfessional = appointments.reduce(
@@ -154,29 +154,26 @@ export async function GET(req: NextRequest) {
     );
 
     // Por serviço
-    const byService = appointments.reduce(
-      (acc, a) => {
-        const serviceId = a.serviceId;
-        const serviceName = a.service.name;
+    const byService = appointments.reduce((acc, a) => {
+      const serviceId = a.serviceId;
+      const serviceName = a.service.name;
 
-        if (!acc[serviceId]) {
-          acc[serviceId] = {
-            id: serviceId,
-            name: serviceName,
-            count: 0,
-            revenue: 0,
-          };
-        }
+      if (!acc[serviceId]) {
+        acc[serviceId] = {
+          id: serviceId,
+          name: serviceName,
+          count: 0,
+          revenue: 0,
+        };
+      }
 
-        acc[serviceId].count++;
-        if (a.status === "COMPLETED") {
-          acc[serviceId].revenue += a.price || 0;
-        }
+      acc[serviceId].count++;
+      if (a.status === "COMPLETED") {
+        acc[serviceId].revenue += a.price || 0;
+      }
 
-        return acc;
-      },
-      {} as Record<string, { id: string; name: string; count: number; revenue: number }>
-    );
+      return acc;
+    }, {} as Record<string, { id: string; name: string; count: number; revenue: number }>);
 
     return api.ok({
       metrics,

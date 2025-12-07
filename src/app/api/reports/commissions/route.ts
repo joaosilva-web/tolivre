@@ -62,55 +62,55 @@ export async function GET(req: NextRequest) {
     });
 
     // Agrupar por profissional
-    const professionalStats = appointments.reduce(
-      (acc, apt) => {
-        const profId = apt.professionalId;
+    const professionalStats = appointments.reduce((acc, apt) => {
+      const profId = apt.professionalId;
 
-        if (!acc[profId]) {
-          acc[profId] = {
-            professional: apt.professional,
-            totalAppointments: 0,
-            totalRevenue: 0,
-            totalCommission: 0,
-            commissionPaid: 0,
-            commissionPending: 0,
-            appointments: [],
-          };
-        }
+      if (!acc[profId]) {
+        acc[profId] = {
+          professional: apt.professional,
+          totalAppointments: 0,
+          totalRevenue: 0,
+          totalCommission: 0,
+          commissionPaid: 0,
+          commissionPending: 0,
+          appointments: [],
+        };
+      }
 
-        acc[profId].totalAppointments++;
-        acc[profId].totalRevenue += apt.price || 0;
-        acc[profId].totalCommission += apt.commissionAmount || 0;
+      acc[profId].totalAppointments++;
+      acc[profId].totalRevenue += apt.price || 0;
+      acc[profId].totalCommission += apt.commissionAmount || 0;
 
-        if (apt.commissionPaid) {
-          acc[profId].commissionPaid += apt.commissionAmount || 0;
-        } else {
-          acc[profId].commissionPending += apt.commissionAmount || 0;
-        }
+      if (apt.commissionPaid) {
+        acc[profId].commissionPaid += apt.commissionAmount || 0;
+      } else {
+        acc[profId].commissionPending += apt.commissionAmount || 0;
+      }
 
-        acc[profId].appointments.push({
-          id: apt.id,
-          startTime: apt.startTime,
-          service: apt.service,
-          client: apt.client?.name || apt.clientName,
-          price: apt.price,
-          commissionRate: apt.commissionRate,
-          commissionAmount: apt.commissionAmount,
-          commissionPaid: apt.commissionPaid,
-          commissionPaidAt: apt.commissionPaidAt,
-        });
+      acc[profId].appointments.push({
+        id: apt.id,
+        startTime: apt.startTime,
+        service: apt.service,
+        client: apt.client?.name || apt.clientName,
+        price: apt.price,
+        commissionRate: apt.commissionRate,
+        commissionAmount: apt.commissionAmount,
+        commissionPaid: apt.commissionPaid,
+        commissionPaidAt: apt.commissionPaidAt,
+      });
 
-        return acc;
-      },
-      {} as Record<string, any>
-    );
+      return acc;
+    }, {} as Record<string, any>);
 
     const report = Object.values(professionalStats);
 
     // Totais gerais
     const totals = {
       totalAppointments: appointments.length,
-      totalRevenue: appointments.reduce((sum, apt) => sum + (apt.price || 0), 0),
+      totalRevenue: appointments.reduce(
+        (sum, apt) => sum + (apt.price || 0),
+        0
+      ),
       totalCommission: appointments.reduce(
         (sum, apt) => sum + (apt.commissionAmount || 0),
         0
