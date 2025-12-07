@@ -4,11 +4,6 @@ const nextConfig: NextConfig = {
   // Output standalone para Docker (produção otimizada)
   output: 'standalone',
   
-  eslint: {
-    // Ignore generated Prisma files during build
-    ignoreDuringBuilds: false,
-    dirs: ["src/app", "src/components", "src/hooks", "src/lib", "src/context"],
-  },
   typescript: {
     // Only type-check source files, not generated
     ignoreBuildErrors: false,
