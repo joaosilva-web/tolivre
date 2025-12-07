@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     // Se um userId foi fornecido, verificar permissões
     if (targetUserId && targetUserId !== user.id) {
       // Apenas OWNER ou MANAGER podem atualizar fotos de outros
-      const isOwnerOrManager = user.roles?.includes("OWNER") || user.roles?.includes("MANAGER");
+      const isOwnerOrManager = user.role === "OWNER" || user.role === "MANAGER";
       
       if (!isOwnerOrManager) {
         return api.forbidden("Você não pode atualizar fotos de outros usuários");
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
 }
 
 // DELETE - Remover foto do profissional
-export async function DELETE(req: NextRequest) {
+export async function DELETE() {
   try {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
