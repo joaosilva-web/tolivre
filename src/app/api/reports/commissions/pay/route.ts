@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
+    if (!user.companyId) return api.forbidden("Usuário sem empresa");
 
     if (user.role !== "OWNER") {
       return api.forbidden("Apenas o dono pode marcar comissões como pagas");

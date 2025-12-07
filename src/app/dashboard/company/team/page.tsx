@@ -133,7 +133,7 @@ export default function TeamManagementPage() {
     );
   }
 
-  if (user?.role === "EMPLOYEE") {
+  if (user?.roles?.includes("EMPLOYEE") && !user?.roles?.includes("OWNER") && !user?.roles?.includes("MANAGER")) {
     return (
       <div className="container mx-auto max-w-7xl px-4 py-8">
         <div className="text-center">
@@ -240,7 +240,7 @@ export default function TeamManagementPage() {
               </div>
 
               {/* Comissão */}
-              {user?.role === "OWNER" && (
+              {user?.roles?.includes("OWNER") && (
                 <div>
                   <Label htmlFor={`commission-${prof.id}`}>
                     Taxa de Comissão (%)
