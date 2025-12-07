@@ -2,9 +2,56 @@ version: "3.9"
 
 # Docker Compose para Produção - KVM 2 Hostinger
 # 2 vCPU, 4 GB RAM, 50 GB SSD
-# Database: Neon (PostgreSQL Serverless)
+# Database: PostgreSQL Local
 
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: tolivre-postgres
+    restart: unless-stopped
+    
+    # Limites de recursos (12.5% da RAM = 512 MB)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+    ports:
+      - "5432:5432"
+    
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tolivre_prod}
+      POSTGRES_USER: ${POSTGRES_USER:-tolivre}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    
+    networks:
+      - tolivre-network
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tolivre} -d ${POSTGRES_DB:-tolivre_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    command: >
+      postgres
+      -c shared_buffers=128MB
+      -c effective_cache_size=384MB
+      -c maintenance_work_mem=64MB
+      -c work_mem=4096kB
+      -c max_connections=50
+
   # Next.js Application
   app:
     build:
@@ -16,26 +63,26 @@ services:
     container_name: tolivre-app
     restart: unless-stopped
 
-    # Limites de recursos (~62% da RAM = 2.5 GB - sem PostgreSQL local)
+    # Limites de recursos (50% da RAM = 2 GB)
     deploy:
       resources:
         limits:
-          cpus: "1.5"
-          memory: 2560M
+          cpus: "1.0"
+          memory: 2048M
         reservations:
-          cpus: "0.75"
-          memory: 1280M
+          cpus: "0.5"
+          memory: 1024M
 
     ports:
       - "3000:3000"
 
     environment:
-      # Database (Neon)
-      POSTGRES_URL: ${POSTGRES_URL:?POSTGRES_URL is required - Use your Neon connection string}
+      # Database (Local PostgreSQL)
+      POSTGRES_URL: postgresql://${POSTGRES_USER:-tolivre}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-tolivre_prod}?schema=public
 
       # Node.js
       NODE_ENV: production
-      NODE_OPTIONS: "--max-old-space-size=2048"
+      NODE_OPTIONS: "--max-old-space-size=1536"
       PORT: 3000
 
       # JWT
@@ -62,6 +109,10 @@ services:
 
     networks:
       - tolivre-network
+
+    depends_on:
+      postgres:
+        condition: service_healthy
 
     # Health check interno do container (localhost = dentro do container)
     healthcheck:
@@ -137,6 +188,8 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 volumes:
+  postgres_data:
+    driver: local
   app_logs:
     driver: local
 
