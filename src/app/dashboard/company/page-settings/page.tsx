@@ -190,11 +190,8 @@ export default function CompanyPageSettings() {
     return null;
   }
 
-  // Verifica se é EMPLOYEE através do roles array
-  const isEmployee =
-    user.roles?.includes("EMPLOYEE") &&
-    !user.roles?.includes("OWNER") &&
-    !user.roles?.includes("MANAGER");
+  // Verifica se é EMPLOYEE
+  const isEmployee = user.role === "EMPLOYEE";
 
   if (isEmployee) {
     return (

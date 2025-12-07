@@ -13,7 +13,8 @@ type UserShape = {
   name?: string;
   email?: string;
   companyId?: string;
-  roles?: string[];
+  role?: string;
+  photoUrl?: string | null;
 } | null;
 
 type SessionContextValue = {
@@ -73,9 +74,8 @@ async function fetchUserOnce(): Promise<UserShape | null> {
           name: typeof u.name === "string" ? u.name : undefined,
           email: typeof u.email === "string" ? u.email : undefined,
           companyId: typeof u.companyId === "string" ? u.companyId : undefined,
-          roles: Array.isArray(u.roles)
-            ? (u.roles.filter((r) => typeof r === "string") as string[])
-            : undefined,
+          role: typeof u.role === "string" ? u.role : undefined,
+          photoUrl: typeof u.photoUrl === "string" ? u.photoUrl : u.photoUrl === null ? null : undefined,
         };
       } else {
         globalCachedUser = null;
