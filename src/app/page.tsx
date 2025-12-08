@@ -556,7 +556,7 @@ export default function Home() {
                 <div style={{ width: 32, height: 32 }}>
                   <IconLogo />
                 </div>
-                <span className="text-2xl font-bold">ToLivre</span>
+                <span className="text-2xl font-bold">TôLivre</span>
               </div>
               <div className="flex items-center gap-4">
                 <Link href="/login">
@@ -1162,15 +1162,21 @@ export default function Home() {
                 },
                 {
                   status: "Planejado",
-                  title: "IA para Predição",
-                  desc: "Inteligência artificial para otimizar horários",
+                  title: "Sistema de Locação",
+                  desc: "Gestão completa para empresas de locação e aluguel",
                   date: "Q4 2025",
                 },
                 {
                   status: "Planejado",
+                  title: "IA para Predição",
+                  desc: "Inteligência artificial para otimizar horários e estoque",
+                  date: "Q1 2026",
+                },
+                {
+                  status: "Planejado",
                   title: "Marketplace",
-                  desc: "Encontre profissionais na sua região",
-                  date: "2026",
+                  desc: "Encontre profissionais e produtos na sua região",
+                  date: "Q2 2026",
                 },
               ].map((item, idx) => (
                 <div
@@ -1362,7 +1368,7 @@ export default function Home() {
         </section>
 
         {/* Team Section */}
-        <section ref={teamRef} className="py-32 px-6 relative overflow-hidden">
+        {/* <section ref={teamRef} className="py-32 px-6 relative overflow-hidden">
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
@@ -1422,7 +1428,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Pricing Section */}
         <section ref={pricingRef} className="relative py-20 px-4 bg-muted/30">
