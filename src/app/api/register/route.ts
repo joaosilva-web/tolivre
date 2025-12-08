@@ -33,7 +33,18 @@ export async function POST(req: Request) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await prisma.user.create({ data: { name, email, password: hashedPassword } });
+  // Definir trial de 14 dias
+  const trialEndsAt = new Date();
+  trialEndsAt.setDate(trialEndsAt.getDate() + 14);
+
+  await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      trialEndsAt,
+    },
+  });
 
   return api.created({ message: "Usuário criado com sucesso" });
 }

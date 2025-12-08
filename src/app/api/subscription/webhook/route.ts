@@ -1,0 +1,144 @@
+import { NextRequest } from "next/server";
+import * as api from "@/app/libs/apiResponse";
+import { MercadoPagoConfig, Payment } from "mercadopago";
+import prisma from "@/lib/prisma";
+
+const mercadopagoClient = new MercadoPagoConfig({
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || "",
+});
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    console.log("[Mercado Pago Webhook] Notificação recebida:", body);
+
+    // Mercado Pago envia notificações de diferentes tipos
+    const { type, data } = body;
+
+    // Processar apenas notificações de pagamento
+    if (type !== "payment") {
+      console.log("[Mercado Pago Webhook] Tipo ignorado:", type);
+      return api.ok({ message: "Notificação ignorada" });
+    }
+
+    // Buscar detalhes do pagamento
+    const paymentId = data.id;
+    const paymentClient = new Payment(mercadopagoClient);
+    const payment = await paymentClient.get({ id: paymentId });
+
+    console.log("[Mercado Pago Webhook] Pagamento:", {
+      id: payment.id,
+      status: payment.status,
+      metadata: payment.metadata,
+    });
+
+    // Extrair metadata
+    const userId = payment.metadata?.user_id as string;
+    const companyId = payment.metadata?.company_id as string;
+    const planId = payment.metadata?.plan_id as string;
+
+    if (!userId || !companyId || !planId) {
+      console.error(
+        "[Mercado Pago Webhook] Metadata incompleta:",
+        payment.metadata
+      );
+      return api.badRequest("Metadata incompleta");
+    }
+
+    // Se o pagamento foi aprovado, ativar assinatura
+    if (payment.status === "approved") {
+      console.log(
+        `[Mercado Pago Webhook] Pagamento aprovado para company ${companyId}`
+      );
+
+      // Mapear planId para ContractType
+      const contractTypeMap: Record<string, string> = {
+        professional: "PRO",
+        enterprise: "ENTERPRISE",
+      };
+
+      const contractType = contractTypeMap[planId] || "PRO";
+
+      // Atualizar company com novo contrato
+      await prisma.company.update({
+        where: { id: companyId },
+        data: {
+          contrato: contractType as any,
+        },
+      });
+
+      // Criar ou atualizar assinatura
+      await prisma.subscription.upsert({
+        where: { companyId },
+        create: {
+          companyId,
+          planType: contractType as any,
+          status: "ACTIVE",
+          startDate: new Date(),
+        },
+        update: {
+          planType: contractType as any,
+          status: "ACTIVE",
+          startDate: new Date(),
+        },
+      });
+
+      // Remover trial do usuário (setar como null = converteu)
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          trialEndsAt: null,
+        },
+      });
+
+      // Atualizar registro de pagamento
+      await prisma.payment.updateMany({
+        where: {
+          companyId,
+          status: "PENDING",
+          metadata: {
+            path: ["preference_id"],
+            equals: payment.additional_info?.items?.[0]?.id,
+          },
+        },
+        data: {
+          status: "PAID",
+          paidAt: new Date(),
+          metadata: {
+            payment_id: payment.id,
+            payment_type: payment.payment_type_id,
+          },
+        },
+      });
+
+      console.log(
+        `[Mercado Pago Webhook] Assinatura ativada: ${contractType} para company ${companyId}`
+      );
+    } else if (payment.status === "rejected") {
+      console.log(
+        `[Mercado Pago Webhook] Pagamento rejeitado para company ${companyId}`
+      );
+
+      // Atualizar registro de pagamento como falhado
+      await prisma.payment.updateMany({
+        where: {
+          companyId,
+          status: "PENDING",
+        },
+        data: {
+          status: "FAILED",
+          metadata: {
+            payment_id: payment.id,
+            status_detail: payment.status_detail,
+          },
+        },
+      });
+    }
+
+    return api.ok({ message: "Webhook processado com sucesso" });
+  } catch (error) {
+    console.error("[Mercado Pago Webhook] Erro ao processar:", error);
+    return api.serverError("Erro ao processar webhook");
+  }
+}

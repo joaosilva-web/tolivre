@@ -6,7 +6,7 @@ export async function GET() {
   const user = await getUserFromCookie();
   if (!user) return api.unauthorized();
 
-  // Buscar informações completas do usuário incluindo photoUrl
+  // Buscar informações completas do usuário incluindo photoUrl e trialEndsAt
   const fullUser = await prisma.user.findUnique({
     where: { id: user.id },
     select: {
@@ -16,6 +16,7 @@ export async function GET() {
       role: true,
       companyId: true,
       photoUrl: true,
+      trialEndsAt: true,
     },
   });
 

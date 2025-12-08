@@ -2,6 +2,9 @@ import { getUserFromCookie } from "@/app/libs/auth";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
+import { canAccessSystem } from "@/lib/trial";
+import prisma from "@/lib/prisma";
+import { TrialBanner } from "@/components/trial-banner";
 
 export default async function DashboardLayout({
   children,
@@ -10,6 +13,31 @@ export default async function DashboardLayout({
 }) {
   const user = await getUserFromCookie();
   if (!user) redirect("/login");
+
+  // Verificar status do trial e assinatura
+  const userWithTrial = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      trialEndsAt: true,
+      company: {
+        select: {
+          subscription: {
+            select: {
+              status: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const hasActiveSubscription =
+    userWithTrial?.company?.subscription?.status === "ACTIVE";
+
+  // Se o trial expirou e não tem assinatura ativa, redirecionar para escolher plano
+  if (!canAccessSystem(userWithTrial?.trialEndsAt || null, hasActiveSubscription)) {
+    redirect("/escolher-plano");
+  }
 
   return (
     <SidebarProvider
@@ -21,7 +49,15 @@ export default async function DashboardLayout({
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <div className="p-4">
+          <TrialBanner
+            trialEndsAt={userWithTrial?.trialEndsAt || null}
+            hasActiveSubscription={hasActiveSubscription}
+          />
+        </div>
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }

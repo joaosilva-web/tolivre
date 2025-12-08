@@ -198,6 +198,7 @@ exports.Prisma.UserScalarFieldEnum = {
   photoUrl: 'photoUrl',
   bio: 'bio',
   commissionRate: 'commissionRate',
+  trialEndsAt: 'trialEndsAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
