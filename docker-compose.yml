@@ -10,40 +10,44 @@ services:
     image: postgres:15-alpine
     container_name: tolivre-postgres
     restart: unless-stopped
-    
+
     # Limites de recursos (12.5% da RAM = 512 MB)
     deploy:
       resources:
         limits:
-          cpus: '0.75'
+          cpus: "0.75"
           memory: 512M
         reservations:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 256M
-    
+
     ports:
       - "5432:5432"
-    
+
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-tolivre_prod}
       POSTGRES_USER: ${POSTGRES_USER:-tolivre}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       POSTGRES_INITDB_ARGS: "-E UTF8"
-    
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
-    
+
     networks:
       - tolivre-network
-    
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tolivre} -d ${POSTGRES_DB:-tolivre_prod}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-tolivre} -d ${POSTGRES_DB:-tolivre_prod}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    
+
     command: >
       postgres
       -c shared_buffers=128MB

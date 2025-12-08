@@ -75,7 +75,12 @@ async function fetchUserOnce(): Promise<UserShape | null> {
           email: typeof u.email === "string" ? u.email : undefined,
           companyId: typeof u.companyId === "string" ? u.companyId : undefined,
           role: typeof u.role === "string" ? u.role : undefined,
-          photoUrl: typeof u.photoUrl === "string" ? u.photoUrl : u.photoUrl === null ? null : undefined,
+          photoUrl:
+            typeof u.photoUrl === "string"
+              ? u.photoUrl
+              : u.photoUrl === null
+              ? null
+              : undefined,
         };
       } else {
         globalCachedUser = null;

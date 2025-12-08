@@ -228,9 +228,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span>
                   <IconLogo />
                 </span>
-                <span className="text-base font-semibold bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
-                  TôLivre
-                </span>
+                <span className="text-base font-bold">TôLivre</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

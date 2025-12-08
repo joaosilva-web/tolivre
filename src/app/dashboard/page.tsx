@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import useSession from "@/hooks/useSession";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -17,10 +15,40 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, Calendar, Users } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Loader2, Calendar, Users, Clock, TrendingUp } from "lucide-react";
 import { gsap } from "gsap";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-import data from "./data.json";
+interface Appointment {
+  id: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  client: { name: string; email: string };
+  professional: { name: string };
+  service: { name: string; price: number };
+}
+
+interface RevenueData {
+  date: string;
+  revenue: number;
+  appointments: number;
+}
+
+interface PopularService {
+  name: string;
+  count: number;
+  revenue: number;
+}
 
 export default function Page() {
   const { user, loading, refresh } = useSession();
@@ -37,15 +65,60 @@ export default function Page() {
   const [cnpjError, setCnpjError] = useState("");
   const [exportingAppointments, setExportingAppointments] = useState(false);
   const [exportingClients, setExportingClients] = useState(false);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
+  const [popularServices, setPopularServices] = useState<PopularService[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Refs for animations
   const cardsRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<HTMLDivElement>(null);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const revenueRef = useRef<HTMLDivElement>(null);
+  const appointmentsRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  // Fetch dashboard data
+  useEffect(() => {
+    if (!user?.companyId || loading) return;
+
+    const fetchDashboardData = async () => {
+      setLoadingData(true);
+      try {
+        // Fetch upcoming appointments
+        const now = new Date().toISOString();
+        const appointmentsRes = await fetch(
+          `/api/appointments?companyId=${user.companyId}&status=CONFIRMED&fromDatetime=${now}&limit=5`
+        );
+        if (appointmentsRes.ok) {
+          const appointmentsData = await appointmentsRes.json();
+          setUpcomingAppointments(appointmentsData.data || appointmentsData || []);
+        }
+
+        // Fetch revenue data (last 30 days)
+        const revenueRes = await fetch("/api/stats/revenue");
+        if (revenueRes.ok) {
+          const revenueData = await revenueRes.json();
+          setRevenueData(revenueData.data || []);
+        }
+
+        // Fetch popular services
+        const servicesRes = await fetch("/api/stats/popular-services");
+        if (servicesRes.ok) {
+          const servicesData = await servicesRes.json();
+          setPopularServices(servicesData.data || []);
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados do dashboard:", err);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user?.companyId, loading]);
 
   // Animations for dashboard elements
   useEffect(() => {
-    if (!user?.companyId || loading) return;
+    if (!user?.companyId || loading || loadingData) return;
 
     const ctx = gsap.context(() => {
       // Animate cards entrance
@@ -56,8 +129,8 @@ export default function Page() {
         ease: "power2.out",
       });
 
-      // Animate chart entrance
-      gsap.from(chartRef.current, {
+      // Animate revenue section
+      gsap.from(revenueRef.current, {
         opacity: 0,
         y: 40,
         duration: 0.7,
@@ -65,8 +138,17 @@ export default function Page() {
         ease: "power2.out",
       });
 
-      // Animate table entrance
-      gsap.from(tableRef.current, {
+      // Animate appointments list
+      gsap.from(appointmentsRef.current, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: 0.3,
+        ease: "power2.out",
+      });
+
+      // Animate services table
+      gsap.from(servicesRef.current, {
         opacity: 0,
         y: 50,
         duration: 0.8,
@@ -76,7 +158,7 @@ export default function Page() {
     });
 
     return () => ctx.revert();
-  }, [user?.companyId, loading]);
+  }, [user?.companyId, loading, loadingData]);
 
   if (loading) {
     return (
@@ -265,6 +347,9 @@ export default function Page() {
     }
   };
 
+  const totalRevenue = revenueData.reduce((acc, day) => acc + day.revenue, 0);
+  const totalAppointmentsInPeriod = revenueData.reduce((acc, day) => acc + day.appointments, 0);
+
   return (
     <SidebarInset>
       <SiteHeader />
@@ -313,11 +398,146 @@ export default function Page() {
               </Card>
             </div>
 
-            <div ref={chartRef} className="px-4 lg:px-6">
-              <ChartAreaInteractive />
+            {/* Revenue Summary */}
+            {loadingData ? (
+              <div className="px-4 lg:px-6">
+                <Card>
+                  <CardContent className="flex items-center justify-center h-48">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <div ref={revenueRef} className="px-4 lg:px-6">
+                <Card className="bg-gradient-to-br from-primary/10 via-blue-500/5 to-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-primary" />
+                      Receita dos Últimos 30 Dias
+                    </CardTitle>
+                    <CardDescription>
+                      Acompanhe o desempenho financeiro do seu negócio
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-1">Receita Total</p>
+                        <p className="text-3xl font-bold text-primary">
+                          {new Intl.NumberFormat("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          }).format(totalRevenue)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-1">Agendamentos Realizados</p>
+                        <p className="text-3xl font-bold">{totalAppointmentsInPeriod}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Upcoming Appointments */}
+            <div ref={appointmentsRef} className="px-4 lg:px-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-primary" />
+                    Próximos Agendamentos
+                  </CardTitle>
+                  <CardDescription>
+                    Agendamentos confirmados para os próximos dias
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingData ? (
+                    <div className="flex items-center justify-center h-32">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  ) : upcomingAppointments.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">
+                      Nenhum agendamento confirmado
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {upcomingAppointments.map((appointment) => (
+                        <div
+                          key={appointment.id}
+                          className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                        >
+                          <div className="flex-1">
+                            <p className="font-semibold">{appointment.client.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.service.name} • {appointment.professional.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {format(new Date(appointment.startTime), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                            </p>
+                          </div>
+                          <div className="mt-2 sm:mt-0 text-right">
+                            <p className="font-semibold text-primary">
+                              {new Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              }).format(appointment.service.price)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
-            <div ref={tableRef}>
-              <DataTable data={data} />
+
+            {/* Popular Services */}
+            <div ref={servicesRef} className="px-4 lg:px-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Serviços Mais Populares</CardTitle>
+                  <CardDescription>
+                    Os serviços mais agendados este mês
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingData ? (
+                    <div className="flex items-center justify-center h-32">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  ) : popularServices.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">
+                      Nenhum serviço agendado ainda
+                    </p>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Serviço</TableHead>
+                          <TableHead className="text-center">Agendamentos</TableHead>
+                          <TableHead className="text-right">Receita</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {popularServices.map((service, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="font-medium">{service.name}</TableCell>
+                            <TableCell className="text-center">{service.count}</TableCell>
+                            <TableCell className="text-right font-semibold text-primary">
+                              {new Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              }).format(service.revenue)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

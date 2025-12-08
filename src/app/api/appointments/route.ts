@@ -307,6 +307,8 @@ export async function GET(req: NextRequest) {
     const from = searchParams.get("from");
     const to = searchParams.get("to");
     const fromDatetime = searchParams.get("fromDatetime");
+    const status = searchParams.get("status");
+    const limitParam = searchParams.get("limit");
     const pageParam = searchParams.get("page");
     const pageSizeParam = searchParams.get("pageSize");
 
@@ -329,12 +331,14 @@ export async function GET(req: NextRequest) {
     }
     if (professionalId) where = { ...where, professionalId };
     if (clientId) where = { ...where, clientId };
+    if (status) where = { ...where, status: status as any };
 
     // support optional pagination
     const page = pageParam ? Math.max(1, Number(pageParam) || 1) : null;
     const pageSize = pageSizeParam
       ? Math.max(1, Number(pageSizeParam) || 10)
       : 10;
+    const limit = limitParam ? Math.max(1, Number(limitParam)) : undefined;
 
     if (page) {
       const total = await prisma.appointment.count({ where });
@@ -352,6 +356,7 @@ export async function GET(req: NextRequest) {
       where,
       include: { service: true, professional: true, client: true },
       orderBy: { startTime: "asc" },
+      ...(limit && { take: limit }),
     });
 
     return api.ok(appointments);

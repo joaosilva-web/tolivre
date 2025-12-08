@@ -556,9 +556,7 @@ export default function Home() {
                 <div style={{ width: 32, height: 32 }}>
                   <IconLogo />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                  ToLivre
-                </span>
+                <span className="text-2xl font-bold">ToLivre</span>
               </div>
               <div className="flex items-center gap-4">
                 <Link href="/login">
