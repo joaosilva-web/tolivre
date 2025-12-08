@@ -423,10 +423,10 @@ exports.Interest = exports.$Enums.Interest = {
 };
 
 exports.ContractType = exports.$Enums.ContractType = {
-  FREE: 'FREE',
-  PRO: 'PRO',
-  PREMIUM: 'PREMIUM',
-  ENTERPRISE: 'ENTERPRISE'
+  TRIAL: 'TRIAL',
+  BASIC: 'BASIC',
+  PROFESSIONAL: 'PROFESSIONAL',
+  BUSINESS: 'BUSINESS'
 };
 
 exports.ExceptionType = exports.$Enums.ExceptionType = {
@@ -456,9 +456,10 @@ exports.PaymentStatusType = exports.$Enums.PaymentStatusType = {
 };
 
 exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
-  FREE: 'FREE',
+  TRIAL: 'TRIAL',
+  BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
-  ENTERPRISE: 'ENTERPRISE'
+  BUSINESS: 'BUSINESS'
 };
 
 exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {

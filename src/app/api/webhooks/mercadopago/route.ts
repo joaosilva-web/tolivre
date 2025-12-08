@@ -98,16 +98,18 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Atualizar contrato na company (para compatibilidade)
+      // Atualizar contrato na company (agora usa os mesmos nomes do enum)
       await prisma.company.update({
         where: { id: companyId },
         data: {
           contrato:
-            planName === "PROFESSIONAL"
-              ? "PRO"
-              : planName === "ENTERPRISE"
-              ? "ENTERPRISE"
-              : "FREE",
+            planName === "BASIC"
+              ? "BASIC"
+              : planName === "PROFESSIONAL"
+              ? "PROFESSIONAL"
+              : planName === "BUSINESS"
+              ? "BUSINESS"
+              : "TRIAL",
         },
       });
 

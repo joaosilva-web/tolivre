@@ -1,25 +1,40 @@
 import { Subscription } from "@/generated/prisma";
 
 export const PLANS = {
-  FREE: {
-    name: "FREE",
-    displayName: "Gratuito",
+  TRIAL: {
+    name: "TRIAL",
+    displayName: "Trial",
     price: 0,
     features: {
-      appointments: 50,
-      professionals: 1,
+      appointments: "unlimited",
+      professionals: "unlimited",
       services: "unlimited",
       clients: "unlimited",
       whatsapp: true,
       support: "email",
     },
-    description: "Ideal para começar",
+    description: "14 dias de teste grátis",
+    popular: false,
+  },
+  BASIC: {
+    name: "BASIC",
+    displayName: "Básico",
+    price: 69.9,
+    features: {
+      appointments: "unlimited",
+      professionals: 1,
+      services: "unlimited",
+      clients: "unlimited",
+      whatsapp: false,
+      support: "email",
+    },
+    description: "Ideal para profissionais autônomos",
     popular: false,
   },
   PROFESSIONAL: {
     name: "PROFESSIONAL",
     displayName: "Profissional",
-    price: 49,
+    price: 99.9,
     features: {
       appointments: "unlimited",
       professionals: 3,
@@ -31,10 +46,10 @@ export const PLANS = {
     description: "Para pequenas equipes",
     popular: true,
   },
-  ENTERPRISE: {
-    name: "ENTERPRISE",
-    displayName: "Enterprise",
-    price: 149,
+  BUSINESS: {
+    name: "BUSINESS",
+    displayName: "Business",
+    price: 169.9,
     features: {
       appointments: "unlimited",
       professionals: "unlimited",
@@ -59,7 +74,7 @@ export function checkAppointmentLimit(
   currentCount: number
 ): { allowed: boolean; message?: string } {
   if (!subscription || subscription.status !== "ACTIVE") {
-    const limit = PLANS.FREE.features.appointments;
+    const limit = PLANS.TRIAL.features.appointments;
     if (currentCount >= limit) {
       return {
         allowed: false,
@@ -84,7 +99,7 @@ export function checkProfessionalLimit(
   currentCount: number
 ): { allowed: boolean; message?: string } {
   if (!subscription || subscription.status !== "ACTIVE") {
-    const limit = PLANS.FREE.features.professionals;
+    const limit = PLANS.TRIAL.features.professionals;
     if (currentCount >= limit) {
       return {
         allowed: false,

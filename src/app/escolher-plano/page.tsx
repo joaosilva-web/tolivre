@@ -18,31 +18,45 @@ interface PlanOption {
 
 const plans: PlanOption[] = [
   {
-    id: "professional",
-    name: "Professional",
-    price: 49,
+    id: "basic",
+    name: "Básico",
+    price: 69.9,
     interval: "mês",
     features: [
       "Agendamentos ilimitados",
+      "1 profissional",
+      "Gestão de clientes",
+      "Gestão de serviços",
+      "Calendário semanal",
+      "Suporte por email",
+    ],
+  },
+  {
+    id: "professional",
+    name: "Profissional",
+    price: 99.9,
+    interval: "mês",
+    features: [
+      "Tudo do Básico +",
       "Até 3 profissionais",
       "Integração WhatsApp",
       "Lembretes automáticos",
-      "Relatórios avançados",
-      "Suporte prioritário",
+      "Relatórios e estatísticas",
+      "Página pública de agendamento",
     ],
     recommended: true,
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
-    price: 149,
+    id: "business",
+    name: "Business",
+    price: 169.9,
     interval: "mês",
     features: [
-      "Tudo do Professional +",
+      "Tudo do Profissional +",
       "Profissionais ilimitados",
-      "API completa",
-      "White label",
-      "Treinamento dedicado",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Notificações em tempo real",
       "Suporte 24/7",
     ],
   },
@@ -146,7 +160,9 @@ export default function EscolherPlanoPage() {
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-5xl font-bold">R$ {plan.price}</span>
-                  <span className="text-muted-foreground">/{plan.interval}</span>
+                  <span className="text-muted-foreground">
+                    /{plan.interval}
+                  </span>
                 </div>
               </div>
 

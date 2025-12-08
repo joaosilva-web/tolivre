@@ -89,7 +89,7 @@ export default function SubscriptionPage() {
     );
   }
 
-  const currentPlan = (data?.subscription?.plan || "FREE") as PlanName;
+  const currentPlan = (data?.subscription?.plan || "TRIAL") as PlanName;
   const planInfo = PLANS[currentPlan];
   const isActive = data?.subscription?.status === "ACTIVE";
 
@@ -131,13 +131,13 @@ export default function SubscriptionPage() {
                 </Badge>
               </CardTitle>
               <CardDescription>
-                {currentPlan === "FREE"
-                  ? "Você está no plano gratuito"
+                {currentPlan === "TRIAL"
+                  ? "Você está no período de trial"
                   : `R$ ${planInfo.price}/mês`}
               </CardDescription>
             </div>
             <Button onClick={() => router.push("/dashboard/assinatura/planos")}>
-              {currentPlan === "FREE" ? "Fazer Upgrade" : "Alterar Plano"}
+              {currentPlan === "TRIAL" ? "Escolher Plano" : "Alterar Plano"}
             </Button>
           </div>
         </CardHeader>

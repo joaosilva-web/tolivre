@@ -1445,28 +1445,28 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {/* Free Plan */}
+              {/* Basic Plan */}
               <div className="pricing-card group">
                 <div className="relative bg-card border rounded-3xl p-8 h-full flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-2">Starter</h3>
+                    <h3 className="text-2xl font-bold mb-2">Básico</h3>
                     <p className="text-muted-foreground">
-                      Perfeito para começar
+                      Ideal para autônomos
                     </p>
                   </div>
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold">R$ 0</span>
+                      <span className="text-5xl font-bold">R$ 69,90</span>
                       <span className="text-muted-foreground">/mês</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Grátis para sempre
+                      14 dias de teste grátis
                     </p>
                   </div>
                   <ul className="space-y-4 mb-8 flex-grow">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                      <span>Até 50 agendamentos/mês</span>
+                      <span>Agendamentos ilimitados</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -1474,7 +1474,11 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                      <span>Gestão básica de clientes</span>
+                      <span>Gestão de clientes</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                      <span>Calendário semanal</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -1483,13 +1487,13 @@ export default function Home() {
                   </ul>
                   <Link href="/login?tab=register" className="w-full">
                     <Button variant="outline" className="w-full" size="lg">
-                      Começar Grátis
+                      Começar Teste Grátis
                     </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Pro Plan - Popular */}
+              {/* Professional Plan - Popular */}
               <div className="pricing-card group">
                 <div className="relative bg-card border-2 border-primary rounded-3xl p-8 h-full flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-primary/20">
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -1498,28 +1502,26 @@ export default function Home() {
                     </span>
                   </div>
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-2">Professional</h3>
+                    <h3 className="text-2xl font-bold mb-2">Profissional</h3>
                     <p className="text-muted-foreground">
-                      Para negócios em crescimento
+                      Para pequenas equipes
                     </p>
                   </div>
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
                       <span className="text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                        R$ 49
+                        R$ 99,90
                       </span>
                       <span className="text-muted-foreground">/mês</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Cobrança mensal
+                      14 dias de teste grátis
                     </p>
                   </div>
                   <ul className="space-y-4 mb-8 flex-grow">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Agendamentos ilimitados
-                      </span>
+                      <span className="font-medium">Tudo do Básico +</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -1535,11 +1537,11 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span>Relatórios avançados</span>
+                      <span>Relatórios e estatísticas</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span>Suporte prioritário</span>
+                      <span>Página pública de agendamento</span>
                     </li>
                   </ul>
                   <Link href="/login?tab=register" className="w-full">
@@ -1547,7 +1549,7 @@ export default function Home() {
                       className="w-full bg-gradient-to-r from-primary to-blue-600"
                       size="lg"
                     >
-                      Começar Agora
+                      Começar Teste Grátis
                     </Button>
                   </Link>
                 </div>
@@ -1557,25 +1559,25 @@ export default function Home() {
               <div className="pricing-card group">
                 <div className="relative bg-card border rounded-3xl p-8 h-full flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
+                    <h3 className="text-2xl font-bold mb-2">Business</h3>
                     <p className="text-muted-foreground">
-                      Para grandes equipes
+                      Para grandes operações
                     </p>
                   </div>
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold">R$ 149</span>
+                      <span className="text-5xl font-bold">R$ 169,90</span>
                       <span className="text-muted-foreground">/mês</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Cobrança mensal
+                      14 dias de teste grátis
                     </p>
                   </div>
                   <ul className="space-y-4 mb-8 flex-grow">
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
                       <span className="font-medium">
-                        Tudo do Professional +
+                        Tudo do Profissional +
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
@@ -1586,15 +1588,15 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
-                      <span>API completa</span>
+                      <span>Sistema de comissões</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
-                      <span>White label</span>
+                      <span>Fotos dos profissionais</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
-                      <span>Treinamento dedicado</span>
+                      <span>Notificações em tempo real</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
@@ -1603,7 +1605,7 @@ export default function Home() {
                   </ul>
                   <Link href="/login?tab=register" className="w-full">
                     <Button variant="outline" className="w-full" size="lg">
-                      Falar com Vendas
+                      Começar Teste Grátis
                     </Button>
                   </Link>
                 </div>

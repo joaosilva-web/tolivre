@@ -7,59 +7,63 @@ import * as api from "@/app/libs/apiResponse";
 
 // Definição dos planos
 export const PLANS = {
-  FREE: {
-    id: "FREE",
-    name: "Starter",
-    price: 0,
+  BASIC: {
+    id: "BASIC",
+    name: "Básico",
+    price: 69.9,
     features: [
-      "Até 50 agendamentos/mês",
+      "Agendamentos ilimitados",
       "1 profissional",
-      "Gestão básica de clientes",
+      "Gestão de clientes",
+      "Gestão de serviços",
+      "Calendário semanal",
       "Suporte por email",
     ],
     limits: {
-      appointments: 50,
+      appointments: -1,
       professionals: 1,
     },
   },
   PROFESSIONAL: {
     id: "PROFESSIONAL",
-    name: "Professional",
-    price: 49,
+    name: "Profissional",
+    price: 99.9,
     features: [
-      "Agendamentos ilimitados",
+      "Tudo do Básico +",
       "Até 3 profissionais",
       "Integração WhatsApp",
       "Lembretes automáticos",
-      "Relatórios avançados",
+      "Relatórios e estatísticas",
+      "Página de agendamento pública",
       "Suporte prioritário",
     ],
     limits: {
-      appointments: -1, // ilimitado
+      appointments: -1,
       professionals: 3,
     },
   },
-  ENTERPRISE: {
-    id: "ENTERPRISE",
-    name: "Enterprise",
-    price: 149,
+  BUSINESS: {
+    id: "BUSINESS",
+    name: "Business",
+    price: 169.9,
     features: [
-      "Tudo do Professional +",
+      "Tudo do Profissional +",
       "Profissionais ilimitados",
-      "API completa",
-      "White label",
-      "Treinamento dedicado",
-      "Suporte 24/7",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Notificações em tempo real",
+      "Suporte prioritário 24/7",
+      "Migração assistida",
     ],
     limits: {
-      appointments: -1, // ilimitado
-      professionals: -1, // ilimitado
+      appointments: -1,
+      professionals: -1,
     },
   },
 };
 
 const checkoutSchema = z.object({
-  plan: z.enum(["PROFESSIONAL", "ENTERPRISE"]),
+  plan: z.enum(["BASIC", "PROFESSIONAL", "BUSINESS"]),
 });
 
 // POST - Criar preferência de pagamento
@@ -88,7 +92,7 @@ export async function POST(req: NextRequest) {
     if (
       existingSubscription &&
       existingSubscription.status === "ACTIVE" &&
-      existingSubscription.plan !== "FREE"
+      existingSubscription.plan !== "TRIAL"
     ) {
       return api.badRequest("Você já possui uma assinatura ativa");
     }

@@ -54,11 +54,12 @@ export async function POST(req: NextRequest) {
 
       // Mapear planId para ContractType
       const contractTypeMap: Record<string, string> = {
-        professional: "PRO",
-        enterprise: "ENTERPRISE",
+        basic: "BASIC",
+        professional: "PROFESSIONAL",
+        business: "BUSINESS",
       };
 
-      const contractType = contractTypeMap[planId] || "PRO";
+      const contractType = contractTypeMap[planId] || "TRIAL";
 
       // Atualizar company com novo contrato
       await prisma.company.update({

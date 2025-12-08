@@ -49,7 +49,7 @@ model Company {
   endereco           String?
   telefone           String?
   email              String?
-  contrato           ContractType @default(FREE)
+  contrato           ContractType @default(TRIAL)
   trialEndsAt        DateTime?
   subscriptionStatus String?      @default("trial")
   createdAt          DateTime     @default(now())
@@ -66,10 +66,10 @@ model Company {
 }
 
 enum ContractType {
-  FREE
-  PRO
-  PREMIUM
-  ENTERPRISE
+  TRIAL
+  BASIC
+  PROFESSIONAL
+  BUSINESS
 }
 
 model WorkingHours {
@@ -299,7 +299,7 @@ model Subscription {
   id                  String             @id @default(cuid())
   companyId           String             @unique
   company             Company            @relation(fields: [companyId], references: [id])
-  plan                SubscriptionPlan   @default(FREE)
+  plan                SubscriptionPlan   @default(TRIAL)
   status              SubscriptionStatus @default(ACTIVE)
   mpSubscriptionId    String?            @unique // ID da assinatura no Mercado Pago
   mpPreapprovalPlanId String? // ID do plano de assinatura no MP
@@ -315,9 +315,10 @@ model Subscription {
 }
 
 enum SubscriptionPlan {
-  FREE // 50 agendamentos/mês, 1 profissional
-  PROFESSIONAL // Ilimitado, 3 profissionais, WhatsApp
-  ENTERPRISE // Ilimitado, profissionais ilimitados, API
+  TRIAL // Trial de 14 dias com acesso completo
+  BASIC // R$ 69.90/mês, 1 profissional, sem WhatsApp
+  PROFESSIONAL // R$ 99.90/mês, 3 profissionais, WhatsApp, relatórios
+  BUSINESS // R$ 169.90/mês, ilimitado, comissões, suporte 24/7
 }
 
 enum SubscriptionStatus {

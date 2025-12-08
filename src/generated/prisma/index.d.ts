@@ -133,10 +133,10 @@ export type Interest = (typeof Interest)[keyof typeof Interest]
 
 
 export const ContractType: {
-  FREE: 'FREE',
-  PRO: 'PRO',
-  PREMIUM: 'PREMIUM',
-  ENTERPRISE: 'ENTERPRISE'
+  TRIAL: 'TRIAL',
+  BASIC: 'BASIC',
+  PROFESSIONAL: 'PROFESSIONAL',
+  BUSINESS: 'BUSINESS'
 };
 
 export type ContractType = (typeof ContractType)[keyof typeof ContractType]
@@ -181,9 +181,10 @@ export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof Appointm
 
 
 export const SubscriptionPlan: {
-  FREE: 'FREE',
+  TRIAL: 'TRIAL',
+  BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
-  ENTERPRISE: 'ENTERPRISE'
+  BUSINESS: 'BUSINESS'
 };
 
 export type SubscriptionPlan = (typeof SubscriptionPlan)[keyof typeof SubscriptionPlan]

@@ -48,81 +48,94 @@ export default function PrecosPage() {
 
   const plans = [
     {
-      id: "starter",
-      name: "Starter",
-      tagline: "Perfeito para começar",
+      id: "basic",
+      name: "Básico",
+      tagline: "Ideal para profissionais autônomos",
       icon: Rocket,
-      monthlyPrice: 0,
-      yearlyPrice: 0,
-      discount: 0,
+      monthlyPrice: 69.9,
+      yearlyPrice: 670.32,
+      discount: 20,
       popular: false,
       features: [
-        { text: "Até 50 agendamentos/mês", included: true },
+        { text: "Agendamentos ilimitados", included: true },
         { text: "1 profissional", included: true },
-        { text: "Gestão básica de clientes", included: true },
+        { text: "Gestão de clientes", included: true },
+        { text: "Gestão de serviços", included: true },
+        { text: "Calendário semanal", included: true },
+        { text: "Horários de funcionamento", included: true },
+        { text: "Exportação de dados (CSV)", included: true },
         { text: "Suporte por email", included: true },
         { text: "Integração WhatsApp", included: false },
         { text: "Lembretes automáticos", included: false },
-        { text: "Relatórios avançados", included: false },
-        { text: "API completa", included: false },
+        { text: "Relatórios e estatísticas", included: false },
+        { text: "Página de agendamento pública", included: false },
       ],
-      cta: "Começar Grátis",
+      cta: "Começar Teste Grátis",
       ctaVariant: "outline" as const,
-      gradient: "from-gray-500 to-slate-600",
+      gradient: "from-blue-500 to-cyan-600",
     },
     {
       id: "professional",
-      name: "Professional",
-      tagline: "Para negócios em crescimento",
+      name: "Profissional",
+      tagline: "Para pequenos negócios",
       icon: Star,
-      monthlyPrice: 49,
-      yearlyPrice: 470,
+      monthlyPrice: 99.9,
+      yearlyPrice: 958.32,
       discount: 20,
       popular: true,
       features: [
-        { text: "Agendamentos ilimitados", included: true },
+        { text: "Tudo do plano Básico +", included: true },
         { text: "Até 3 profissionais", included: true },
-        { text: "Gestão completa de clientes", included: true },
         { text: "Integração WhatsApp", included: true },
-        { text: "Lembretes automáticos", included: true },
-        { text: "Relatórios avançados", included: true },
+        { text: "Lembretes automáticos via WhatsApp", included: true },
+        { text: "Relatórios e estatísticas", included: true },
+        { text: "Página de agendamento pública", included: true },
+        { text: "Personalização de cores", included: true },
+        { text: "Upload de logo", included: true },
+        { text: "Tags e categorias", included: true },
         { text: "Suporte prioritário", included: true },
-        { text: "Apps mobile", included: true },
-        { text: "API completa", included: false },
-        { text: "White label", included: false },
+        { text: "Profissionais ilimitados", included: false },
+        { text: "Sistema de comissões", included: false },
       ],
-      cta: "Começar Agora",
+      cta: "Começar Teste Grátis",
       ctaVariant: "default" as const,
       gradient: "from-primary to-blue-600",
     },
     {
-      id: "enterprise",
-      name: "Enterprise",
-      tagline: "Para grandes equipes",
+      id: "business",
+      name: "Business",
+      tagline: "Para empresas estabelecidas",
       icon: Crown,
-      monthlyPrice: 149,
-      yearlyPrice: 1430,
+      monthlyPrice: 169.9,
+      yearlyPrice: 1630.32,
       discount: 20,
       popular: false,
       features: [
-        { text: "Tudo do Professional +", included: true },
+        { text: "Tudo do plano Profissional +", included: true },
         { text: "Profissionais ilimitados", included: true },
-        { text: "API completa", included: true },
-        { text: "White label", included: true },
-        { text: "Integrações customizadas", included: true },
-        { text: "Treinamento dedicado", included: true },
-        { text: "Suporte 24/7", included: true },
-        { text: "Account manager", included: true },
-        { text: "SLA garantido", included: true },
+        { text: "Sistema de comissões", included: true },
+        { text: "Fotos dos profissionais", included: true },
+        { text: "Múltiplos serviços por agendamento", included: true },
+        { text: "Gestão de exceções de horário", included: true },
+        { text: "Notificações em tempo real", included: true },
+        { text: "Assinaturas e pagamentos", included: true },
+        { text: "Suporte prioritário por WhatsApp", included: true },
         { text: "Migração assistida", included: true },
+        { text: "Treinamento personalizado", included: true },
+        { text: "Backup automático diário", included: true },
       ],
-      cta: "Falar com Vendas",
+      cta: "Começar Teste Grátis",
       ctaVariant: "outline" as const,
       gradient: "from-purple-500 to-pink-600",
     },
   ];
 
   const faqs = [
+    {
+      question: "Como funciona o período de teste gratuito?",
+      answer:
+        "Todos os planos incluem 14 dias de teste grátis com acesso completo a todas as funcionalidades. Não é necessário cartão de crédito para começar. Após o período de teste, você escolhe o plano que melhor se encaixa no seu negócio.",
+    },
     {
       question: "Posso mudar de plano a qualquer momento?",
       answer:
@@ -131,22 +144,17 @@ export default function PrecosPage() {
     {
       question: "Como funciona a cobrança?",
       answer:
-        "A cobrança é feita mensalmente ou anualmente (com desconto) via cartão de crédito ou boleto bancário. Você recebe uma fatura alguns dias antes da data de renovação e pode gerenciar seu método de pagamento a qualquer momento no painel.",
-    },
-    {
-      question: "Preciso de cartão de crédito no plano gratuito?",
-      answer:
-        "Não! O plano Starter é totalmente gratuito e não requer cadastro de cartão de crédito. Você só precisará informar dados de pagamento se decidir fazer upgrade para um plano pago. Sem surpresas, sem taxas ocultas.",
+        "A cobrança é feita mensalmente ou anualmente (com desconto de 20%) via cartão de crédito ou Pix. Você recebe uma fatura alguns dias antes da data de renovação e pode gerenciar seu método de pagamento a qualquer momento no painel.",
     },
     {
       question: "Há desconto para pagamento anual?",
       answer:
-        "Sim! Oferecemos 20% de desconto para assinaturas anuais em todos os planos pagos. Por exemplo, o plano Professional sai de R$ 588/ano para apenas R$ 470/ano. É como ganhar mais de 2 meses grátis!",
+        "Sim! Oferecemos 20% de desconto para assinaturas anuais em todos os planos. Por exemplo, o plano Profissional sai de R$ 1.198,80/ano para apenas R$ 958,32/ano. É como ganhar mais de 2 meses grátis!",
     },
     {
-      question: "O que acontece se eu exceder os limites do meu plano?",
+      question: "Os agendamentos são ilimitados em todos os planos?",
       answer:
-        "No plano Starter, você receberá uma notificação ao atingir 80% do limite de agendamentos e poderá fazer upgrade antes de atingir o limite. Nos planos pagos, os agendamentos são ilimitados, então você nunca precisa se preocupar com isso.",
+        "Sim! Todos os nossos planos oferecem agendamentos ilimitados. Você nunca precisará se preocupar em atingir limites ou pagar taxas extras por volume de agendamentos. Seu negócio pode crescer sem restrições.",
     },
     {
       question: "Posso cancelar a qualquer momento?",
@@ -156,22 +164,22 @@ export default function PrecosPage() {
     {
       question: "Vocês oferecem garantia de devolução do dinheiro?",
       answer:
-        "Sim! Oferecemos garantia de 30 dias em todos os planos pagos. Se você não ficar completamente satisfeito com o ToLivre, reembolsamos 100% do valor pago, sem perguntas. Simples assim.",
+        "Sim! Oferecemos garantia de 30 dias em todos os planos. Se você não ficar completamente satisfeito com o TôLivre, reembolsamos 100% do valor pago, sem perguntas. Simples assim.",
     },
     {
       question: "O que está incluído no suporte?",
       answer:
-        "O plano Starter tem suporte por email com resposta em até 48h. Professional e Enterprise têm suporte prioritário por email, chat e WhatsApp. Enterprise também inclui suporte 24/7, account manager dedicado e linha direta com nossa equipe técnica.",
+        "O plano Básico tem suporte por email com resposta em até 48h. Profissional tem suporte prioritário por email. Business inclui suporte prioritário por email e WhatsApp, além de treinamento personalizado e migração assistida.",
     },
     {
       question: "Posso adicionar mais profissionais depois?",
       answer:
-        "Claro! No plano Professional, você pode ter até 3 profissionais. Se precisar de mais, basta fazer upgrade para o Enterprise que oferece profissionais ilimitados. A mudança é instantânea e o valor é ajustado proporcionalmente.",
+        "Claro! No plano Básico você tem 1 profissional, no Profissional até 3 profissionais. Se precisar de mais, basta fazer upgrade para o Business que oferece profissionais ilimitados. A mudança é instantânea e o valor é ajustado proporcionalmente.",
     },
     {
-      question: "Vocês ajudam na migração de outra plataforma?",
+      question: "Como funciona a integração com WhatsApp?",
       answer:
-        "Sim! Nos planos Professional e Enterprise, oferecemos assistência na migração dos seus dados de outras plataformas. Nossa equipe ajuda a importar seus clientes, serviços e histórico de agendamentos. No Enterprise, a migração é totalmente assistida.",
+        "A partir do plano Profissional, você tem integração com WhatsApp para envio de lembretes automáticos e confirmações de agendamento. A configuração é simples e nosso suporte te ajuda no processo de integração com a API do WhatsApp.",
     },
   ];
 

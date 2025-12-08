@@ -17,31 +17,45 @@ interface PlanConfig {
 }
 
 const plans: Record<string, PlanConfig> = {
-  professional: {
-    id: "professional",
-    name: "Professional",
-    price: 49.0,
-    description: "Agendamentos ilimitados + WhatsApp + Relatórios",
+  basic: {
+    id: "basic",
+    name: "Básico",
+    price: 69.9,
+    description: "Agendamentos ilimitados para 1 profissional",
     features: [
       "Agendamentos ilimitados",
+      "1 profissional",
+      "Gestão de clientes",
+      "Gestão de serviços",
+      "Calendário semanal",
+      "Suporte por email",
+    ],
+  },
+  professional: {
+    id: "professional",
+    name: "Profissional",
+    price: 99.9,
+    description: "Agendamentos ilimitados + WhatsApp + Relatórios",
+    features: [
+      "Tudo do Básico +",
       "Até 3 profissionais",
       "Integração WhatsApp",
       "Lembretes automáticos",
-      "Relatórios avançados",
-      "Suporte prioritário",
+      "Relatórios e estatísticas",
+      "Página pública de agendamento",
     ],
   },
-  enterprise: {
-    id: "enterprise",
-    name: "Enterprise",
-    price: 149.0,
-    description: "Profissionais ilimitados + API + White Label",
+  business: {
+    id: "business",
+    name: "Business",
+    price: 169.9,
+    description: "Profissionais ilimitados + Comissões + Suporte 24/7",
     features: [
-      "Tudo do Professional",
+      "Tudo do Profissional +",
       "Profissionais ilimitados",
-      "API completa",
-      "White label",
-      "Treinamento dedicado",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Notificações em tempo real",
       "Suporte 24/7",
     ],
   },
@@ -75,7 +89,7 @@ export async function POST(req: NextRequest) {
         items: [
           {
             id: plan.id,
-            title: `ToLivre - Plano ${plan.name}`,
+            title: `TôLivre - Plano ${plan.name}`,
             description: plan.description,
             quantity: 1,
             unit_price: plan.price,

@@ -14,9 +14,9 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { plan } = body; // PROFESSIONAL ou ENTERPRISE
+    const { plan } = body; // BASIC, PROFESSIONAL ou BUSINESS
 
-    if (!plan || !["PROFESSIONAL", "ENTERPRISE"].includes(plan)) {
+    if (!plan || !["BASIC", "PROFESSIONAL", "BUSINESS"].includes(plan)) {
       return api.badRequest("Plano inválido");
     }
 
@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
       data: {
         subscriptionId: subscription.id,
         mpPaymentId: `test-payment-${Date.now()}`,
-        amount: plan === "PROFESSIONAL" ? 49 : 149,
+        amount:
+          plan === "BASIC" ? 69.9 : plan === "PROFESSIONAL" ? 99.9 : 169.9,
         currency: "BRL",
         status: "APPROVED",
         paymentMethod: "credit_card",
@@ -58,11 +59,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Atualizar campo contrato na company
+    // Atualizar campo contrato na company (agora usa os mesmos nomes)
     await prisma.company.update({
       where: { id: user.companyId },
       data: {
-        contrato: plan === "PROFESSIONAL" ? "PRO" : "ENTERPRISE",
+        contrato: plan,
       },
     });
 
