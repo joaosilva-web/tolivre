@@ -28,7 +28,7 @@ RUN npx prisma generate
 # Build Next.js
 # Desabilitar telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+RUN POSTGRES_URL="postgresql://temp:temp@localhost:5432/temp" npx prisma generate && npx next build --turbopack
 
 # Imagem de produção - apenas o necessário
 FROM node:20-alpine AS runner
