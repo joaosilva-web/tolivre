@@ -147,6 +147,8 @@ exports.Prisma.CompanyScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   contrato: 'contrato',
+  trialEndsAt: 'trialEndsAt',
+  subscriptionStatus: 'subscriptionStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -5265,6 +5265,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     contrato: $Enums.ContractType | null
+    trialEndsAt: Date | null
+    subscriptionStatus: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5278,6 +5280,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     contrato: $Enums.ContractType | null
+    trialEndsAt: Date | null
+    subscriptionStatus: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5291,6 +5295,8 @@ export namespace Prisma {
     telefone: number
     email: number
     contrato: number
+    trialEndsAt: number
+    subscriptionStatus: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5306,6 +5312,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     contrato?: true
+    trialEndsAt?: true
+    subscriptionStatus?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5319,6 +5327,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     contrato?: true
+    trialEndsAt?: true
+    subscriptionStatus?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5332,6 +5342,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     contrato?: true
+    trialEndsAt?: true
+    subscriptionStatus?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5418,6 +5430,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     contrato: $Enums.ContractType
+    trialEndsAt: Date | null
+    subscriptionStatus: string | null
     createdAt: Date
     updatedAt: Date
     _count: CompanyCountAggregateOutputType | null
@@ -5448,6 +5462,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     contrato?: boolean
+    trialEndsAt?: boolean
+    subscriptionStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | Company$usersArgs<ExtArgs>
@@ -5470,6 +5486,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     contrato?: boolean
+    trialEndsAt?: boolean
+    subscriptionStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["company"]>
@@ -5483,6 +5501,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     contrato?: boolean
+    trialEndsAt?: boolean
+    subscriptionStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["company"]>
@@ -5496,11 +5516,13 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     contrato?: boolean
+    trialEndsAt?: boolean
+    subscriptionStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nomeFantasia" | "razaoSocial" | "cnpjCpf" | "endereco" | "telefone" | "email" | "contrato" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nomeFantasia" | "razaoSocial" | "cnpjCpf" | "endereco" | "telefone" | "email" | "contrato" | "trialEndsAt" | "subscriptionStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Company$usersArgs<ExtArgs>
     appointments?: boolean | Company$appointmentsArgs<ExtArgs>
@@ -5536,6 +5558,8 @@ export namespace Prisma {
       telefone: string | null
       email: string | null
       contrato: $Enums.ContractType
+      trialEndsAt: Date | null
+      subscriptionStatus: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["company"]>
@@ -5977,6 +6001,8 @@ export namespace Prisma {
     readonly telefone: FieldRef<"Company", 'String'>
     readonly email: FieldRef<"Company", 'String'>
     readonly contrato: FieldRef<"Company", 'ContractType'>
+    readonly trialEndsAt: FieldRef<"Company", 'DateTime'>
+    readonly subscriptionStatus: FieldRef<"Company", 'String'>
     readonly createdAt: FieldRef<"Company", 'DateTime'>
     readonly updatedAt: FieldRef<"Company", 'DateTime'>
   }
@@ -27525,6 +27551,8 @@ export namespace Prisma {
     telefone: 'telefone',
     email: 'email',
     contrato: 'contrato',
+    trialEndsAt: 'trialEndsAt',
+    subscriptionStatus: 'subscriptionStatus',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -28206,6 +28234,8 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"Company"> | string | null
     email?: StringNullableFilter<"Company"> | string | null
     contrato?: EnumContractTypeFilter<"Company"> | $Enums.ContractType
+    trialEndsAt?: DateTimeNullableFilter<"Company"> | Date | string | null
+    subscriptionStatus?: StringNullableFilter<"Company"> | string | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     users?: UserListRelationFilter
@@ -28227,6 +28257,8 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     contrato?: SortOrder
+    trialEndsAt?: SortOrderInput | SortOrder
+    subscriptionStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
@@ -28251,6 +28283,8 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"Company"> | string | null
     email?: StringNullableFilter<"Company"> | string | null
     contrato?: EnumContractTypeFilter<"Company"> | $Enums.ContractType
+    trialEndsAt?: DateTimeNullableFilter<"Company"> | Date | string | null
+    subscriptionStatus?: StringNullableFilter<"Company"> | string | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     users?: UserListRelationFilter
@@ -28272,6 +28306,8 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     contrato?: SortOrder
+    trialEndsAt?: SortOrderInput | SortOrder
+    subscriptionStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CompanyCountOrderByAggregateInput
@@ -28291,6 +28327,8 @@ export namespace Prisma {
     telefone?: StringNullableWithAggregatesFilter<"Company"> | string | null
     email?: StringNullableWithAggregatesFilter<"Company"> | string | null
     contrato?: EnumContractTypeWithAggregatesFilter<"Company"> | $Enums.ContractType
+    trialEndsAt?: DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
+    subscriptionStatus?: StringNullableWithAggregatesFilter<"Company"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
   }
@@ -29955,6 +29993,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -29976,6 +30016,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -29997,6 +30039,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -30018,6 +30062,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -30039,6 +30085,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30052,6 +30100,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30065,6 +30115,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31965,6 +32017,17 @@ export namespace Prisma {
     not?: NestedEnumContractTypeFilter<$PrismaModel> | $Enums.ContractType
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
@@ -32049,6 +32112,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     contrato?: SortOrder
+    trialEndsAt?: SortOrder
+    subscriptionStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32062,6 +32127,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     contrato?: SortOrder
+    trialEndsAt?: SortOrder
+    subscriptionStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32075,6 +32142,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     contrato?: SortOrder
+    trialEndsAt?: SortOrder
+    subscriptionStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32105,6 +32174,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumContractTypeFilter<$PrismaModel>
     _max?: NestedEnumContractTypeFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type CompanyScalarRelationFilter = {
@@ -32328,17 +32411,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type CompanyNullableScalarRelationFilter = {
     is?: CompanyWhereInput | null
     isNot?: CompanyWhereInput | null
@@ -32456,20 +32528,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumAppointmentStatusFilter<$PrismaModel = never> = {
@@ -33430,6 +33488,10 @@ export namespace Prisma {
     set?: $Enums.ContractType
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type UserUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -33888,10 +33950,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type CompanyUpdateOneWithoutUsersNestedInput = {
@@ -34725,6 +34783,17 @@ export namespace Prisma {
     not?: NestedEnumContractTypeFilter<$PrismaModel> | $Enums.ContractType
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -34761,6 +34830,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumContractTypeFilter<$PrismaModel>
     _max?: NestedEnumContractTypeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumExceptionTypeFilter<$PrismaModel = never> = {
@@ -34814,17 +34897,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -34849,20 +34921,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumAppointmentStatusFilter<$PrismaModel = never> = {
@@ -35606,6 +35664,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -35626,6 +35686,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -35662,6 +35724,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -35682,6 +35746,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -35702,6 +35768,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -35722,6 +35790,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -35842,6 +35912,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -35862,6 +35934,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -36079,6 +36153,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentCreateNestedManyWithoutCompanyInput
@@ -36099,6 +36175,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutCompanyInput
@@ -36368,6 +36446,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUpdateManyWithoutCompanyNestedInput
@@ -36388,6 +36468,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -36581,6 +36663,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -36601,6 +36685,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -36859,6 +36945,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -36879,6 +36967,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -37097,6 +37187,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -37117,6 +37209,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -37239,6 +37333,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -37259,6 +37355,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -37321,6 +37419,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -37341,6 +37441,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -37399,6 +37501,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -37419,6 +37523,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -37567,6 +37673,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -37587,6 +37695,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -37655,6 +37765,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -37675,6 +37787,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
@@ -37834,6 +37948,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutCompanyInput
@@ -37854,6 +37970,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     contrato?: $Enums.ContractType
+    trialEndsAt?: Date | string | null
+    subscriptionStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -37924,6 +38042,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutCompanyNestedInput
@@ -37944,6 +38064,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput

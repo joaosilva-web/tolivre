@@ -35,7 +35,9 @@ export default async function DashboardLayout({
     userWithTrial?.company?.subscription?.status === "ACTIVE";
 
   // Se o trial expirou e não tem assinatura ativa, redirecionar para escolher plano
-  if (!canAccessSystem(userWithTrial?.trialEndsAt || null, hasActiveSubscription)) {
+  if (
+    !canAccessSystem(userWithTrial?.trialEndsAt || null, hasActiveSubscription)
+  ) {
     redirect("/escolher-plano");
   }
 
@@ -50,7 +52,7 @@ export default async function DashboardLayout({
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <div className="p-4">
+        <div className="">
           <TrialBanner
             trialEndsAt={userWithTrial?.trialEndsAt || null}
             hasActiveSubscription={hasActiveSubscription}

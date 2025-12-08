@@ -42,16 +42,18 @@ model RateLimit {
 }
 
 model Company {
-  id           String       @id @default(cuid())
-  nomeFantasia String
-  razaoSocial  String?
-  cnpjCpf      String       @unique
-  endereco     String?
-  telefone     String?
-  email        String?
-  contrato     ContractType @default(FREE)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id                 String       @id @default(cuid())
+  nomeFantasia       String
+  razaoSocial        String?
+  cnpjCpf            String       @unique
+  endereco           String?
+  telefone           String?
+  email              String?
+  contrato           ContractType @default(FREE)
+  trialEndsAt        DateTime?
+  subscriptionStatus String?      @default("trial")
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
   users        User[]
   appointments Appointment[]

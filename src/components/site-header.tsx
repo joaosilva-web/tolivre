@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { CircleQuestionMark } from "lucide-react";
 import { NotificationBell } from "@/components/notification-bell";
+import { TrialTimer } from "@/components/trial-timer";
 
 export function SiteHeader() {
   return (
@@ -14,8 +15,9 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
-          Documents
+          Document
         </h1>
+        <TrialTimer />
         <div className="ml-auto flex items-center gap-2">
           <NotificationBell />
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
