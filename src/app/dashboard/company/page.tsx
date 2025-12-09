@@ -81,7 +81,7 @@ interface ProfessionalService {
 }
 
 export default function CompanyPage() {
-  const { user } = useSession();
+  const { user, loading: sessionLoading } = useSession();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -133,7 +133,9 @@ export default function CompanyPage() {
       const companyRes = await fetch(`/api/company/${user.companyId}`);
       if (companyRes.ok) {
         const companyData = await companyRes.json();
-        setCompanyForm(companyData.data);
+        if (companyData.data) {
+          setCompanyForm(companyData.data);
+        }
       }
 
       // Load professionals
@@ -187,10 +189,10 @@ export default function CompanyPage() {
   }, [user?.companyId]);
 
   useEffect(() => {
-    if (user?.companyId) {
+    if (user?.companyId && !sessionLoading) {
       loadData();
     }
-  }, [user?.companyId, loadData]);
+  }, [user?.companyId, sessionLoading, loadData]);
 
   const handleUpdateCompany = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -339,7 +341,7 @@ export default function CompanyPage() {
     return () => ctx.revert();
   }, [loading]);
 
-  if (loading) {
+  if (sessionLoading || loading) {
     return (
       <SidebarInset>
         <SiteHeader />
