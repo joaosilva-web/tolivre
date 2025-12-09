@@ -31,12 +31,6 @@ export default function IntegrationsPage() {
   const { user } = useSession();
 
   // Uazapi Integration State
-  const [uazapiForm, setUazapiForm] = useState({
-    instanceName: "",
-    webhookUrl: "",
-    qrcode: true,
-    webhook_wa_business: false,
-  });
   const [uazapiLoading, setUazapiLoading] = useState(false);
   const [uazapiStatus, setUazapiStatus] = useState<{
     connected: boolean;
@@ -131,66 +125,65 @@ export default function IntegrationsPage() {
     };
   }, []);
 
-  const handleUazapiInit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+  const handleUazapiInit = useCallback(async () => {
+    if (!user?.companyId) {
+      setError("Erro: Empresa não identificada");
+      return;
+    }
 
-      if (!uazapiForm.instanceName.trim()) {
-        setError("Nome da instância é obrigatório");
-        return;
-      }
+    setUazapiLoading(true);
+    setError("");
 
-      setUazapiLoading(true);
-      setError("");
+    try {
+      // Gera instanceName automaticamente: tolivre-{companyId}
+      const instanceName = `tolivre-${user.companyId}`;
+      const webhookUrl = `${window.location.origin}/api/webhooks/uazapi`;
 
-      try {
-        const response = await fetch("/api/integrations/uazapi/init", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...uazapiForm,
-            companyId: user?.companyId,
-          }),
+      const response = await fetch("/api/integrations/uazapi/init", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          instanceName,
+          webhookUrl,
+          qrcode: true,
+          webhook_wa_business: false,
+          companyId: user.companyId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const instanceToken = result.data.instanceToken;
+
+        setUazapiStatus({
+          connected: false,
+          instanceId: result.data.instanceId,
+          instanceToken: instanceToken,
+          qrCode: result.data.qrCode,
+          message: result.data.qrCode
+            ? "QR Code gerado! Escaneie com seu WhatsApp para conectar."
+            : "Instância criada, mas QR Code não foi retornado. Verifique os logs.",
         });
 
-        const result = await response.json();
-
-        if (result.success) {
-          // Don't set connected: true until QR code is scanned
-          // Show QR code for user to scan first
-          const instanceToken = result.data.instanceToken;
-
-          setUazapiStatus({
-            connected: false, // Keep false until scanned
-            instanceId: result.data.instanceId,
-            instanceToken: instanceToken,
-            qrCode: result.data.qrCode,
-            message: result.data.qrCode
-              ? "Instância criada! Escaneie o QR Code abaixo para conectar."
-              : "Instância criada, mas QR Code não foi retornado. Verifique os logs.",
-          });
-
-          // Start polling to check connection status
-          if (instanceToken && result.data.qrCode) {
-            startPolling(instanceToken);
-          }
-
-          // Log the full response for debugging
-          console.log("[integrations-page] Full API response:", result);
-        } else {
-          setError(result.error || "Erro ao criar instância");
+        // Start polling to check connection status
+        if (instanceToken && result.data.qrCode) {
+          startPolling(instanceToken);
         }
-      } catch (err) {
-        console.error("Erro ao conectar com Uazapi:", err);
-        setError("Erro de conexão. Verifique suas configurações.");
-      } finally {
-        setUazapiLoading(false);
+
+        console.log("[integrations-page] Instância criada:", instanceName);
+      } else {
+        setError(result.error || "Erro ao criar instância");
       }
-    },
-    [uazapiForm, user?.companyId, startPolling]
-  );
+    } catch (err) {
+      console.error("Erro ao conectar com Uazapi:", err);
+      setError("Erro de conexão. Verifique suas configurações.");
+    } finally {
+      setUazapiLoading(false);
+    }
+  }, [user?.companyId, startPolling]);
 
   const checkUazapiStatus = useCallback(async () => {
     if (!user?.companyId) return;
@@ -371,85 +364,20 @@ export default function IntegrationsPage() {
                         </div>
                       </div>
                     ) : (
-                      <form onSubmit={handleUazapiInit} className="space-y-4">
-                        <div className="grid gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="instanceName">
-                              Nome da Instância *
-                            </Label>
-                            <Input
-                              id="instanceName"
-                              placeholder="Ex: tolivre-company"
-                              value={uazapiForm.instanceName}
-                              onChange={(e) =>
-                                setUazapiForm({
-                                  ...uazapiForm,
-                                  instanceName: e.target.value,
-                                })
-                              }
-                              required
-                            />
-                            <p className="text-sm text-muted-foreground">
-                              Nome único para identificar sua instância do
-                              WhatsApp
-                            </p>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="webhookUrl">
-                              URL do Webhook (Opcional)
-                            </Label>
-                            <Input
-                              id="webhookUrl"
-                              placeholder="https://seu-site.com/webhook"
-                              value={uazapiForm.webhookUrl}
-                              onChange={(e) =>
-                                setUazapiForm({
-                                  ...uazapiForm,
-                                  webhookUrl: e.target.value,
-                                })
-                              }
-                            />
-                            <p className="text-sm text-muted-foreground">
-                              URL para receber eventos do WhatsApp (mensagens,
-                              status, etc.)
-                            </p>
-                          </div>
-
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="checkbox"
-                              id="qrcode"
-                              checked={uazapiForm.qrcode}
-                              onChange={(e) =>
-                                setUazapiForm({
-                                  ...uazapiForm,
-                                  qrcode: e.target.checked,
-                                })
-                              }
-                              className="rounded"
-                            />
-                            <Label htmlFor="qrcode">
-                              Gerar QR Code para conexão
-                            </Label>
-                          </div>
-
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="checkbox"
-                              id="webhook_wa_business"
-                              checked={uazapiForm.webhook_wa_business}
-                              onChange={(e) =>
-                                setUazapiForm({
-                                  ...uazapiForm,
-                                  webhook_wa_business: e.target.checked,
-                                })
-                              }
-                              className="rounded"
-                            />
-                            <Label htmlFor="webhook_wa_business">
-                              WhatsApp Business API
-                            </Label>
+                      <div className="space-y-4">
+                        <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                          <div className="flex items-start gap-3">
+                            <MessageCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                            <div>
+                              <h4 className="font-medium text-blue-900 dark:text-blue-100">
+                                Conectar WhatsApp
+                              </h4>
+                              <p className="text-sm text-blue-800 dark:text-blue-200 mt-1">
+                                Clique no botão abaixo para gerar o QR Code.
+                                Após escanear com seu WhatsApp, a conexão será
+                                estabelecida automaticamente.
+                              </p>
+                            </div>
                           </div>
                         </div>
 
@@ -461,14 +389,15 @@ export default function IntegrationsPage() {
                         )}
 
                         <Button
-                          type="submit"
+                          onClick={handleUazapiInit}
                           disabled={uazapiLoading}
                           className="w-full"
+                          size="lg"
                         >
                           {uazapiLoading ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Conectando...
+                              Gerando QR Code...
                             </>
                           ) : (
                             <>
@@ -477,7 +406,7 @@ export default function IntegrationsPage() {
                             </>
                           )}
                         </Button>
-                      </form>
+                      </div>
                     )}
 
                     {/* Show QR Code card if we have a QR code, regardless of connected status */}

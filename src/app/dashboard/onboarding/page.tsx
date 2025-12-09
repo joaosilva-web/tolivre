@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Loader2,
   Building,
@@ -34,6 +35,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   Plus,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +67,12 @@ const steps: OnboardingStep[] = [
   },
   {
     id: 4,
+    title: "Configuração WhatsApp",
+    description: "Configure notificações automáticas",
+    icon: MessageSquare,
+  },
+  {
+    id: 5,
     title: "Configuração Completa",
     description: "Tudo pronto para começar!",
     icon: CheckCircle2,
@@ -86,34 +94,138 @@ interface Service {
 export default function OnboardingPage() {
   const router = useRouter();
   const { user, loading: sessionLoading } = useSession();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_step");
+      return saved ? parseInt(saved) : 1;
+    }
+    return 1;
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   // Step 1: Company Info
-  const [companyForm, setCompanyForm] = useState({
-    nomeFantasia: "",
-    razaoSocial: "",
-    cnpjCpf: "",
-    telefone: "",
-    endereco: "",
-    email: "",
+  const [companyForm, setCompanyForm] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_company");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Erro ao carregar dados da empresa do localStorage", e);
+        }
+      }
+    }
+    return {
+      nomeFantasia: "",
+      razaoSocial: "",
+      cnpjCpf: "",
+      telefone: "",
+      endereco: "",
+      email: "",
+    };
   });
 
   // Step 2: Working Hours
-  const [workingHours, setWorkingHours] = useState<WorkingHour[]>([
-    { dayOfWeek: 1, openTime: "08:00", closeTime: "18:00" },
-    { dayOfWeek: 2, openTime: "08:00", closeTime: "18:00" },
-    { dayOfWeek: 3, openTime: "08:00", closeTime: "18:00" },
-    { dayOfWeek: 4, openTime: "08:00", closeTime: "18:00" },
-    { dayOfWeek: 5, openTime: "08:00", closeTime: "18:00" },
-  ]);
-  const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [workingHours, setWorkingHours] = useState<WorkingHour[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_hours");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Erro ao carregar horários do localStorage", e);
+        }
+      }
+    }
+    return [
+      { dayOfWeek: 1, openTime: "08:00", closeTime: "18:00" },
+      { dayOfWeek: 2, openTime: "08:00", closeTime: "18:00" },
+      { dayOfWeek: 3, openTime: "08:00", closeTime: "18:00" },
+      { dayOfWeek: 4, openTime: "08:00", closeTime: "18:00" },
+      { dayOfWeek: 5, openTime: "08:00", closeTime: "18:00" },
+    ];
+  });
+  const [selectedDays, setSelectedDays] = useState<number[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_selected_days");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error(
+            "Erro ao carregar dias selecionados do localStorage",
+            e
+          );
+        }
+      }
+    }
+    return [1, 2, 3, 4, 5];
+  });
 
   // Step 3: Services
-  const [services, setServices] = useState<Service[]>([
-    { name: "", price: "", duration: "30" },
-  ]);
+  const [services, setServices] = useState<Service[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_services");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Erro ao carregar serviços do localStorage", e);
+        }
+      }
+    }
+    return [{ name: "", price: "", duration: "30" }];
+  });
+
+  // Step 4: WhatsApp Configuration
+  const [skipWhatsapp, setSkipWhatsapp] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboarding_skip_whatsapp");
+      return saved === "true";
+    }
+    return false;
+  });
+
+  // Save to localStorage whenever data changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_step", currentStep.toString());
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_company", JSON.stringify(companyForm));
+    }
+  }, [companyForm]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_hours", JSON.stringify(workingHours));
+    }
+  }, [workingHours]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "onboarding_selected_days",
+        JSON.stringify(selectedDays)
+      );
+    }
+  }, [selectedDays]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_services", JSON.stringify(services));
+    }
+  }, [services]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_skip_whatsapp", skipWhatsapp.toString());
+    }
+  }, [skipWhatsapp]);
 
   // Check if onboarding is already completed
   useEffect(() => {
@@ -223,6 +335,13 @@ export default function OnboardingPage() {
     setCurrentStep(4);
   };
 
+  const handleStep4Next = () => {
+    // Step 4 just informs about WhatsApp, no validation needed
+    // User decides if they want to configure now or later
+    setError("");
+    setCurrentStep(5);
+  };
+
   const handleFinishOnboarding = async () => {
     setLoading(true);
     setError("");
@@ -293,11 +412,26 @@ export default function OnboardingPage() {
       }
 
       // Tudo salvo com sucesso!
-      // Se foi POST (nova empresa), recarrega para atualizar token
+      // Limpar localStorage
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("onboarding_step");
+        localStorage.removeItem("onboarding_company");
+        localStorage.removeItem("onboarding_hours");
+        localStorage.removeItem("onboarding_selected_days");
+        localStorage.removeItem("onboarding_services");
+        localStorage.removeItem("onboarding_skip_whatsapp");
+      }
+
+      // Se usuário escolheu configurar WhatsApp agora, redireciona para integrações
+      // Caso contrário, vai para dashboard
+      const destination = !skipWhatsapp
+        ? "/dashboard/integrations"
+        : "/dashboard";
+
       if (method === "POST") {
-        window.location.href = "/dashboard";
+        window.location.href = destination;
       } else {
-        router.push("/dashboard");
+        router.push(destination);
       }
     } catch (err) {
       console.error("Erro ao finalizar onboarding:", err);
@@ -742,8 +876,83 @@ export default function OnboardingPage() {
                 </div>
               )}
 
-              {/* Step 4: Complete */}
+              {/* Step 4: WhatsApp Configuration */}
               {currentStep === 4 && (
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-6">
+                    <div className="flex items-start gap-3">
+                      <MessageSquare className="h-6 w-6 text-green-600 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-green-900 mb-2">
+                          Integração WhatsApp
+                        </h3>
+                        <ul className="text-sm text-green-800 space-y-1">
+                          <li>
+                            ✅ Notificações automáticas de novos agendamentos
+                          </li>
+                          <li>✅ Lembretes de compromissos para clientes</li>
+                          <li>✅ Confirmações instantâneas via WhatsApp</li>
+                          <li>✅ Reduza faltas e melhore a comunicação</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Alert className="bg-blue-50 border-blue-200">
+                      <AlertDescription className="text-sm text-blue-800">
+                        <strong>📱 Configuração Simples</strong>
+                        <p className="mt-2">
+                          Após concluir o onboarding, você poderá configurar o
+                          WhatsApp em poucos cliques:
+                        </p>
+                        <ol className="list-decimal ml-4 mt-2 space-y-1">
+                          <li>
+                            Acesse <strong>Dashboard → Integrações</strong>
+                          </li>
+                          <li>Informe seu número do WhatsApp</li>
+                          <li>Escaneie o QR Code</li>
+                          <li>Pronto! Notificações ativadas ✅</li>
+                        </ol>
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-700 mb-3">
+                        <strong>Vamos configurar o WhatsApp agora?</strong>
+                      </p>
+                      <div className="flex gap-3 justify-center">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setSkipWhatsapp(true);
+                            setCurrentStep(5);
+                          }}
+                        >
+                          Configurar Depois
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setSkipWhatsapp(false);
+                            setCurrentStep(5);
+                          }}
+                        >
+                          Sim, Configurar Agora
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        Você será direcionado para a tela de integrações após
+                        concluir o onboarding
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Complete */}
+              {currentStep === 5 && (
                 <div className="text-center space-y-6 py-8">
                   <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full">
                     <CheckCircle2 className="h-12 w-12 text-green-600" />
@@ -820,7 +1029,7 @@ export default function OnboardingPage() {
 
               {/* Navigation Buttons */}
               <div className="flex justify-between mt-8 pt-6 border-t">
-                {currentStep > 1 && currentStep < 4 && (
+                {currentStep > 1 && currentStep < 5 && (
                   <Button
                     type="button"
                     variant="outline"
@@ -832,13 +1041,14 @@ export default function OnboardingPage() {
                   </Button>
                 )}
 
-                {currentStep < 4 ? (
+                {currentStep < 5 ? (
                   <Button
                     type="button"
                     onClick={() => {
                       if (currentStep === 1) handleStep1Next();
                       if (currentStep === 2) handleStep2Next();
                       if (currentStep === 3) handleStep3Next();
+                      if (currentStep === 4) handleStep4Next();
                     }}
                     disabled={loading}
                     className="ml-auto"

@@ -16,6 +16,8 @@ const companySchema = z.object({
   endereco: z.string().optional(),
   telefone: z.string().optional(),
   email: z.string().email().optional(),
+  whatsappEnabled: z.boolean().optional(),
+  whatsappNumber: z.string().optional().nullable(),
 });
 
 // Tipagem do body validado

@@ -58,11 +58,28 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
     const isConnected =
       data.loggedIn === true || data.instance?.status === "open";
+    const profileName = data.instance?.profileName || "";
+
+    // Se conectado, atualizar no banco
+    if (isConnected && companyId) {
+      const prisma = (await import("@/lib/prisma")).default;
+
+      await prisma.company.update({
+        where: { id: companyId },
+        data: {
+          uazapiConnected: true,
+          uazapiProfileName: profileName,
+          whatsappEnabled: true,
+        },
+      });
+
+      console.log("[uazapi-status] Updated database: connected =", isConnected);
+    }
 
     return api.ok({
       connected: isConnected,
       status: data.instance?.status || "unknown",
-      profileName: data.instance?.profileName || "",
+      profileName: profileName,
       jid: data.jid || null,
       loggedIn: data.loggedIn || false,
     });
@@ -271,6 +288,23 @@ export async function POST(req: NextRequest) {
         console.error("[uazapi-init] Error fetching QR code:", err);
       }
     }
+
+    // Save to database
+    const prisma = (await import("@/lib/prisma")).default;
+
+    await prisma.company.update({
+      where: { id: parsed.companyId },
+      data: {
+        uazapiInstanceName: parsed.instanceName,
+        uazapiInstanceToken: instanceToken,
+        uazapiConnected: false,
+      },
+    });
+
+    console.log("[uazapi-init] Saved to database:", {
+      companyId: parsed.companyId,
+      instanceName: parsed.instanceName,
+    });
 
     // Return success response with instance data
     return api.created({

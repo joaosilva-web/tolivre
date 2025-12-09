@@ -5265,6 +5265,12 @@ export namespace Prisma {
     endereco: string | null
     telefone: string | null
     email: string | null
+    whatsappEnabled: boolean | null
+    whatsappNumber: string | null
+    uazapiInstanceName: string | null
+    uazapiInstanceToken: string | null
+    uazapiConnected: boolean | null
+    uazapiProfileName: string | null
     contrato: $Enums.ContractType | null
     trialEndsAt: Date | null
     subscriptionStatus: string | null
@@ -5280,6 +5286,12 @@ export namespace Prisma {
     endereco: string | null
     telefone: string | null
     email: string | null
+    whatsappEnabled: boolean | null
+    whatsappNumber: string | null
+    uazapiInstanceName: string | null
+    uazapiInstanceToken: string | null
+    uazapiConnected: boolean | null
+    uazapiProfileName: string | null
     contrato: $Enums.ContractType | null
     trialEndsAt: Date | null
     subscriptionStatus: string | null
@@ -5295,6 +5307,12 @@ export namespace Prisma {
     endereco: number
     telefone: number
     email: number
+    whatsappEnabled: number
+    whatsappNumber: number
+    uazapiInstanceName: number
+    uazapiInstanceToken: number
+    uazapiConnected: number
+    uazapiProfileName: number
     contrato: number
     trialEndsAt: number
     subscriptionStatus: number
@@ -5312,6 +5330,12 @@ export namespace Prisma {
     endereco?: true
     telefone?: true
     email?: true
+    whatsappEnabled?: true
+    whatsappNumber?: true
+    uazapiInstanceName?: true
+    uazapiInstanceToken?: true
+    uazapiConnected?: true
+    uazapiProfileName?: true
     contrato?: true
     trialEndsAt?: true
     subscriptionStatus?: true
@@ -5327,6 +5351,12 @@ export namespace Prisma {
     endereco?: true
     telefone?: true
     email?: true
+    whatsappEnabled?: true
+    whatsappNumber?: true
+    uazapiInstanceName?: true
+    uazapiInstanceToken?: true
+    uazapiConnected?: true
+    uazapiProfileName?: true
     contrato?: true
     trialEndsAt?: true
     subscriptionStatus?: true
@@ -5342,6 +5372,12 @@ export namespace Prisma {
     endereco?: true
     telefone?: true
     email?: true
+    whatsappEnabled?: true
+    whatsappNumber?: true
+    uazapiInstanceName?: true
+    uazapiInstanceToken?: true
+    uazapiConnected?: true
+    uazapiProfileName?: true
     contrato?: true
     trialEndsAt?: true
     subscriptionStatus?: true
@@ -5430,6 +5466,12 @@ export namespace Prisma {
     endereco: string | null
     telefone: string | null
     email: string | null
+    whatsappEnabled: boolean
+    whatsappNumber: string | null
+    uazapiInstanceName: string | null
+    uazapiInstanceToken: string | null
+    uazapiConnected: boolean
+    uazapiProfileName: string | null
     contrato: $Enums.ContractType
     trialEndsAt: Date | null
     subscriptionStatus: string | null
@@ -5462,6 +5504,12 @@ export namespace Prisma {
     endereco?: boolean
     telefone?: boolean
     email?: boolean
+    whatsappEnabled?: boolean
+    whatsappNumber?: boolean
+    uazapiInstanceName?: boolean
+    uazapiInstanceToken?: boolean
+    uazapiConnected?: boolean
+    uazapiProfileName?: boolean
     contrato?: boolean
     trialEndsAt?: boolean
     subscriptionStatus?: boolean
@@ -5486,6 +5534,12 @@ export namespace Prisma {
     endereco?: boolean
     telefone?: boolean
     email?: boolean
+    whatsappEnabled?: boolean
+    whatsappNumber?: boolean
+    uazapiInstanceName?: boolean
+    uazapiInstanceToken?: boolean
+    uazapiConnected?: boolean
+    uazapiProfileName?: boolean
     contrato?: boolean
     trialEndsAt?: boolean
     subscriptionStatus?: boolean
@@ -5501,6 +5555,12 @@ export namespace Prisma {
     endereco?: boolean
     telefone?: boolean
     email?: boolean
+    whatsappEnabled?: boolean
+    whatsappNumber?: boolean
+    uazapiInstanceName?: boolean
+    uazapiInstanceToken?: boolean
+    uazapiConnected?: boolean
+    uazapiProfileName?: boolean
     contrato?: boolean
     trialEndsAt?: boolean
     subscriptionStatus?: boolean
@@ -5516,6 +5576,12 @@ export namespace Prisma {
     endereco?: boolean
     telefone?: boolean
     email?: boolean
+    whatsappEnabled?: boolean
+    whatsappNumber?: boolean
+    uazapiInstanceName?: boolean
+    uazapiInstanceToken?: boolean
+    uazapiConnected?: boolean
+    uazapiProfileName?: boolean
     contrato?: boolean
     trialEndsAt?: boolean
     subscriptionStatus?: boolean
@@ -5523,7 +5589,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nomeFantasia" | "razaoSocial" | "cnpjCpf" | "endereco" | "telefone" | "email" | "contrato" | "trialEndsAt" | "subscriptionStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nomeFantasia" | "razaoSocial" | "cnpjCpf" | "endereco" | "telefone" | "email" | "whatsappEnabled" | "whatsappNumber" | "uazapiInstanceName" | "uazapiInstanceToken" | "uazapiConnected" | "uazapiProfileName" | "contrato" | "trialEndsAt" | "subscriptionStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Company$usersArgs<ExtArgs>
     appointments?: boolean | Company$appointmentsArgs<ExtArgs>
@@ -5558,6 +5624,12 @@ export namespace Prisma {
       endereco: string | null
       telefone: string | null
       email: string | null
+      whatsappEnabled: boolean
+      whatsappNumber: string | null
+      uazapiInstanceName: string | null
+      uazapiInstanceToken: string | null
+      uazapiConnected: boolean
+      uazapiProfileName: string | null
       contrato: $Enums.ContractType
       trialEndsAt: Date | null
       subscriptionStatus: string | null
@@ -6001,6 +6073,12 @@ export namespace Prisma {
     readonly endereco: FieldRef<"Company", 'String'>
     readonly telefone: FieldRef<"Company", 'String'>
     readonly email: FieldRef<"Company", 'String'>
+    readonly whatsappEnabled: FieldRef<"Company", 'Boolean'>
+    readonly whatsappNumber: FieldRef<"Company", 'String'>
+    readonly uazapiInstanceName: FieldRef<"Company", 'String'>
+    readonly uazapiInstanceToken: FieldRef<"Company", 'String'>
+    readonly uazapiConnected: FieldRef<"Company", 'Boolean'>
+    readonly uazapiProfileName: FieldRef<"Company", 'String'>
     readonly contrato: FieldRef<"Company", 'ContractType'>
     readonly trialEndsAt: FieldRef<"Company", 'DateTime'>
     readonly subscriptionStatus: FieldRef<"Company", 'String'>
@@ -27551,6 +27629,12 @@ export namespace Prisma {
     endereco: 'endereco',
     telefone: 'telefone',
     email: 'email',
+    whatsappEnabled: 'whatsappEnabled',
+    whatsappNumber: 'whatsappNumber',
+    uazapiInstanceName: 'uazapiInstanceName',
+    uazapiInstanceToken: 'uazapiInstanceToken',
+    uazapiConnected: 'uazapiConnected',
+    uazapiProfileName: 'uazapiProfileName',
     contrato: 'contrato',
     trialEndsAt: 'trialEndsAt',
     subscriptionStatus: 'subscriptionStatus',
@@ -27956,6 +28040,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'ContractType'
    */
   export type EnumContractTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContractType'>
@@ -28036,13 +28127,6 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentStatusType[]'
    */
   export type ListEnumPaymentStatusTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatusType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -28234,6 +28318,12 @@ export namespace Prisma {
     endereco?: StringNullableFilter<"Company"> | string | null
     telefone?: StringNullableFilter<"Company"> | string | null
     email?: StringNullableFilter<"Company"> | string | null
+    whatsappEnabled?: BoolFilter<"Company"> | boolean
+    whatsappNumber?: StringNullableFilter<"Company"> | string | null
+    uazapiInstanceName?: StringNullableFilter<"Company"> | string | null
+    uazapiInstanceToken?: StringNullableFilter<"Company"> | string | null
+    uazapiConnected?: BoolFilter<"Company"> | boolean
+    uazapiProfileName?: StringNullableFilter<"Company"> | string | null
     contrato?: EnumContractTypeFilter<"Company"> | $Enums.ContractType
     trialEndsAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     subscriptionStatus?: StringNullableFilter<"Company"> | string | null
@@ -28257,6 +28347,12 @@ export namespace Prisma {
     endereco?: SortOrderInput | SortOrder
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    whatsappEnabled?: SortOrder
+    whatsappNumber?: SortOrderInput | SortOrder
+    uazapiInstanceName?: SortOrderInput | SortOrder
+    uazapiInstanceToken?: SortOrderInput | SortOrder
+    uazapiConnected?: SortOrder
+    uazapiProfileName?: SortOrderInput | SortOrder
     contrato?: SortOrder
     trialEndsAt?: SortOrderInput | SortOrder
     subscriptionStatus?: SortOrderInput | SortOrder
@@ -28283,6 +28379,12 @@ export namespace Prisma {
     endereco?: StringNullableFilter<"Company"> | string | null
     telefone?: StringNullableFilter<"Company"> | string | null
     email?: StringNullableFilter<"Company"> | string | null
+    whatsappEnabled?: BoolFilter<"Company"> | boolean
+    whatsappNumber?: StringNullableFilter<"Company"> | string | null
+    uazapiInstanceName?: StringNullableFilter<"Company"> | string | null
+    uazapiInstanceToken?: StringNullableFilter<"Company"> | string | null
+    uazapiConnected?: BoolFilter<"Company"> | boolean
+    uazapiProfileName?: StringNullableFilter<"Company"> | string | null
     contrato?: EnumContractTypeFilter<"Company"> | $Enums.ContractType
     trialEndsAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     subscriptionStatus?: StringNullableFilter<"Company"> | string | null
@@ -28306,6 +28408,12 @@ export namespace Prisma {
     endereco?: SortOrderInput | SortOrder
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    whatsappEnabled?: SortOrder
+    whatsappNumber?: SortOrderInput | SortOrder
+    uazapiInstanceName?: SortOrderInput | SortOrder
+    uazapiInstanceToken?: SortOrderInput | SortOrder
+    uazapiConnected?: SortOrder
+    uazapiProfileName?: SortOrderInput | SortOrder
     contrato?: SortOrder
     trialEndsAt?: SortOrderInput | SortOrder
     subscriptionStatus?: SortOrderInput | SortOrder
@@ -28327,6 +28435,12 @@ export namespace Prisma {
     endereco?: StringNullableWithAggregatesFilter<"Company"> | string | null
     telefone?: StringNullableWithAggregatesFilter<"Company"> | string | null
     email?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    whatsappEnabled?: BoolWithAggregatesFilter<"Company"> | boolean
+    whatsappNumber?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    uazapiInstanceName?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    uazapiInstanceToken?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    uazapiConnected?: BoolWithAggregatesFilter<"Company"> | boolean
+    uazapiProfileName?: StringNullableWithAggregatesFilter<"Company"> | string | null
     contrato?: EnumContractTypeWithAggregatesFilter<"Company"> | $Enums.ContractType
     trialEndsAt?: DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
     subscriptionStatus?: StringNullableWithAggregatesFilter<"Company"> | string | null
@@ -29993,6 +30107,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -30016,6 +30136,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -30039,6 +30165,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30062,6 +30194,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30085,6 +30223,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -30100,6 +30244,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30115,6 +30265,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32011,6 +32167,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type EnumContractTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
@@ -32112,6 +32273,12 @@ export namespace Prisma {
     endereco?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
+    whatsappEnabled?: SortOrder
+    whatsappNumber?: SortOrder
+    uazapiInstanceName?: SortOrder
+    uazapiInstanceToken?: SortOrder
+    uazapiConnected?: SortOrder
+    uazapiProfileName?: SortOrder
     contrato?: SortOrder
     trialEndsAt?: SortOrder
     subscriptionStatus?: SortOrder
@@ -32127,6 +32294,12 @@ export namespace Prisma {
     endereco?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
+    whatsappEnabled?: SortOrder
+    whatsappNumber?: SortOrder
+    uazapiInstanceName?: SortOrder
+    uazapiInstanceToken?: SortOrder
+    uazapiConnected?: SortOrder
+    uazapiProfileName?: SortOrder
     contrato?: SortOrder
     trialEndsAt?: SortOrder
     subscriptionStatus?: SortOrder
@@ -32142,6 +32315,12 @@ export namespace Prisma {
     endereco?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
+    whatsappEnabled?: SortOrder
+    whatsappNumber?: SortOrder
+    uazapiInstanceName?: SortOrder
+    uazapiInstanceToken?: SortOrder
+    uazapiConnected?: SortOrder
+    uazapiProfileName?: SortOrder
     contrato?: SortOrder
     trialEndsAt?: SortOrder
     subscriptionStatus?: SortOrder
@@ -32165,6 +32344,14 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumContractTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -32545,11 +32732,6 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusTypeFilter<$PrismaModel> | $Enums.PaymentStatusType
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type ClientNullableScalarRelationFilter = {
     is?: ClientWhereInput | null
     isNot?: ClientWhereInput | null
@@ -32673,14 +32855,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusTypeFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusTypeFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type ClientTagListRelationFilter = {
@@ -33485,6 +33659,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type EnumContractTypeFieldUpdateOperationsInput = {
     set?: $Enums.ContractType
   }
@@ -34175,10 +34353,6 @@ export namespace Prisma {
     set?: $Enums.PaymentStatusType
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type CompanyUpdateOneRequiredWithoutAppointmentsNestedInput = {
     create?: XOR<CompanyCreateWithoutAppointmentsInput, CompanyUncheckedCreateWithoutAppointmentsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutAppointmentsInput
@@ -34777,6 +34951,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumContractTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ContractType | EnumContractTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ContractType[] | ListEnumContractTypeFieldRefInput<$PrismaModel>
@@ -34821,6 +35000,14 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumContractTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -34938,11 +35125,6 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusTypeFilter<$PrismaModel> | $Enums.PaymentStatusType
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AppointmentStatus | EnumAppointmentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AppointmentStatus[] | ListEnumAppointmentStatusFieldRefInput<$PrismaModel>
@@ -34961,14 +35143,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusTypeFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumSubscriptionPlanFilter<$PrismaModel = never> = {
@@ -35664,6 +35838,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -35686,6 +35866,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -35724,6 +35910,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35746,6 +35938,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35768,6 +35966,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -35790,6 +35994,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -35912,6 +36122,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35934,6 +36150,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36153,6 +36375,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -36175,6 +36403,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -36446,6 +36680,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36468,6 +36708,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36663,6 +36909,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -36685,6 +36937,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -36945,6 +37203,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36967,6 +37231,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37187,6 +37457,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37209,6 +37485,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37333,6 +37615,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37355,6 +37643,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37419,6 +37713,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37441,6 +37741,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37501,6 +37807,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37523,6 +37835,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37673,6 +37991,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37695,6 +38019,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37765,6 +38095,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37787,6 +38123,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37948,6 +38290,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -37970,6 +38318,12 @@ export namespace Prisma {
     endereco?: string | null
     telefone?: string | null
     email?: string | null
+    whatsappEnabled?: boolean
+    whatsappNumber?: string | null
+    uazapiInstanceName?: string | null
+    uazapiInstanceToken?: string | null
+    uazapiConnected?: boolean
+    uazapiProfileName?: string | null
     contrato?: $Enums.ContractType
     trialEndsAt?: Date | string | null
     subscriptionStatus?: string | null
@@ -38042,6 +38396,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38064,6 +38424,12 @@ export namespace Prisma {
     endereco?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
+    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
+    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null

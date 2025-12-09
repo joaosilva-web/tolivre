@@ -25,41 +25,36 @@ export async function GET(req: NextRequest) {
       return api.serverError("Configuração Uazapi não encontrada");
     }
 
-    // For now, we'll return a basic status check
-    // In a real implementation, you might want to store instance data in your database
-    // and check the actual status with Uazapi API
+    // Check database for connection status
+    const prisma = (await import("@/lib/prisma")).default;
 
-    // Prepare headers for Uazapi API
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      admintoken: UAZAPI_TOKEN || "",
-      "Content-Type": "application/json",
-    };
-
-    // Example: Check if we can reach Uazapi API
-    try {
-      const testResponse = await fetch(`${UAZAPI_BASE_URL}/instance/list`, {
-        method: "GET",
-        headers,
-      });
-
-      const isConnected = testResponse.ok;
-
-      return api.ok({
-        connected: isConnected,
-        instanceId: companyId, // Using companyId as instance identifier for now
-        message: isConnected
-          ? "Conexão com Uazapi ativa"
-          : "Problemas de conexão com Uazapi",
-      });
-    } catch (err) {
-      console.error("[uazapi-status] Connection error:", err);
-
-      return api.ok({
-        connected: false,
-        message: "Erro ao conectar com Uazapi",
-      });
+    if (!companyId) {
+      return api.badRequest("Company ID é obrigatório");
     }
+
+    const company = await prisma.company.findUnique({
+      where: { id: companyId },
+      select: {
+        uazapiConnected: true,
+        uazapiInstanceName: true,
+        uazapiProfileName: true,
+      },
+    });
+
+    if (!company) {
+      return api.notFound("Empresa não encontrada");
+    }
+
+    return api.ok({
+      connected: company.uazapiConnected,
+      instanceId: company.uazapiInstanceName || companyId,
+      profileName: company.uazapiProfileName,
+      message: company.uazapiConnected
+        ? `WhatsApp conectado${
+            company.uazapiProfileName ? ` - ${company.uazapiProfileName}` : ""
+          }`
+        : "WhatsApp não conectado",
+    });
   } catch (err) {
     console.error("[uazapi-status] Error:", err);
     return api.serverError("Erro interno do servidor");
