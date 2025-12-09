@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { canAccessSystem } from "@/lib/trial";
 import prisma from "@/lib/prisma";
 import { TrialBanner } from "@/components/trial-banner";
+import { OnboardingGuard } from "@/components/onboarding-guard";
 
 export default async function DashboardLayout({
   children,
@@ -58,7 +59,7 @@ export default async function DashboardLayout({
             hasActiveSubscription={hasActiveSubscription}
           />
         </div>
-        {children}
+        <OnboardingGuard>{children}</OnboardingGuard>
       </SidebarInset>
     </SidebarProvider>
   );
