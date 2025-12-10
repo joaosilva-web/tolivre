@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import useSession from "@/hooks/useSession";
 import { Loader2 } from "lucide-react";
+import { clearSessionCache } from "@/context/SessionProvider";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -35,7 +36,9 @@ export function NavUser() {
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
+    clearSessionCache(); // Limpar cache da sessão
+    // Forçar reload completo da página para garantir limpeza total
+    window.location.href = "/login";
   };
 
   if (loading) {

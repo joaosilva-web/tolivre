@@ -74,14 +74,14 @@ export async function POST(req: NextRequest) {
         where: { companyId },
         create: {
           companyId,
-          planType: contractType as any,
+          plan: contractType as any,
           status: "ACTIVE",
-          startDate: new Date(),
+          currentPeriodStart: new Date(),
         },
         update: {
-          planType: contractType as any,
+          plan: contractType as any,
           status: "ACTIVE",
-          startDate: new Date(),
+          currentPeriodStart: new Date(),
         },
       });
 
@@ -93,25 +93,8 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Atualizar registro de pagamento
-      await prisma.payment.updateMany({
-        where: {
-          companyId,
-          status: "PENDING",
-          metadata: {
-            path: ["preference_id"],
-            equals: payment.additional_info?.items?.[0]?.id,
-          },
-        },
-        data: {
-          status: "PAID",
-          paidAt: new Date(),
-          metadata: {
-            payment_id: payment.id,
-            payment_type: payment.payment_type_id,
-          },
-        },
-      });
+      // TODO: Criar registro de Payment quando implementarmos o histórico completo de pagamentos
+      // Por enquanto, apenas atualizamos Company e Subscription
 
       console.log(
         `[Mercado Pago Webhook] Assinatura ativada: ${contractType} para company ${companyId}`
@@ -121,20 +104,8 @@ export async function POST(req: NextRequest) {
         `[Mercado Pago Webhook] Pagamento rejeitado para company ${companyId}`
       );
 
-      // Atualizar registro de pagamento como falhado
-      await prisma.payment.updateMany({
-        where: {
-          companyId,
-          status: "PENDING",
-        },
-        data: {
-          status: "FAILED",
-          metadata: {
-            payment_id: payment.id,
-            status_detail: payment.status_detail,
-          },
-        },
-      });
+      // TODO: Registrar falha no Payment quando implementarmos histórico completo
+      // Por enquanto, apenas logamos
     }
 
     return api.ok({ message: "Webhook processado com sucesso" });

@@ -32,8 +32,16 @@ export async function POST(req: NextRequest) {
     const data: CompanyInput = companySchema.parse(body); // valida o body
     console.log("Dados validados:", data);
 
+    // Definir trial de 14 dias
+    const trialEndsAt = new Date();
+    trialEndsAt.setDate(trialEndsAt.getDate() + 14);
+
     const company: Company = await prisma.company.create({
-      data: { ...data, users: { connect: { id: user.id } } },
+      data: { 
+        ...data, 
+        trialEndsAt,
+        users: { connect: { id: user.id } } 
+      },
     });
     console.log("Empresa criada:", company.id);
 

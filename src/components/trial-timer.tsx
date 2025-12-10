@@ -91,14 +91,23 @@ export function TrialTimer() {
 
   console.log("[TrialTimer] Renderizando - timeLeft:", timeLeft);
 
-  // Temporariamente sempre renderizar para teste
+  // Só mostrar se o usuário tiver uma company
+  if (!user?.companyId || loading) {
+    return null;
+  }
+
+  // Não mostrar se não tiver timeLeft
+  if (!timeLeft) {
+    return null;
+  }
+
   return (
     <Badge
       variant="outline"
       className="flex items-center gap-1.5 px-2.5 py-1 bg-yellow-100 dark:bg-yellow-900"
     >
       <Clock className="h-3.5 w-3.5" />
-      <span className="text-xs font-medium">{timeLeft || "Carregando..."}</span>
+      <span className="text-xs font-medium">{timeLeft}</span>
     </Badge>
   );
 }

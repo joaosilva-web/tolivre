@@ -75,7 +75,8 @@ export function checkAppointmentLimit(
 ): { allowed: boolean; message?: string } {
   if (!subscription || subscription.status !== "ACTIVE") {
     const limit = PLANS.TRIAL.features.appointments;
-    if (currentCount >= limit) {
+    // Trial tem appointments ilimitados
+    if (limit !== "unlimited" && currentCount >= limit) {
       return {
         allowed: false,
         message: `Limite de ${limit} agendamentos/mês atingido no plano gratuito. Faça upgrade para continuar.`,
@@ -100,7 +101,8 @@ export function checkProfessionalLimit(
 ): { allowed: boolean; message?: string } {
   if (!subscription || subscription.status !== "ACTIVE") {
     const limit = PLANS.TRIAL.features.professionals;
-    if (currentCount >= limit) {
+    // Trial tem professionals ilimitados
+    if (limit !== "unlimited" && currentCount >= limit) {
       return {
         allowed: false,
         message: `Limite de ${limit} profissional atingido no plano gratuito. Faça upgrade para adicionar mais.`,
@@ -121,7 +123,7 @@ export function checkProfessionalLimit(
 
 export function getCurrentPlan(subscription: Subscription | null): PlanName {
   if (!subscription || subscription.status !== "ACTIVE") {
-    return "FREE";
+    return "TRIAL";
   }
   return subscription.plan as PlanName;
 }

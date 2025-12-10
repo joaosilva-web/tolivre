@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Verifica se tem pelo menos um horário de funcionamento
-    const workingHoursCount = await prisma.workingHour.count({
+    const workingHoursCount = await prisma.workingHours.count({
       where: { companyId: user.companyId },
     });
 

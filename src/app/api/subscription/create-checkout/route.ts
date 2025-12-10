@@ -115,20 +115,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Salvar intenção de pagamento no banco (opcional, para controle)
-    await prisma.payment.create({
-      data: {
-        companyId: user.companyId,
-        amount: plan.price,
-        method: "MERCADO_PAGO",
-        status: "PENDING",
-        metadata: {
-          preference_id: preferenceData.id,
-          plan_id: planId,
-          plan_name: plan.name,
-        },
-      },
-    });
+    // Nota: O Payment será criado no webhook após confirmação do pagamento pelo Mercado Pago
+    // Não criamos aqui para evitar registros pendentes sem subscriptionId
 
     return api.created({
       checkoutUrl: preferenceData.init_point,

@@ -107,6 +107,12 @@ export function __test_clearSessionCache() {
   globalCachedPromise = null;
 }
 
+// Function to clear session cache (used on logout)
+export function clearSessionCache() {
+  globalCachedUser = null;
+  globalCachedPromise = null;
+}
+
 export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {

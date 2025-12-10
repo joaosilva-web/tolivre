@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ArrowRight, Loader2 } from "lucide-react";
-import { useSession } from "@/hooks/useSession";
+import useSession from "@/hooks/useSession";
 
 interface PlanOption {
   id: string;
@@ -69,19 +69,11 @@ export default function EscolherPlanoPage() {
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
-    // Se não está em trial expirado, redirecionar para dashboard
-    if (!sessionLoading && user) {
-      // Verificar se ainda tem trial ativo ou já tem assinatura
-      if (user.trialEndsAt) {
-        const trialEnd = new Date(user.trialEndsAt);
-        const now = new Date();
-        if (trialEnd > now) {
-          // Trial ainda ativo, redirecionar
-          router.push("/dashboard");
-        }
-      }
-      // TODO: Verificar se já tem assinatura ativa
+    // Se usuário não está logado, redirecionar para login
+    if (!sessionLoading && !user) {
+      router.push("/login");
     }
+    // TODO: Verificar se já tem assinatura ativa via API
   }, [user, sessionLoading, router]);
 
   const handleSelectPlan = async (planId: string) => {
