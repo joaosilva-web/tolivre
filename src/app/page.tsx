@@ -1030,7 +1030,7 @@ export default function Home() {
                 Por que escolher TôLivre?
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Compare e veja a diferença
+                Feito para o mercado brasileiro de serviços
               </p>
             </div>
 
@@ -1045,31 +1045,45 @@ export default function Home() {
                       TôLivre
                     </th>
                     <th className="px-6 py-4 text-center font-semibold text-muted-foreground">
-                      Concorrentes
+                      Calendly
+                    </th>
+                    <th className="px-6 py-4 text-center font-semibold text-muted-foreground">
+                      Booksy
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    "WhatsApp Integrado",
-                    "Agendamento Online 24/7",
-                    "Lembretes Automáticos",
-                    "Gestão de Múltiplos Profissionais",
-                    "Relatórios Avançados",
-                    "Suporte em Português",
-                    "Sem Taxa de Setup",
-                    "App Mobile Nativo",
+                    { name: "WhatsApp Integrado", tolivre: true, calendly: false, booksy: false },
+                    { name: "Preço em Reais", tolivre: true, calendly: false, booksy: true },
+                    { name: "Suporte em Português", tolivre: true, calendly: false, booksy: true },
+                    { name: "Agendamento 24/7", tolivre: true, calendly: true, booksy: true },
+                    { name: "Gestão de Comissões", tolivre: true, calendly: false, booksy: true },
+                    { name: "Página Pública Personalizada", tolivre: true, calendly: true, booksy: true },
+                    { name: "A partir de R$ 69,90/mês", tolivre: true, calendly: false, booksy: false },
+                    { name: "Sem Taxa de Setup", tolivre: true, calendly: true, booksy: false },
                   ].map((feature, idx) => (
                     <tr
                       key={idx}
                       className="comparison-row border-t border-border hover:bg-muted/50 transition-colors"
                     >
-                      <td className="px-6 py-4">{feature}</td>
+                      <td className="px-6 py-4">{feature.name}</td>
                       <td className="px-6 py-4 text-center">
-                        <CheckCircle className="w-6 h-6 mx-auto text-green-500" />
+                        {feature.tolivre ? (
+                          <CheckCircle className="w-6 h-6 mx-auto text-green-500" />
+                        ) : (
+                          <span className="text-3xl text-red-500/40">×</span>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        {idx < 4 ? (
+                        {feature.calendly ? (
+                          <CheckCircle className="w-6 h-6 mx-auto text-green-500/40" />
+                        ) : (
+                          <span className="text-3xl text-red-500/40">×</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {feature.booksy ? (
                           <CheckCircle className="w-6 h-6 mx-auto text-green-500/40" />
                         ) : (
                           <span className="text-3xl text-red-500/40">×</span>
@@ -1079,6 +1093,48 @@ export default function Home() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            <div className="mt-12 max-w-4xl mx-auto">
+              <div className="bg-primary/5 border border-primary/20 rounded-xl p-8">
+                <h3 className="text-xl font-bold mb-4 text-center">
+                  💡 Por que o TôLivre é diferente?
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6 text-sm">
+                  <div className="space-y-3">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Calendly</strong> - Focado em reuniões corporativas (US$ 10-16/assento). 
+                        Não tem gestão de comissões nem integração WhatsApp nativa.
+                      </span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Booksy</strong> - Plataforma internacional de marketplace. 
+                        Cobra taxas de transação e setup. Menos flexível para personalização.
+                      </span>
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <span>
+                        <strong>TôLivre</strong> - Criado especificamente para o mercado brasileiro. 
+                        WhatsApp integrado, preços em reais, suporte local.
+                      </span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Melhor custo-benefício</strong> - A partir de R$ 69,90/mês com 
+                        todas as funcionalidades essenciais incluídas.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
