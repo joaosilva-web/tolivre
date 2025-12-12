@@ -584,15 +584,13 @@ export default function Home() {
                 className="hero-title text-6xl md:text-8xl font-bold leading-tight"
                 style={{ transformStyle: "preserve-3d" }}
               >
-                <span className="block bg-gradient-to-r from-foreground via-primary to-blue-600 bg-clip-text text-transparent">
-                  Agendamentos
-                </span>
-                <span className="block">Sem Limites</span>
+                <span className="block text-primary">Liberte</span>
+                <span className="block text-primary">Sua Agenda</span>
               </h1>
               <p className="hero-subtitle text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-                Transforme sua gestão de agendamentos com inteligência
-                artificial, integração WhatsApp e uma experiência única para
-                seus clientes.
+                Agendamento online automático para profissionais de serviço.
+                Reduza no-shows, economize tempo e foque no que realmente
+                importa: seu negócio.
               </p>
               <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href="/login?tab=register">
@@ -617,17 +615,19 @@ export default function Home() {
               <div className="flex flex-wrap justify-center gap-6 mt-12">
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-sm font-semibold">14 dias grátis</span>
+                </div>
+                <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
+                  <Clock className="w-5 h-5 text-blue-500" />
                   <span className="text-sm font-semibold">
-                    Grátis para começar
+                    Agendamento 24/7
                   </span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
-                  <Users className="w-5 h-5 text-blue-500" />
-                  <span className="text-sm font-semibold">500+ empresas</span>
-                </div>
-                <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
-                  <CheckCircle className="w-5 h-5 text-purple-500" />
-                  <span className="text-sm font-semibold">4.9★ Avaliação</span>
+                  <MessageCircle className="w-5 h-5 text-purple-500" />
+                  <span className="text-sm font-semibold">
+                    WhatsApp automático
+                  </span>
                 </div>
               </div>
             </div>
@@ -639,10 +639,14 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {[
-                { number: "10k+", label: "Agendamentos/Mês", icon: Calendar },
-                { number: "500+", label: "Empresas Ativas", icon: Users },
-                { number: "99.9%", label: "Uptime", icon: TrendingUp },
-                { number: "24/7", label: "Suporte", icon: Clock },
+                { number: "80%", label: "Menos No-Shows", icon: CheckCircle },
+                { number: "5h/sem", label: "Tempo Economizado", icon: Clock },
+                {
+                  number: "24/7",
+                  label: "Agendamentos Online",
+                  icon: Calendar,
+                },
+                { number: "100%", label: "Automático", icon: TrendingUp },
               ].map((stat, index) => (
                 <div key={index} className="stat-item relative group">
                   <div className="bg-card border rounded-2xl p-8 text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl">
@@ -665,11 +669,11 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-bold mb-4">
-                Recursos que <span className="text-primary">Impressionam</span>
+                Funcionalidades <span className="text-primary">Completas</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Tudo que você precisa para gerenciar seus agendamentos de forma
-                profissional
+                Tudo que você precisa para automatizar sua agenda e focar no que
+                realmente importa
               </p>
             </div>
 
@@ -677,44 +681,44 @@ export default function Home() {
               {[
                 {
                   icon: MessageCircle,
-                  title: "Integração WhatsApp",
+                  title: "Lembretes Automáticos",
                   description:
-                    "Envie confirmações e lembretes automáticos direto no WhatsApp dos seus clientes.",
+                    "Reduza no-shows em até 80% com lembretes automáticos por WhatsApp. Seus clientes nunca mais esquecem um agendamento.",
                   gradient: "from-green-500 to-emerald-600",
                 },
                 {
                   icon: Calendar,
-                  title: "Agenda Inteligente",
+                  title: "Agendamento 24/7",
                   description:
-                    "Sistema inteligente que otimiza seus horários e evita conflitos automaticamente.",
+                    "Seus clientes podem agendar a qualquer hora do dia, mesmo quando você está dormindo ou atendendo. Nunca perca uma venda.",
                   gradient: "from-blue-500 to-cyan-600",
                 },
                 {
                   icon: Users,
                   title: "Gestão de Clientes",
                   description:
-                    "Mantenha todo histórico, preferências e informações dos seus clientes organizados.",
+                    "Histórico completo de agendamentos, preferências e informações. Atendimento personalizado que fideliza.",
                   gradient: "from-purple-500 to-pink-600",
                 },
                 {
                   icon: Clock,
-                  title: "Horários Flexíveis",
+                  title: "Horários de Trabalho",
                   description:
-                    "Configure seus horários de trabalho e bloqueie períodos com total flexibilidade.",
+                    "Configure seus horários disponíveis, bloqueie períodos e crie exceções. Total controle sobre sua agenda.",
                   gradient: "from-orange-500 to-red-600",
                 },
                 {
                   icon: TrendingUp,
-                  title: "Relatórios Avançados",
+                  title: "Relatórios Financeiros",
                   description:
-                    "Acompanhe métricas, tendências e performance do seu negócio em tempo real.",
+                    "Acompanhe faturamento, serviços mais vendidos e performance. Tome decisões baseadas em dados reais.",
                   gradient: "from-yellow-500 to-orange-600",
                 },
                 {
                   icon: CheckCircle,
-                  title: "Multi-usuário",
+                  title: "Múltiplos Profissionais",
                   description:
-                    "Gerencie múltiplos profissionais e serviços em uma única plataforma.",
+                    "Gerencie toda sua equipe em uma única plataforma. Controle de comissões, horários e serviços por profissional.",
                   gradient: "from-indigo-500 to-purple-600",
                 },
               ].map((feature, index) => (
@@ -753,13 +757,13 @@ export default function Home() {
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
                 Para quem é o{" "}
                 <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                  ToLivre
+                  TôLivre
                 </span>
                 ?
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Desenvolvido para profissionais e empresas que valorizam seu
-                tempo e querem oferecer a melhor experiência aos seus clientes
+                Profissionais de serviço que querem economizar tempo, reduzir
+                no-shows e crescer com organização profissional
               </p>
             </div>
 
@@ -767,57 +771,57 @@ export default function Home() {
               {[
                 {
                   icon: "💇",
-                  title: "Salões de Beleza",
+                  title: "Salões & Barbearias",
                   description:
                     "Cabeleireiros, manicures, barbeiros e estéticas. Gerencie múltiplos profissionais, serviços e horários em um só lugar.",
                   benefits: [
-                    "Redução de no-show em 40%",
-                    "Agenda sempre organizada",
-                    "Clientes mais satisfeitos",
+                    "80% menos no-shows",
+                    "Agendamentos 24/7",
+                    "Controle de comissões",
                   ],
                 },
                 {
                   icon: "🏥",
-                  title: "Clínicas e Consultórios",
+                  title: "Clínicas & Consultórios",
                   description:
-                    "Médicos, dentistas, psicólogos e terapeutas. Prontuários digitais, lembretes automáticos e gestão de pacientes.",
+                    "Médicos, dentistas, psicólogos e terapeutas. Lembretes automáticos, gestão de pacientes e histórico completo.",
                   benefits: [
-                    "Menos faltas",
-                    "Confirmação via WhatsApp",
-                    "Histórico completo",
+                    "Confirmação WhatsApp",
+                    "Histórico de consultas",
+                    "5h/semana economizadas",
                   ],
                 },
                 {
                   icon: "💪",
                   title: "Personal Trainers",
                   description:
-                    "Profissionais de educação física e wellness. Acompanhe treinos, avaliações e evolução dos seus alunos.",
+                    "Profissionais de educação física e wellness. Controle de treinos, pagamentos e evolução dos seus alunos.",
                   benefits: [
-                    "Agenda flexível",
-                    "Gestão de planos",
-                    "Relatórios de presença",
+                    "Agenda de treinos",
+                    "Gestão de pacotes",
+                    "Pagamentos recorrentes",
                   ],
                 },
                 {
                   icon: "🎓",
-                  title: "Professores Particulares",
+                  title: "Professores & Aulas",
                   description:
-                    "Aulas de idiomas, música, reforço escolar e mais. Organize horários, alunos e pagamentos facilmente.",
+                    "Idiomas, música, reforço escolar e mais. Organize horários, alunos e pagamentos em um só lugar.",
                   benefits: [
-                    "Controle financeiro",
+                    "Controle de mensalidades",
                     "Múltiplos alunos",
-                    "Lembretes automáticos",
+                    "Histórico de aulas",
                   ],
                 },
                 {
                   icon: "⚖️",
                   title: "Profissionais Liberais",
                   description:
-                    "Advogados, contadores, consultores e arquitetos. Agende reuniões, consultas e apresentações sem conflitos.",
+                    "Advogados, contadores, consultores e arquitetos. Agende reuniões e consultas sem complicação.",
                   benefits: [
                     "Agenda profissional",
-                    "Integrações úteis",
-                    "Relatórios detalhados",
+                    "Link personalizado",
+                    "Relatórios financeiros",
                   ],
                 },
                 {
@@ -863,7 +867,7 @@ export default function Home() {
                   Seu negócio não está na lista?
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  O ToLivre é perfeito para{" "}
+                  O TôLivre é perfeito para{" "}
                   <strong>qualquer profissional ou empresa</strong> que trabalha
                   com agendamentos. Se você marca horários com clientes, nós
                   temos a solução ideal para você!
@@ -905,7 +909,7 @@ export default function Home() {
                   role: "Proprietária - Salão Bella Donna",
                   avatar: "MS",
                   rating: 5,
-                  text: "O ToLivre revolucionou nossa forma de agendar. Reduzimos cancelamentos em 40% e nossos clientes adoram a praticidade!",
+                  text: "O TôLivre revolucionou nossa forma de agendar. Reduzimos cancelamentos em 40% e nossos clientes adoram a praticidade!",
                 },
                 {
                   name: "Carlos Mendes",
@@ -976,7 +980,7 @@ export default function Home() {
                   <div className="text-center p-12">
                     <Calendar className="w-24 h-24 mx-auto mb-6 text-primary" />
                     <p className="text-2xl font-semibold text-white mb-2">
-                      Dashboard ToLivre
+                      Dashboard TôLivre
                     </p>
                     <p className="text-muted-foreground">
                       Visualização em tempo real dos seus agendamentos
@@ -1027,7 +1031,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto relative z-10">
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                Por que escolher ToLivre?
+                Por que escolher TôLivre?
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Compare e veja a diferença
@@ -1042,7 +1046,7 @@ export default function Home() {
                       Funcionalidade
                     </th>
                     <th className="px-6 py-4 text-center font-semibold">
-                      ToLivre
+                      TôLivre
                     </th>
                     <th className="px-6 py-4 text-center font-semibold text-muted-foreground">
                       Concorrentes
@@ -1713,7 +1717,7 @@ export default function Home() {
                   <div style={{ width: 24, height: 24 }}>
                     <IconLogo />
                   </div>
-                  <span className="text-xl font-bold">ToLivre</span>
+                  <span className="text-xl font-bold">TôLivre</span>
                 </div>
                 <p className="text-muted-foreground">
                   Sistema completo de agendamentos para profissionais modernos.
@@ -1808,7 +1812,7 @@ export default function Home() {
               </div>
             </div>
             <div className="border-t pt-8 text-center text-muted-foreground">
-              <p>&copy; 2025 ToLivre. Todos os direitos reservados.</p>
+              <p>&copy; 2025 TôLivre. Todos os direitos reservados.</p>
             </div>
           </div>
         </footer>

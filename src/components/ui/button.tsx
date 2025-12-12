@@ -10,16 +10,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-primary to-blue-600 text-white hover:opacity-90 hover:scale-[1.02]",
+          "bg-gradient-to-r from-primary to-blue-600 text-white hover:opacity-90 hover:scale-[1.02] hover:cursor-pointer",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 hover:cursor-pointer",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-background shadow-xs hover:bg-primary hover:text-primary-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 hover:cursor-pointer",
         secondary:
-          "bg-gradient-to-r from-secondary to-blue-500 text-white hover:opacity-90 hover:scale-[1.02]",
+          "bg-gradient-to-r from-secondary to-blue-500 text-white hover:opacity-90 hover:scale-[1.02] hover:cursor-pointer",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "hover:bg-primary hover:text-accent-foreground dark:hover:bg-accent/50 hover:cursor-pointer",
+        link: "text-primary underline-offset-4 hover:underline hover:cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

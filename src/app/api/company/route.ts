@@ -37,10 +37,10 @@ export async function POST(req: NextRequest) {
     trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
     const company: Company = await prisma.company.create({
-      data: { 
-        ...data, 
+      data: {
+        ...data,
         trialEndsAt,
-        users: { connect: { id: user.id } } 
+        users: { connect: { id: user.id } },
       },
     });
     console.log("Empresa criada:", company.id);

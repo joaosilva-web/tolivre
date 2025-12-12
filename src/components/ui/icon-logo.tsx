@@ -17,15 +17,7 @@ export default function IconLogo({
 }: IconLogoProps = {}) {
   const [animationComplete, setAnimationComplete] = useState(false);
 
-  return animationComplete ? (
-    <Image
-      src="/logo.svg"
-      alt="TôLivre Logo"
-      width={typeof width === "number" ? width : 26}
-      height={typeof height === "number" ? height : 26}
-      style={{ width, height }}
-    />
-  ) : (
+  return (
     <Lottie
       style={{ width, height }}
       animationData={animationData}
