@@ -755,11 +755,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                Para quem é o{" "}
-                <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                  TôLivre
-                </span>
-                ?
+                Para quem é o <span className="text-primary">TôLivre</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                 Profissionais de serviço que querem economizar tempo, reduzir
@@ -894,7 +890,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background via-purple-500/5 to-background" />
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20">
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-primary">
                 O que nossos clientes dizem
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -931,7 +927,7 @@ export default function Home() {
                   className="testimonial-card bg-card border border-border/50 rounded-2xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300"
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold text-xl">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center text-white font-bold text-xl">
                       {testimonial.avatar}
                     </div>
                     <div>
