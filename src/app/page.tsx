@@ -1054,14 +1054,54 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {[
-                    { name: "WhatsApp Integrado", tolivre: true, calendly: false, booksy: false },
-                    { name: "Preço em Reais", tolivre: true, calendly: false, booksy: true },
-                    { name: "Suporte em Português", tolivre: true, calendly: false, booksy: true },
-                    { name: "Agendamento 24/7", tolivre: true, calendly: true, booksy: true },
-                    { name: "Gestão de Comissões", tolivre: true, calendly: false, booksy: true },
-                    { name: "Página Pública Personalizada", tolivre: true, calendly: true, booksy: true },
-                    { name: "A partir de R$ 69,90/mês", tolivre: true, calendly: false, booksy: false },
-                    { name: "Sem Taxa de Setup", tolivre: true, calendly: true, booksy: false },
+                    {
+                      name: "WhatsApp Integrado",
+                      tolivre: true,
+                      calendly: false,
+                      booksy: false,
+                    },
+                    {
+                      name: "Preço em Reais",
+                      tolivre: true,
+                      calendly: false,
+                      booksy: true,
+                    },
+                    {
+                      name: "Suporte em Português",
+                      tolivre: true,
+                      calendly: false,
+                      booksy: true,
+                    },
+                    {
+                      name: "Agendamento 24/7",
+                      tolivre: true,
+                      calendly: true,
+                      booksy: true,
+                    },
+                    {
+                      name: "Gestão de Comissões",
+                      tolivre: true,
+                      calendly: false,
+                      booksy: true,
+                    },
+                    {
+                      name: "Página Pública Personalizada",
+                      tolivre: true,
+                      calendly: true,
+                      booksy: true,
+                    },
+                    {
+                      name: "A partir de R$ 69,90/mês",
+                      tolivre: true,
+                      calendly: false,
+                      booksy: false,
+                    },
+                    {
+                      name: "Sem Taxa de Setup",
+                      tolivre: true,
+                      calendly: true,
+                      booksy: false,
+                    },
                   ].map((feature, idx) => (
                     <tr
                       key={idx}
@@ -1105,15 +1145,17 @@ export default function Home() {
                     <p className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <span>
-                        <strong>Calendly</strong> - Focado em reuniões corporativas (US$ 10-16/assento). 
-                        Não tem gestão de comissões nem integração WhatsApp nativa.
+                        <strong>Calendly</strong> - Focado em reuniões
+                        corporativas (US$ 10-16/assento). Não tem gestão de
+                        comissões nem integração WhatsApp nativa.
                       </span>
                     </p>
                     <p className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <span>
-                        <strong>Booksy</strong> - Plataforma internacional de marketplace. 
-                        Cobra taxas de transação e setup. Menos flexível para personalização.
+                        <strong>Booksy</strong> - Plataforma internacional de
+                        marketplace. Cobra taxas de transação e setup. Menos
+                        flexível para personalização.
                       </span>
                     </p>
                   </div>
@@ -1121,15 +1163,17 @@ export default function Home() {
                     <p className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <span>
-                        <strong>TôLivre</strong> - Criado especificamente para o mercado brasileiro. 
-                        WhatsApp integrado, preços em reais, suporte local.
+                        <strong>TôLivre</strong> - Criado especificamente para o
+                        mercado brasileiro. WhatsApp integrado, preços em reais,
+                        suporte local.
                       </span>
                     </p>
                     <p className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <span>
-                        <strong>Melhor custo-benefício</strong> - A partir de R$ 69,90/mês com 
-                        todas as funcionalidades essenciais incluídas.
+                        <strong>Melhor custo-benefício</strong> - A partir de R$
+                        69,90/mês com todas as funcionalidades essenciais
+                        incluídas.
                       </span>
                     </p>
                   </div>
@@ -1199,40 +1243,40 @@ export default function Home() {
 
               {[
                 {
-                  status: "Concluído",
-                  title: "Lançamento da Plataforma",
-                  desc: "Sistema completo de agendamentos online",
-                  date: "Q1 2025",
-                },
-                {
-                  status: "Concluído",
-                  title: "Integração WhatsApp",
-                  desc: "Notificações automáticas via WhatsApp",
-                  date: "Q2 2025",
-                },
-                {
                   status: "Em Desenvolvimento",
-                  title: "App Mobile",
-                  desc: "Apps nativos para iOS e Android",
-                  date: "Q3 2025",
+                  title: "Desenvolvimento da Plataforma",
+                  desc: "Sistema completo de agendamentos online em fase final de testes",
+                  date: "Dez 2025",
                 },
                 {
                   status: "Planejado",
-                  title: "Sistema de Locação",
-                  desc: "Gestão completa para empresas de locação e aluguel",
-                  date: "Q4 2025",
+                  title: "Lançamento Oficial",
+                  desc: "Abertura da plataforma para o público com plano gratuito de 14 dias",
+                  date: "01 Jan 2026",
                 },
                 {
                   status: "Planejado",
-                  title: "IA para Predição",
-                  desc: "Inteligência artificial para otimizar horários e estoque",
-                  date: "Q1 2026",
+                  title: "Apps Mobile",
+                  desc: "Apps nativos para iOS e Android com todas as funcionalidades",
+                  date: "Mar 2026",
                 },
                 {
                   status: "Planejado",
-                  title: "Marketplace",
-                  desc: "Encontre profissionais e produtos na sua região",
-                  date: "Q2 2026",
+                  title: "Pagamentos Online",
+                  desc: "Integração com gateways de pagamento (Stripe, PagSeguro, Mercado Pago)",
+                  date: "Mai 2026",
+                },
+                {
+                  status: "Planejado",
+                  title: "Email Marketing",
+                  desc: "Ferramenta de campanhas de email integrada na plataforma",
+                  date: "Jul 2026",
+                },
+                {
+                  status: "Futuro",
+                  title: "IA e Automação Avançada",
+                  desc: "Inteligência artificial para predição de demanda e otimização automática",
+                  date: "2027",
                 },
               ].map((item, idx) => (
                 <div

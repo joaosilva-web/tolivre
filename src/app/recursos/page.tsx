@@ -25,12 +25,7 @@ import {
   Database,
   Workflow,
   Video,
-  Filter,
-  Search,
   Upload,
-  Download,
-  Share2,
-  Tag,
   QrCode,
   Headphones,
   Star,
@@ -38,10 +33,22 @@ import {
   Sparkles,
   Target,
   Layers,
-  GitBranch,
   Activity,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+type FeatureStatus = "disponivel" | "desenvolvimento" | "futuro";
+
+interface Feature {
+  category: string;
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  gradient: string;
+  status: FeatureStatus;
+  benefits: string[];
+  details: string;
+}
 
 export default function RecursosPage() {
   const [activeCategory, setActiveCategory] = useState("todos");
@@ -72,7 +79,7 @@ export default function RecursosPage() {
     { id: "seguranca", label: "Segurança", icon: Shield },
   ];
 
-  const features = [
+  const features: Feature[] = [
     {
       category: "agendamento",
       icon: Calendar,
@@ -80,6 +87,7 @@ export default function RecursosPage() {
       description:
         "Sistema de agendamento completo com visualização em calendário, drag-and-drop e detecção automática de conflitos.",
       gradient: "from-blue-500 to-cyan-600",
+      status: "disponivel",
       benefits: [
         "Visualização em dia, semana e mês",
         "Arrastar e soltar para reagendar",
@@ -96,6 +104,7 @@ export default function RecursosPage() {
       description:
         "Configure seus horários de trabalho, pausas, dias de folga e exceções com total flexibilidade.",
       gradient: "from-orange-500 to-red-600",
+      status: "disponivel",
       benefits: [
         "Horários personalizados por dia",
         "Bloqueio de períodos específicos",
@@ -112,6 +121,7 @@ export default function RecursosPage() {
       description:
         "Crie agendamentos que se repetem semanalmente, quinzenalmente ou mensalmente com um clique.",
       gradient: "from-purple-500 to-pink-600",
+      status: "desenvolvimento",
       benefits: [
         "Repetição semanal, quinzenal ou mensal",
         "Edição em lote de recorrências",
@@ -128,6 +138,7 @@ export default function RecursosPage() {
       description:
         "Gere QR Codes personalizados para seus serviços e facilite o agendamento dos seus clientes.",
       gradient: "from-green-500 to-emerald-600",
+      status: "disponivel",
       benefits: [
         "QR Code único para cada serviço",
         "Agendamento instantâneo via celular",
@@ -144,6 +155,7 @@ export default function RecursosPage() {
       description:
         "Envie confirmações, lembretes e avisos automáticos direto no WhatsApp dos seus clientes.",
       gradient: "from-green-500 to-green-600",
+      status: "disponivel",
       benefits: [
         "Confirmação automática de agendamentos",
         "Lembretes 24h e 1h antes",
@@ -160,6 +172,7 @@ export default function RecursosPage() {
       description:
         "Receba alertas instantâneos sobre novos agendamentos, cancelamentos e alterações.",
       gradient: "from-yellow-500 to-orange-600",
+      status: "disponivel",
       benefits: [
         "Push notifications no celular",
         "Alertas por email",
@@ -176,6 +189,7 @@ export default function RecursosPage() {
       description:
         "Envie campanhas de email para seus clientes com ofertas, novidades e promoções.",
       gradient: "from-blue-500 to-purple-600",
+      status: "futuro",
       benefits: [
         "Templates profissionais prontos",
         "Segmentação de clientes",
@@ -192,6 +206,7 @@ export default function RecursosPage() {
       description:
         "Realize atendimentos remotos com videochamadas integradas diretamente na plataforma.",
       gradient: "from-indigo-500 to-blue-600",
+      status: "futuro",
       benefits: [
         "Videochamada HD integrada",
         "Gravação de sessões (opcional)",
@@ -208,6 +223,7 @@ export default function RecursosPage() {
       description:
         "Mantenha um cadastro completo com histórico, preferências e informações de todos os seus clientes.",
       gradient: "from-purple-500 to-pink-600",
+      status: "disponivel",
       benefits: [
         "Ficha completa do cliente",
         "Histórico de agendamentos",
@@ -224,6 +240,7 @@ export default function RecursosPage() {
       description:
         "Cadastre seus serviços com descrição, duração, preço e personalize cada detalhe.",
       gradient: "from-cyan-500 to-blue-600",
+      status: "disponivel",
       benefits: [
         "Catálogo completo de serviços",
         "Preços e durações flexíveis",
@@ -240,6 +257,7 @@ export default function RecursosPage() {
       description:
         "Acompanhe pagamentos, pendências e seu faturamento com relatórios financeiros detalhados.",
       gradient: "from-green-500 to-teal-600",
+      status: "desenvolvimento",
       benefits: [
         "Registro de pagamentos",
         "Controle de contas a receber",
@@ -256,6 +274,7 @@ export default function RecursosPage() {
       description:
         "Gerencie múltiplos profissionais com diferentes níveis de acesso e permissões personalizadas.",
       gradient: "from-indigo-500 to-purple-600",
+      status: "disponivel",
       benefits: [
         "Perfis de acesso personalizados",
         "Gestão de equipe completa",
@@ -272,6 +291,7 @@ export default function RecursosPage() {
       description:
         "Visualize métricas importantes em tempo real com gráficos interativos e indicadores de performance.",
       gradient: "from-blue-500 to-cyan-600",
+      status: "desenvolvimento",
       benefits: [
         "KPIs em tempo real",
         "Gráficos interativos",
@@ -288,6 +308,7 @@ export default function RecursosPage() {
       description:
         "Gere relatórios detalhados sobre faturamento, ocupação, clientes e performance da equipe.",
       gradient: "from-purple-500 to-pink-600",
+      status: "desenvolvimento",
       benefits: [
         "Relatórios personalizáveis",
         "Filtros avançados",
@@ -304,6 +325,7 @@ export default function RecursosPage() {
       description:
         "Acompanhe a produtividade individual e da equipe com métricas detalhadas de desempenho.",
       gradient: "from-orange-500 to-red-600",
+      status: "desenvolvimento",
       benefits: [
         "Taxa de ocupação",
         "Serviços mais vendidos",
@@ -320,6 +342,7 @@ export default function RecursosPage() {
       description:
         "Defina metas de faturamento, atendimentos e acompanhe o progresso em tempo real.",
       gradient: "from-yellow-500 to-orange-600",
+      status: "futuro",
       benefits: [
         "Metas personalizadas",
         "Acompanhamento visual",
@@ -336,6 +359,7 @@ export default function RecursosPage() {
       description:
         "Integre o ToLivre com outros sistemas usando nossa API REST completa e bem documentada.",
       gradient: "from-yellow-500 to-orange-600",
+      status: "futuro",
       benefits: [
         "Endpoints RESTful",
         "Documentação completa",
@@ -352,6 +376,7 @@ export default function RecursosPage() {
       description:
         "Sincronize com Google Calendar, Outlook e outros calendários para evitar conflitos.",
       gradient: "from-blue-500 to-indigo-600",
+      status: "futuro",
       benefits: [
         "Sync bidirecional",
         "Google Calendar",
@@ -368,6 +393,7 @@ export default function RecursosPage() {
       description:
         "Aceite pagamentos online com integração de gateways como Stripe, PagSeguro e Mercado Pago.",
       gradient: "from-green-500 to-emerald-600",
+      status: "futuro",
       benefits: [
         "Múltiplos gateways",
         "Pagamento no agendamento",
@@ -384,6 +410,7 @@ export default function RecursosPage() {
       description:
         "Conecte o ToLivre com mais de 5000 aplicativos através do Zapier sem escrever código.",
       gradient: "from-orange-500 to-red-600",
+      status: "futuro",
       benefits: [
         "5000+ integrações disponíveis",
         "Automações sem código",
@@ -400,6 +427,7 @@ export default function RecursosPage() {
       description:
         "Seus dados protegidos com criptografia SSL/TLS, backups automáticos e conformidade LGPD.",
       gradient: "from-red-500 to-pink-600",
+      status: "disponivel",
       benefits: [
         "Criptografia SSL/TLS 256-bit",
         "Backups diários automáticos",
@@ -416,6 +444,7 @@ export default function RecursosPage() {
       description:
         "Proteja sua conta com autenticação de dois fatores e controle de acesso granular.",
       gradient: "from-purple-500 to-indigo-600",
+      status: "desenvolvimento",
       benefits: [
         "Two-factor authentication (2FA)",
         "Biometria no app mobile",
@@ -432,6 +461,7 @@ export default function RecursosPage() {
       description:
         "Backups automáticos diários com recuperação rápida em caso de necessidade.",
       gradient: "from-blue-500 to-cyan-600",
+      status: "disponivel",
       benefits: [
         "Backup automático diário",
         "Retenção de 30 dias",
@@ -448,6 +478,7 @@ export default function RecursosPage() {
       description:
         "Rastreie todas as ações realizadas na plataforma com logs detalhados de auditoria.",
       gradient: "from-gray-500 to-slate-600",
+      status: "futuro",
       benefits: [
         "Registro de todas as ações",
         "Histórico de alterações",
@@ -600,8 +631,30 @@ export default function RecursosPage() {
             {filteredFeatures.map((feature, idx) => (
               <div
                 key={idx}
-                className="group bg-card border border-border rounded-2xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="group bg-card border border-border rounded-2xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300 relative"
               >
+                {/* Status Badge */}
+                <div className="absolute top-4 right-4">
+                  {feature.status === "disponivel" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-semibold">
+                      <CheckCircle className="w-3 h-3" />
+                      Disponível
+                    </span>
+                  )}
+                  {feature.status === "desenvolvimento" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold">
+                      <Clock className="w-3 h-3" />
+                      Em Desenvolvimento
+                    </span>
+                  )}
+                  {feature.status === "futuro" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-semibold">
+                      <Sparkles className="w-3 h-3" />
+                      Em Breve
+                    </span>
+                  )}
+                </div>
+
                 <div
                   className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
                 >
