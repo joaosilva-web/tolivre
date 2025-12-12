@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +16,7 @@ import { Loader2, CheckCircle2, XCircle, Mail } from "lucide-react";
 
 export default function VerificarEmailPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const [token, setToken] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -66,6 +65,17 @@ export default function VerificarEmailPage() {
 
     verifyEmail();
   }, [token, router]);
+
+  useEffect(() => {
+    // Read token from URL in the browser to avoid using `useSearchParams()` during prerender.
+    try {
+      const params = new URLSearchParams(window.location.search || "");
+      const t = params.get("token");
+      setToken(t);
+    } catch (err) {
+      // ignore on server
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-blue-500/10 p-4">
