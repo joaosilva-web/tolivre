@@ -151,6 +151,11 @@ model User {
   // Trial de 14 dias
   trialEndsAt DateTime? // Data de término do período de teste (null = sem trial ou já converteu)
 
+  // Verificação de email
+  emailVerified      Boolean   @default(false) // Se o email foi verificado
+  verificationToken  String?   @unique // Token para verificação de email
+  verificationSentAt DateTime? // Quando o email de verificação foi enviado
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

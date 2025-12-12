@@ -207,6 +207,9 @@ exports.Prisma.UserScalarFieldEnum = {
   bio: 'bio',
   commissionRate: 'commissionRate',
   trialEndsAt: 'trialEndsAt',
+  emailVerified: 'emailVerified',
+  verificationToken: 'verificationToken',
+  verificationSentAt: 'verificationSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

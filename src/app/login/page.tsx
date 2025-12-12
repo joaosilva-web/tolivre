@@ -23,6 +23,7 @@ function LoginContent() {
   const { refresh } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [activeTab, setActiveTab] = useState("login");
 
   useEffect(() => {
@@ -45,6 +46,7 @@ function LoginContent() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
       const res = await fetch("/api/auth/login", {
@@ -64,7 +66,7 @@ function LoginContent() {
         router.push("/dashboard");
       } else {
         const data = await res.json();
-        setError(data.message || "Erro no login");
+        setError(data.error || data.message || "Erro no login");
       }
     } catch {
       setError("Erro de conexão");
@@ -77,6 +79,7 @@ function LoginContent() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
       const res = await fetch("/api/register", {
@@ -90,14 +93,23 @@ function LoginContent() {
       });
 
       if (res.ok) {
-        setError("Usuário criado com sucesso! Faça login.");
+        const data = await res.json();
+        setSuccess(
+          data.data?.message ||
+            "Usuário criado com sucesso! Verifique seu email para ativar sua conta."
+        );
         // Limpar formulário de registro
         setRegisterName("");
         setRegisterEmail("");
         setRegisterPassword("");
+        // Mudar para aba de login após 3 segundos
+        setTimeout(() => {
+          setActiveTab("login");
+          setSuccess("");
+        }, 4000);
       } else {
         const data = await res.json();
-        setError(data.message || "Erro no registro");
+        setError(data.error || data.message || "Erro no registro");
       }
     } catch {
       setError("Erro de conexão");
@@ -117,7 +129,11 @@ function LoginContent() {
           <CardDescription>Entre na sua conta ou crie uma nova</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="register">Registrar</TabsTrigger>
@@ -126,6 +142,22 @@ function LoginContent() {
             {error && (
               <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                 {error}
+                {error.includes("verifique seu email") && (
+                  <div className="mt-2 pt-2 border-t border-red-300">
+                    <a
+                      href="/reenviar-verificacao"
+                      className="text-sm underline hover:no-underline"
+                    >
+                      Reenviar email de verificação
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {success && (
+              <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                {success}
               </div>
             )}
 
@@ -205,11 +237,13 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
       <LoginContent />
     </Suspense>
   );

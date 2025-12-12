@@ -4,20 +4,29 @@ import { PrismaClient } from "@/generated/prisma";
 import { compare } from "bcrypt";
 import { signToken } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
-import { parseUserAgent, generateSessionToken, isNewDevice, isIpSuspicious, calculateLoginRiskScore } from "@/lib/security";
+import {
+  parseUserAgent,
+  generateSessionToken,
+  isNewDevice,
+  isIpSuspicious,
+  calculateLoginRiskScore,
+} from "@/lib/security";
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   const { email, password, twoFactorToken } = await req.json();
-  
+
   // Extrair informações da requisição
-  const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+  const ip =
+    req.headers.get("x-forwarded-for") ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
   const userAgent = req.headers.get("user-agent") || "unknown";
   const deviceInfo = parseUserAgent(userAgent);
 
   const user = await prisma.user.findUnique({ where: { email } });
-  
+
   // Registrar tentativa de login (sucesso ou falha)
   const logLoginAttempt = async (success: boolean, failReason?: string) => {
     try {
@@ -29,7 +38,7 @@ export async function POST(req: Request) {
           createdAt: new Date(),
         },
       });
-      
+
       if (user) {
         await prisma.loginHistory.create({
           data: {
@@ -48,10 +57,18 @@ export async function POST(req: Request) {
       console.error("[Security] Failed to log login attempt:", err);
     }
   };
-  
+
   if (!user) {
     await logLoginAttempt(false, "Usuário não encontrado");
     return api.unauthorized("Usuário não encontrado");
+  }
+
+  // Verificar se o email foi verificado
+  if (!user.emailVerified) {
+    await logLoginAttempt(false, "Email não verificado");
+    return api.forbidden(
+      "Por favor, verifique seu email antes de fazer login. Verifique sua caixa de entrada e spam."
+    );
   }
 
   // Verificar bloqueio por tentativas falhadas (últimas 24h)
@@ -63,10 +80,15 @@ export async function POST(req: Request) {
       createdAt: { gte: last24h },
     },
   });
-  
+
   if (failedAttempts >= 5) {
-    await logLoginAttempt(false, "Conta temporariamente bloqueada por excesso de tentativas");
-    return api.tooMany("Muitas tentativas de login falhadas. Tente novamente em 24 horas.");
+    await logLoginAttempt(
+      false,
+      "Conta temporariamente bloqueada por excesso de tentativas"
+    );
+    return api.tooMany(
+      "Muitas tentativas de login falhadas. Tente novamente em 24 horas."
+    );
   }
 
   const isValid = await compare(password, user.password);
@@ -90,37 +112,42 @@ export async function POST(req: Request) {
     }
 
     // Verificar código 2FA
-    const { verifyTOTPToken, verifyBackupCode } = await import("@/lib/twoFactor");
-    
+    const { verifyTOTPToken, verifyBackupCode } = await import(
+      "@/lib/twoFactor"
+    );
+
     let twoFactorValid = false;
-    
+
     // Primeiro tenta TOTP
     if (securitySettings.twoFactorSecret) {
-      twoFactorValid = verifyTOTPToken(twoFactorToken, securitySettings.twoFactorSecret);
+      twoFactorValid = verifyTOTPToken(
+        twoFactorToken,
+        securitySettings.twoFactorSecret
+      );
     }
-    
+
     // Se não for válido, tenta código de backup
     if (!twoFactorValid && securitySettings.backupCodes.length > 0) {
       const backupResult = await verifyBackupCode(
         twoFactorToken,
         securitySettings.backupCodes as string[]
       );
-      
+
       if (backupResult.valid) {
         twoFactorValid = true;
-        
+
         // Remover código usado
         const updatedCodes = (securitySettings.backupCodes as string[]).filter(
           (_, index) => index !== backupResult.usedIndex
         );
-        
+
         await prisma.userSecuritySettings.update({
           where: { userId: user.id },
           data: { backupCodes: updatedCodes },
         });
       }
     }
-    
+
     if (!twoFactorValid) {
       await logLoginAttempt(false, "Código 2FA inválido");
       return api.unauthorized("Código 2FA inválido ou expirado");
@@ -137,19 +164,21 @@ export async function POST(req: Request) {
     orderBy: { createdAt: "desc" },
     take: 10,
   });
-  
+
   const lastLogin = recentLogins[0];
-  const previousDevices = recentLogins.map(l => ({
+  const previousDevices = recentLogins.map((l) => ({
     device: l.device || "",
     browser: l.browser || "",
     os: l.os || "",
   }));
-  
+
   const isNewDev = isNewDevice(deviceInfo, previousDevices);
   const isNewIp = lastLogin ? lastLogin.ip !== ip : true;
   const isSuspiciousIp = lastLogin ? isIpSuspicious(ip, lastLogin.ip) : false;
-  const timeSinceLastLogin = lastLogin ? (Date.now() - lastLogin.createdAt.getTime()) / (1000 * 60 * 60) : 999;
-  
+  const timeSinceLastLogin = lastLogin
+    ? (Date.now() - lastLogin.createdAt.getTime()) / (1000 * 60 * 60)
+    : 999;
+
   const riskScore = calculateLoginRiskScore({
     isNewDevice: isNewDev,
     isNewIp,
@@ -157,7 +186,7 @@ export async function POST(req: Request) {
     failedAttemptsLast24h: failedAttempts,
     timeSinceLastLogin,
   });
-  
+
   // Gerar token e criar sessão
   const sessionToken = generateSessionToken();
   const token = signToken({
@@ -167,9 +196,9 @@ export async function POST(req: Request) {
     role: user.role,
     companyId: user.companyId,
   });
-  
+
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  
+
   // Criar sessão no banco
   try {
     await prisma.userSession.create({
@@ -184,9 +213,9 @@ export async function POST(req: Request) {
         expiresAt,
       },
     });
-    
+
     await logLoginAttempt(true);
-    
+
     // Se for novo dispositivo ou alto risco, notificar (via WebSocket)
     if ((isNewDev || riskScore > 50) && user.companyId) {
       try {
@@ -195,7 +224,11 @@ export async function POST(req: Request) {
           id: `security-${user.id}-${Date.now()}`,
           type: "system",
           title: isNewDev ? "Novo dispositivo detectado" : "Login suspeito",
-          message: `Login realizado de ${deviceInfo.device} (${deviceInfo.browser} em ${deviceInfo.os}) do IP ${ip}. ${isNewDev ? "Este é um novo dispositivo." : ""} ${riskScore > 50 ? `Score de risco: ${riskScore}/100` : ""}`,
+          message: `Login realizado de ${deviceInfo.device} (${
+            deviceInfo.browser
+          } em ${deviceInfo.os}) do IP ${ip}. ${
+            isNewDev ? "Este é um novo dispositivo." : ""
+          } ${riskScore > 50 ? `Score de risco: ${riskScore}/100` : ""}`,
           timestamp: new Date().toISOString(),
           data: { riskScore, deviceInfo, ip },
         });
@@ -207,8 +240,8 @@ export async function POST(req: Request) {
     console.error("[Security] Failed to create session:", err);
   }
 
-  const res = api.ok({ 
-    message: "Login realizado com sucesso", 
+  const res = api.ok({
+    message: "Login realizado com sucesso",
     token,
     security: {
       isNewDevice: isNewDev,

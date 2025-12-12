@@ -3,6 +3,7 @@
 ## Arquitetura de Autenticação
 
 ### Fluxo de Login
+
 ```
 Cliente                    Servidor                    Banco de Dados
    |                          |                              |
@@ -21,17 +22,20 @@ Cliente                    Servidor                    Banco de Dados
 ### ✅ Práticas de Segurança Implementadas
 
 #### 1. **Senha e Criptografia**
+
 - ✅ Senhas hasheadas com **bcrypt** (10 rounds) no servidor
 - ✅ Senhas **NUNCA** armazenadas em texto simples
 - ✅ Comparação segura com `bcrypt.compare()`
 - ✅ HTTPS obrigatório em produção (variável `NODE_ENV=production`)
 
 **Por que enviamos senha em plain text?**
+
 - HTTPS criptografa TODA a comunicação (TLS 1.3)
 - Hasher no cliente não adiciona segurança (pode-se enviar o hash diretamente)
 - O importante é hasher no SERVIDOR antes de salvar no banco
 
 #### 2. **JWT Token**
+
 - ✅ Armazenado em **HttpOnly Cookie** (JavaScript não consegue acessar)
 - ✅ **SameSite=lax** (proteção contra CSRF)
 - ✅ **Secure flag** em produção (apenas HTTPS)
@@ -39,17 +43,20 @@ Cliente                    Servidor                    Banco de Dados
 - ✅ Secret forte no `.env` (`JWT_SECRET`)
 
 #### 3. **Rate Limiting**
+
 - ✅ Máximo de **5 tentativas** de login por email em 24h
 - ✅ Bloqueio automático após exceder limite
 - ✅ Rate limiting por IP para registro (`checkRateLimit()`)
 
 #### 4. **Autenticação de Dois Fatores (2FA)**
+
 - ✅ TOTP (Time-based One-Time Password) com app autenticador
 - ✅ Backup codes para recuperação
 - ✅ QR Code para configuração fácil
 - ✅ Obrigatório em logins após ativação
 
 #### 5. **Monitoramento e Auditoria**
+
 - ✅ Histórico completo de logins (`LoginHistory`)
   - IP, User-Agent, Device, Browser, OS
   - Timestamp, Sucesso/Falha
@@ -58,6 +65,7 @@ Cliente                    Servidor                    Banco de Dados
 - ✅ Score de risco calculado (`calculateLoginRiskScore()`)
 
 #### 6. **Detecção de Ameaças**
+
 - ✅ Detecção de **novo dispositivo**
 - ✅ Detecção de **novo IP**
 - ✅ Detecção de **IP suspeito** (mudança de região/país)
@@ -69,21 +77,25 @@ Cliente                    Servidor                    Banco de Dados
   - Login rápido após outro: +20 pontos
 
 #### 7. **Notificações de Segurança**
+
 - ✅ Alerta em tempo real via WebSocket para:
   - Login de novo dispositivo
   - Login com alto score de risco (>50)
 - ✅ Informações detalhadas: IP, device, browser, OS
 
 #### 8. **Proteção Contra Bots**
+
 - ✅ **reCAPTCHA v3** no registro
 - ✅ Verificação server-side com `verifyRecaptcha()`
 
 #### 9. **Content Security Policy (CSP)**
+
 - ✅ CSP headers configurados no Next.js
 - ✅ Restrição de scripts inline
 - ✅ Whitelist de domínios externos (Mercado Pago)
 
 #### 10. **Conformidade LGPD**
+
 - ✅ Dados criptografados em trânsito (HTTPS)
 - ✅ Dados sensíveis hasheados no banco
 - ✅ Logs de auditoria para compliance
@@ -106,6 +118,7 @@ Antes de fazer deploy, garanta:
 ## 🔐 Configurações Recomendadas
 
 ### Variáveis de Ambiente (.env)
+
 ```bash
 # JWT (gerar com: openssl rand -base64 32)
 JWT_SECRET=sua_chave_super_secreta_com_minimo_32_caracteres
@@ -119,6 +132,7 @@ NODE_ENV=production
 ```
 
 ### Nginx (HTTPS)
+
 ```nginx
 server {
     listen 443 ssl http2;
@@ -141,12 +155,14 @@ server {
 ## 📊 Monitoramento
 
 ### Métricas de Segurança
+
 - Taxa de tentativas de login falhadas
 - Logins de novos dispositivos por dia
 - Score médio de risco de logins
 - IPs bloqueados por rate limit
 
 ### Alertas
+
 - Login com score de risco > 70
 - Mais de 3 tentativas falhadas seguidas
 - Acesso de IP internacional inesperado
@@ -156,19 +172,22 @@ server {
 Se suspeitar de comprometimento:
 
 1. **Revogar todas as sessões ativas**
+
    ```sql
    DELETE FROM "UserSession" WHERE "userId" = 'user_id';
    ```
 
 2. **Forçar reset de senha**
+
    ```sql
    UPDATE "User" SET "password" = 'temp_hash' WHERE "id" = 'user_id';
    ```
 
 3. **Investigar logs**
+
    ```sql
-   SELECT * FROM "LoginHistory" 
-   WHERE "userId" = 'user_id' 
+   SELECT * FROM "LoginHistory"
+   WHERE "userId" = 'user_id'
    ORDER BY "createdAt" DESC;
    ```
 

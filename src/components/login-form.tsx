@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Loader2, Shield } from "lucide-react";
 
 export function LoginForm() {
@@ -98,7 +104,10 @@ export function LoginForm() {
             </>
           ) : (
             <div>
-              <Label htmlFor="twoFactorToken" className="flex items-center gap-2">
+              <Label
+                htmlFor="twoFactorToken"
+                className="flex items-center gap-2"
+              >
                 <Shield className="h-4 w-4" />
                 Código de Autenticação (6 dígitos)
               </Label>
@@ -106,7 +115,9 @@ export function LoginForm() {
                 id="twoFactorToken"
                 type="text"
                 value={twoFactorToken}
-                onChange={(e) => setTwoFactorToken(e.target.value.replace(/\D/g, ""))}
+                onChange={(e) =>
+                  setTwoFactorToken(e.target.value.replace(/\D/g, ""))
+                }
                 maxLength={6}
                 required
                 disabled={loading}
@@ -123,6 +134,16 @@ export function LoginForm() {
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
               {error}
+              {error.includes("verifique seu email") && (
+                <div className="mt-2 pt-2 border-t border-destructive/20">
+                  <a
+                    href="/reenviar-verificacao"
+                    className="text-xs underline hover:no-underline"
+                  >
+                    Reenviar email de verificação
+                  </a>
+                </div>
+              )}
             </div>
           )}
 

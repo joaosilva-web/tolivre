@@ -11075,6 +11075,9 @@ export namespace Prisma {
     bio: string | null
     commissionRate: number | null
     trialEndsAt: Date | null
+    emailVerified: boolean | null
+    verificationToken: string | null
+    verificationSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11090,6 +11093,9 @@ export namespace Prisma {
     bio: string | null
     commissionRate: number | null
     trialEndsAt: Date | null
+    emailVerified: boolean | null
+    verificationToken: string | null
+    verificationSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11105,6 +11111,9 @@ export namespace Prisma {
     bio: number
     commissionRate: number
     trialEndsAt: number
+    emailVerified: number
+    verificationToken: number
+    verificationSentAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11130,6 +11139,9 @@ export namespace Prisma {
     bio?: true
     commissionRate?: true
     trialEndsAt?: true
+    emailVerified?: true
+    verificationToken?: true
+    verificationSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11145,6 +11157,9 @@ export namespace Prisma {
     bio?: true
     commissionRate?: true
     trialEndsAt?: true
+    emailVerified?: true
+    verificationToken?: true
+    verificationSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11160,6 +11175,9 @@ export namespace Prisma {
     bio?: true
     commissionRate?: true
     trialEndsAt?: true
+    emailVerified?: true
+    verificationToken?: true
+    verificationSentAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11262,6 +11280,9 @@ export namespace Prisma {
     bio: string | null
     commissionRate: number | null
     trialEndsAt: Date | null
+    emailVerified: boolean
+    verificationToken: string | null
+    verificationSentAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -11296,6 +11317,9 @@ export namespace Prisma {
     bio?: boolean
     commissionRate?: boolean
     trialEndsAt?: boolean
+    emailVerified?: boolean
+    verificationToken?: boolean
+    verificationSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11319,6 +11343,9 @@ export namespace Prisma {
     bio?: boolean
     commissionRate?: boolean
     trialEndsAt?: boolean
+    emailVerified?: boolean
+    verificationToken?: boolean
+    verificationSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11335,6 +11362,9 @@ export namespace Prisma {
     bio?: boolean
     commissionRate?: boolean
     trialEndsAt?: boolean
+    emailVerified?: boolean
+    verificationToken?: boolean
+    verificationSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
@@ -11351,11 +11381,14 @@ export namespace Prisma {
     bio?: boolean
     commissionRate?: boolean
     trialEndsAt?: boolean
+    emailVerified?: boolean
+    verificationToken?: boolean
+    verificationSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "companyId" | "photoUrl" | "bio" | "commissionRate" | "trialEndsAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "companyId" | "photoUrl" | "bio" | "commissionRate" | "trialEndsAt" | "emailVerified" | "verificationToken" | "verificationSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | User$companyArgs<ExtArgs>
     appointments?: boolean | User$appointmentsArgs<ExtArgs>
@@ -11395,6 +11428,9 @@ export namespace Prisma {
       bio: string | null
       commissionRate: number | null
       trialEndsAt: Date | null
+      emailVerified: boolean
+      verificationToken: string | null
+      verificationSentAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -11837,6 +11873,9 @@ export namespace Prisma {
     readonly bio: FieldRef<"User", 'String'>
     readonly commissionRate: FieldRef<"User", 'Float'>
     readonly trialEndsAt: FieldRef<"User", 'DateTime'>
+    readonly emailVerified: FieldRef<"User", 'Boolean'>
+    readonly verificationToken: FieldRef<"User", 'String'>
+    readonly verificationSentAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -27705,6 +27744,9 @@ export namespace Prisma {
     bio: 'bio',
     commissionRate: 'commissionRate',
     trialEndsAt: 'trialEndsAt',
+    emailVerified: 'emailVerified',
+    verificationToken: 'verificationToken',
+    verificationSentAt: 'verificationSentAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -28718,6 +28760,9 @@ export namespace Prisma {
     bio?: StringNullableFilter<"User"> | string | null
     commissionRate?: FloatNullableFilter<"User"> | number | null
     trialEndsAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    verificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -28740,6 +28785,9 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     commissionRate?: SortOrderInput | SortOrder
     trialEndsAt?: SortOrderInput | SortOrder
+    emailVerified?: SortOrder
+    verificationToken?: SortOrderInput | SortOrder
+    verificationSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
@@ -28754,6 +28802,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    verificationToken?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -28765,6 +28814,8 @@ export namespace Prisma {
     bio?: StringNullableFilter<"User"> | string | null
     commissionRate?: FloatNullableFilter<"User"> | number | null
     trialEndsAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerified?: BoolFilter<"User"> | boolean
+    verificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -28774,7 +28825,7 @@ export namespace Prisma {
     sessions?: UserSessionListRelationFilter
     auditLogs?: AuditLogListRelationFilter
     securitySettings?: XOR<UserSecuritySettingsNullableScalarRelationFilter, UserSecuritySettingsWhereInput> | null
-  }, "id" | "email">
+  }, "id" | "email" | "verificationToken">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -28787,6 +28838,9 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     commissionRate?: SortOrderInput | SortOrder
     trialEndsAt?: SortOrderInput | SortOrder
+    emailVerified?: SortOrder
+    verificationToken?: SortOrderInput | SortOrder
+    verificationSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -28810,6 +28864,9 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
     commissionRate?: FloatNullableWithAggregatesFilter<"User"> | number | null
     trialEndsAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    verificationToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    verificationSentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -30551,6 +30608,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -30573,6 +30633,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -30593,6 +30656,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -30615,6 +30681,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -30636,6 +30705,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30650,6 +30722,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30665,6 +30740,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32650,6 +32728,9 @@ export namespace Prisma {
     bio?: SortOrder
     commissionRate?: SortOrder
     trialEndsAt?: SortOrder
+    emailVerified?: SortOrder
+    verificationToken?: SortOrder
+    verificationSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32669,6 +32750,9 @@ export namespace Prisma {
     bio?: SortOrder
     commissionRate?: SortOrder
     trialEndsAt?: SortOrder
+    emailVerified?: SortOrder
+    verificationToken?: SortOrder
+    verificationSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32684,6 +32768,9 @@ export namespace Prisma {
     bio?: SortOrder
     commissionRate?: SortOrder
     trialEndsAt?: SortOrder
+    emailVerified?: SortOrder
+    verificationToken?: SortOrder
+    verificationSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35229,6 +35316,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentCreateNestedManyWithoutProfessionalInput
@@ -35249,6 +35339,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -35567,6 +35660,9 @@ export namespace Prisma {
     bio?: StringNullableFilter<"User"> | string | null
     commissionRate?: FloatNullableFilter<"User"> | number | null
     trialEndsAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    verificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
@@ -36221,6 +36317,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -36242,6 +36341,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -36304,6 +36406,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -36325,6 +36430,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -36972,6 +37080,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -36993,6 +37104,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     services?: ProfessionalServiceUncheckedCreateNestedManyWithoutProfessionalInput
@@ -37272,6 +37386,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -37293,6 +37410,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: ProfessionalServiceUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38566,6 +38686,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -38587,6 +38710,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -38622,6 +38748,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -38643,6 +38772,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38662,6 +38794,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -38683,6 +38818,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -38718,6 +38856,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -38739,6 +38880,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38758,6 +38902,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -38779,6 +38926,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -38814,6 +38964,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -38835,6 +38988,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38854,6 +39010,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -38875,6 +39034,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appointments?: AppointmentUncheckedCreateNestedManyWithoutProfessionalInput
@@ -38910,6 +39072,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -38931,6 +39096,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -38950,6 +39118,9 @@ export namespace Prisma {
     bio?: string | null
     commissionRate?: number | null
     trialEndsAt?: Date | string | null
+    emailVerified?: boolean
+    verificationToken?: string | null
+    verificationSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39023,6 +39194,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUpdateManyWithoutProfessionalNestedInput
@@ -39043,6 +39217,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appointments?: AppointmentUncheckedUpdateManyWithoutProfessionalNestedInput
@@ -39063,6 +39240,9 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

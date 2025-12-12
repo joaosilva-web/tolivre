@@ -53,7 +53,9 @@ export async function GET(req: NextRequest) {
     // Serviços e horários podem ser adicionados depois
     const needsOnboarding = !hasEssentialData;
 
-    console.log(`[Onboarding Status] User: ${user.id}, Company: ${user.companyId}`);
+    console.log(
+      `[Onboarding Status] User: ${user.id}, Company: ${user.companyId}`
+    );
     console.log(`  - hasEssentialData: ${hasEssentialData}`);
     console.log(`  - servicesCount: ${servicesCount}`);
     console.log(`  - workingHoursCount: ${workingHoursCount}`);

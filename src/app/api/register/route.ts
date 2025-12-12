@@ -37,14 +37,35 @@ export async function POST(req: Request) {
   const trialEndsAt = new Date();
   trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
-  await prisma.user.create({
+  // Gerar token de verificação (random string seguro)
+  const crypto = await import("crypto");
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+
+  const user = await prisma.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
       trialEndsAt,
+      verificationToken,
+      verificationSentAt: new Date(),
+      emailVerified: false,
     },
   });
 
-  return api.created({ message: "Usuário criado com sucesso" });
+  // Enviar email de verificação (não bloqueia o registro se falhar)
+  try {
+    const { sendVerificationEmail } = await import("@/lib/email");
+    await sendVerificationEmail(email, name, verificationToken);
+    console.log(`[Registration] Email de verificação enviado para ${email}`);
+  } catch (err) {
+    console.error("[Registration] Erro ao enviar email de verificação:", err);
+    // Não falha o registro se o email não for enviado
+  }
+
+  return api.created({
+    message:
+      "Usuário criado com sucesso! Verifique seu email para ativar sua conta.",
+    userId: user.id,
+  });
 }
