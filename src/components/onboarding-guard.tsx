@@ -31,11 +31,15 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/onboarding/status");
         if (res.ok) {
           const data = await res.json();
+          console.log("OnboardingGuard - Status:", data.data);
+          
           if (data.data?.needsOnboarding) {
-            console.log("Usuário precisa fazer onboarding. Redirecionando...");
+            console.log("OnboardingGuard - Redirecionando para onboarding");
             router.push("/dashboard/onboarding");
             return;
           }
+          
+          console.log("OnboardingGuard - Onboarding completo, permitindo acesso");
         }
       } catch (err) {
         console.error("Erro ao verificar onboarding:", err);

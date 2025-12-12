@@ -236,15 +236,13 @@ export default function OnboardingPage() {
       }
 
       try {
-        const res = await fetch(`/api/company/${user.companyId}`);
+        // Usa a mesma API que o OnboardingGuard para evitar inconsistência
+        const res = await fetch("/api/onboarding/status");
         if (res.ok) {
           const data = await res.json();
-          // Se empresa já tem dados, redireciona para dashboard
-          if (
-            data.data?.nomeFantasia &&
-            data.data?.cnpjCpf &&
-            data.data?.telefone
-          ) {
+          // Se onboarding está completo, redireciona para dashboard
+          if (!data.data?.needsOnboarding) {
+            console.log("Onboarding completo, redirecionando para dashboard");
             router.push("/dashboard");
           }
         }

@@ -49,8 +49,15 @@ export async function GET(req: NextRequest) {
       where: { companyId: user.companyId },
     });
 
-    const needsOnboarding =
-      !hasEssentialData || servicesCount === 0 || workingHoursCount === 0;
+    // Onboarding é necessário APENAS se faltam dados essenciais da empresa
+    // Serviços e horários podem ser adicionados depois
+    const needsOnboarding = !hasEssentialData;
+
+    console.log(`[Onboarding Status] User: ${user.id}, Company: ${user.companyId}`);
+    console.log(`  - hasEssentialData: ${hasEssentialData}`);
+    console.log(`  - servicesCount: ${servicesCount}`);
+    console.log(`  - workingHoursCount: ${workingHoursCount}`);
+    console.log(`  - needsOnboarding: ${needsOnboarding}`);
 
     return api.ok({
       needsOnboarding,
