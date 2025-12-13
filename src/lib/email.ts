@@ -33,10 +33,19 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
       return { success: false, error: "RESEND_API_KEY não configurado" };
     }
 
+    // Normaliza o nome do remetente para evitar problemas com headers
+    const rawFromName = process.env.SMTP_FROM_NAME || "TôLivre";
+    const safeFromName = rawFromName
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\x20-\x7E]/g, "");
+
+    const fromHeader = `${safeFromName} <${
+      process.env.SMTP_FROM_EMAIL || "onboarding@resend.dev"
+    }>`;
+
     const { data, error } = await resend.emails.send({
-      from: `${process.env.SMTP_FROM_NAME || "TôLivre"} <${
-        process.env.SMTP_FROM_EMAIL || "onboarding@resend.dev"
-      }>`,
+      from: fromHeader,
       to,
       subject,
       html,
@@ -44,15 +53,20 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
     });
 
     if (error) {
-      console.error("[Email] Erro ao enviar:", error);
-      return { success: false, error: String(error) };
+      console.error("[Email] Erro ao enviar:",
+        (error as any)?.response?.data || error
+      );
+      return { success: false, error: String((error as any)?.message || error) };
     }
 
     console.log("[Email] ✅ Enviado com sucesso:", data?.id);
     return { success: true, messageId: data?.id };
   } catch (error) {
-    console.error("[Email] Erro ao enviar email:", error);
-    return { success: false, error: String(error) };
+    console.error(
+      "[Email] Erro ao enviar email:",
+      (error as any)?.response?.data || (error as any)?.message || error
+    );
+    return { success: false, error: String((error as any)?.message || error) };
   }
 }
 
