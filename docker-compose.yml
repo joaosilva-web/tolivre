@@ -107,6 +107,9 @@ services:
       RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
       NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
 
+      # Resend
+      RESEND_API_KEY: ${RESEND_API_KEY}
+
     volumes:
       - ./uploads:/app/uploads
       - app_logs:/app/logs
