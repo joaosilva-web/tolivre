@@ -53,10 +53,14 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
     });
 
     if (error) {
-      console.error("[Email] Erro ao enviar:",
+      console.error(
+        "[Email] Erro ao enviar:",
         (error as any)?.response?.data || error
       );
-      return { success: false, error: String((error as any)?.message || error) };
+      return {
+        success: false,
+        error: String((error as any)?.message || error),
+      };
     }
 
     console.log("[Email] ✅ Enviado com sucesso:", data?.id);
@@ -93,98 +97,120 @@ export async function sendVerificationEmail(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verifique seu email - TôLivre</title>
+  <title>Confirme seu email | TôLivre</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #1AC897 0%, #1892C9 100%); padding: 28px 20px; text-align: center;">
-              <span style="display:none; font-size:1px; color:#ffffff; max-height:0; max-width:0; opacity:0; overflow:hidden;">Confirme seu email para ativar sua conta no TôLivre ✨</span>
-              <div style="text-align:center;">
-                <img src="${hostedLogoUrl}" alt="TôLivre" style="width:120px; height:auto; display:block; margin:0 auto; border:0;" />
-              </div>
-              <p style="color: #ffffff; margin: 8px 0 0 0; font-size: 15px;">Liberte Sua Agenda 🕊️</p>
+            <td style="background: linear-gradient(135deg, #10B981 0%, #1892C9 100%); padding: 28px 20px; text-align: center;">
+              <span style="display:none; font-size:1px; color:#ffffff; max-height:0; max-width:0; opacity:0; overflow:hidden;">
+                Falta só um passo para liberar sua agenda ✨
+              </span>
+
+              <img src="${hostedLogoUrl}" alt="TôLivre" style="width:120px; height:auto; display:block; margin:0 auto;" />
+
+              <p style="color:#ffffff; margin:10px 0 0 0; font-size:14px;">
+                Liberte sua agenda 🕊️
+              </p>
             </td>
           </tr>
-          
+
           <!-- Body -->
           <tr>
             <td style="padding: 36px 30px;">
-              <h2 style="color: #333333; margin: 0 0 12px 0; font-size: 22px;">Olá, ${name} 👋</h2>
-              <p style="color: #666666; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0;">
-                Obrigado por se cadastrar no <strong>TôLivre</strong>! Estamos felizes em ter você por aqui.
+              <h2 style="color:#333333; margin:0 0 12px 0; font-size:22px;">
+                Olá, ${name}! 👋
+              </h2>
+
+              <p style="color:#555555; font-size:15px; line-height:1.6; margin:0 0 16px 0;">
+                Seja bem-vindo ao <strong>TôLivre</strong>!
               </p>
-              <p style="color: #666666; font-size: 15px; line-height: 1.6; margin: 0 0 22px 0;">
-                Para começar a liberar sua agenda e receber reservas, confirme seu email clicando no botão abaixo ✨
+
+              <p style="color:#555555; font-size:15px; line-height:1.6; margin:0 0 22px 0;">
+                Estamos prontos para cuidar da sua agenda e te ajudar a ganhar mais tempo livre.
+                Para começar, precisamos apenas que você confirme seu email.
               </p>
-              
+
               <!-- Button -->
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding: 18px 0;">
-                    <a href="${verificationUrl}" aria-label="Verificar email" style="display: inline-block; background: linear-gradient(135deg, #1AC897 0%, #1892C9 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 6px; font-size: 16px; font-weight: 700;">
-                      Confirmar email
+                    <a href="${verificationUrl}" aria-label="Confirmar email"
+                      style="display:inline-block; background: linear-gradient(135deg, #10B981 0%, #1892C9 100%);
+                      color:#ffffff; text-decoration:none; padding:14px 42px; border-radius:6px;
+                      font-size:16px; font-weight:700;">
+                      Confirmar meu email
                     </a>
                   </td>
                 </tr>
               </table>
-              
-              <p style="color: #999999; font-size: 13px; line-height: 1.6; margin: 24px 0 0 0;">
-                Se o botão não funcionar, copie e cole este link no seu navegador:
+
+              <p style="color:#999999; font-size:13px; line-height:1.6; margin:24px 0 0 0;">
+                Se o botão não funcionar, copie e cole o link abaixo no seu navegador:
               </p>
-              <p style="color: #667eea; font-size: 13px; word-break: break-all; margin: 8px 0 0 0;">
+
+              <p style="color:#10B981; font-size:13px; word-break:break-all; margin:8px 0 0 0;">
                 ${verificationUrl}
               </p>
-              
-              <hr style="border: none; border-top: 1px solid #eeeeee; margin: 28px 0;">
-              
-              <p style="color: #999999; font-size: 12px; line-height: 1.6; margin: 0;">
+
+              <hr style="border:none; border-top:1px solid #eeeeee; margin:28px 0;">
+
+              <p style="color:#999999; font-size:12px; line-height:1.6; margin:0;">
                 <strong>Este link expira em 24 horas.</strong><br>
-                Se você não criou uma conta no TôLivre, por favor ignore este email. 💬
+                Se você não criou uma conta no TôLivre, é só ignorar este email.
               </p>
             </td>
           </tr>
-          
+
           <!-- Footer -->
           <tr>
-            <td style="background-color: #f8f8f8; padding: 18px 30px; text-align: center; border-top: 1px solid #eeeeee;">
-              <p style="color: #999999; font-size: 12px; margin: 0;">
-                © 2025 TôLivre. Todos os direitos reservados.
+            <td style="background-color:#f8f8f8; padding:18px 30px; text-align:center; border-top:1px solid #eeeeee;">
+              <p style="color:#999999; font-size:12px; margin:0;">
+                © 2025 TôLivre — O sistema de agendamento que trabalha por você.
               </p>
-              <p style="color: #999999; font-size: 12px; margin: 8px 0 0 0;">
+              <p style="color:#999999; font-size:12px; margin:8px 0 0 0;">
                 <a href="${
                   process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-                }" style="color: #667eea; text-decoration: none;">tolivre.com.br</a>
+                }"
+                   style="color:#10B981; text-decoration:none;">
+                  tolivre.com.br
+                </a>
               </p>
             </td>
           </tr>
+
         </table>
       </td>
     </tr>
   </table>
 </body>
 </html>
-  `;
+`;
 
   const text = `
 Olá, ${name}!
 
-Obrigado por se cadastrar no TôLivre!
+Seja bem-vindo ao TôLivre 👋
 
-Para começar a usar nossa plataforma, verifique seu email clicando no link abaixo:
+Estamos prontos para cuidar da sua agenda e te ajudar a ganhar mais tempo livre.
+Para começar, confirme seu email acessando o link abaixo:
 
 ${verificationUrl}
 
 Este link expira em 24 horas.
 
-Se você não criou uma conta no TôLivre, por favor ignore este email.
+Se você não criou uma conta no TôLivre, basta ignorar este email.
 
-© 2025 TôLivre
-  `;
+—
+TôLivre
+O sistema de agendamento que trabalha por você.
+© 2025
+`;
 
   return sendEmail({
     to: email,
