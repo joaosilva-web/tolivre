@@ -18,6 +18,8 @@ import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import LaunchCountdown from '../components/launch-countdown'
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -579,57 +581,106 @@ export default function Home() {
           style={{ perspective: "1000px" }}
         >
           <div className="max-w-7xl mx-auto">
-            <div className="text-center space-y-8">
-              <h1
-                className="hero-title text-6xl md:text-8xl font-bold leading-tight"
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <span className="block text-primary">Liberte</span>
-                <span className="block text-primary">Sua Agenda</span>
+            <LaunchCountdown heroRef={heroRef} />
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center justify-center gap-3">
+                <span className="text-3xl">🕊️</span>
+                <span className="text-3xl md:text-4xl font-extrabold">TôLivre</span>
+              </div>
+
+              <h1 className="hero-title text-3xl md:text-4xl font-bold leading-tight">
+                Se liberte sua agenda. Ganhe tempo de verdade.
               </h1>
-              <p className="hero-subtitle text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-                Agendamento online automático para profissionais de serviço.
-                Reduza no-shows, economize tempo e foque no que realmente
-                importa: seu negócio.
+
+              <p className="hero-subtitle text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                O sistema de agendamento online que trabalha por você, enquanto
+                você trabalha melhor e vive com mais liberdade.
               </p>
+
               <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href="/login?tab=register">
                   <Button
                     size="lg"
-                    className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 hover:scale-110 transition-all duration-300"
+                    className="text-lg px-8 py-5 bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 transition-all duration-300"
                   >
-                    Começar Agora
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    Começar grátis
                   </Button>
                 </Link>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-lg px-8 py-6 hover:scale-110 transition-all duration-300"
-                >
-                  Ver Demonstração
-                </Button>
+                <Link href="/demonstracao">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="text-lg px-8 py-5 hover:scale-105 transition-all duration-300"
+                  >
+                    Ver como funciona
+                  </Button>
+                </Link>
               </div>
 
               {/* Trust badges */}
-              <div className="flex flex-wrap justify-center gap-6 mt-12">
+              <div className="flex flex-wrap justify-center gap-6 mt-8">
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <span className="text-sm font-semibold">14 dias grátis</span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <Clock className="w-5 h-5 text-blue-500" />
-                  <span className="text-sm font-semibold">
-                    Agendamento 24/7
-                  </span>
+                  <span className="text-sm font-semibold">Mensagens no WhatsApp</span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <MessageCircle className="w-5 h-5 text-purple-500" />
-                  <span className="text-sm font-semibold">
-                    WhatsApp automático
-                  </span>
+                  <span className="text-sm font-semibold">Agendamento 24/7</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* New section: Sua agenda não deveria te prender */}
+        <section className="py-20 px-6 bg-background/0">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Sua agenda não deveria te prender</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
+              Mensagens no WhatsApp. Confirmações manuais. Remarcações de última hora. Clientes que esquecem o horário.
+            </p>
+            <p className="text-base text-muted-foreground max-w-3xl mx-auto mb-6">
+              Tudo isso rouba o que você mais precisa: tempo. O TôLivre automatiza seus agendamentos para que você pare de correr atrás da agenda — e volte a ter controle do seu dia.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 text-left mt-8">
+              <div>
+                <h3 className="text-xl font-semibold mb-3">✨ O que o TôLivre faz por você</h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-3"><span className="text-2xl">🗓️</span><div><strong>Agendamentos automáticos</strong><div className="text-sm">Seus clientes agendam sozinhos, no horário disponível, sem trocas infinitas de mensagens.</div></div></li>
+                  <li className="flex items-start gap-3"><span className="text-2xl">🔔</span><div><strong>Lembretes automáticos</strong><div className="text-sm">Reduza faltas com lembretes inteligentes por mensagem, sem esforço.</div></div></li>
+                  <li className="flex items-start gap-3"><span className="text-2xl">🔄</span><div><strong>Menos retrabalho</strong><div className="text-sm">Chega de remarcar tudo manualmente. Sua agenda se organiza sozinha.</div></div></li>
+                  <li className="flex items-start gap-3"><span className="text-2xl">🤝</span><div><strong>Atendimento mais profissional</strong><div className="text-sm">Transmita organização, confiança e modernidade desde o primeiro contato.</div></div></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-3">🧠 Menos mensagens. Mais tempo livre.</h3>
+                <p className="text-muted-foreground mb-4">Com o TôLivre, sua agenda:</p>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                  <li>fica organizada</li>
+                  <li>funciona sozinha</li>
+                  <li>respeita seus horários</li>
+                </ul>
+
+                <p className="mt-6 text-muted-foreground">Você ganha previsibilidade, tranquilidade e liberdade para focar no que realmente importa.</p>
+
+                <div className="mt-6 flex gap-3">
+                  <Link href="/login?tab=register">
+                    <Button className="bg-gradient-to-r from-primary to-blue-600">Começar grátis</Button>
+                  </Link>
+                  <Link href="/demonstracao">
+                    <Button variant="outline">Criar minha agenda agora</Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 text-sm text-muted-foreground">
+              <p>👩‍💼👨‍🔧 Feito para profissionais de serviços — autônomos, clínicas, salões, estúdios e prestadores de serviço em geral.</p>
             </div>
           </div>
         </section>
