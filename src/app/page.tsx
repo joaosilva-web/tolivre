@@ -13,12 +13,13 @@ import {
   TrendingUp,
   CheckCircle,
   ArrowRight,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-import LaunchCountdown from '../components/launch-countdown'
+import LaunchCountdown from "../components/launch-countdown";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,30 @@ export default function Home() {
   const teamRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+
+  const navItems: {
+    label: string;
+    ref: { current?: HTMLElement | null } | null;
+  }[] = [
+    { label: "Início", ref: heroRef },
+    { label: "Funcionalidades", ref: featuresRef },
+    { label: "Integrações", ref: integrationsRef },
+    { label: "Preços", ref: pricingRef },
+    { label: "Contato", ref: ctaRef },
+  ];
+
+  function scrollToRef(ref: { current?: HTMLElement | null } | null) {
+    const el = ref && ref.current ? ref.current : null;
+    if (!el) return;
+    try {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch {
+      window.scrollTo({
+        top: (el as HTMLElement).offsetTop || 0,
+        behavior: "smooth",
+      });
+    }
+  }
 
   useEffect(() => {
     // Loading screen animation
@@ -560,6 +585,19 @@ export default function Home() {
                 </div>
                 <span className="text-2xl font-bold">TôLivre</span>
               </div>
+              <div className="hidden md:flex md:flex-1 md:justify-center">
+                <div className="flex items-center gap-4">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.label}
+                      onClick={() => scrollToRef(item.ref)}
+                      className="text-md text-text hover:text-primary transition-colors cursor-pointer"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="flex items-center gap-4">
                 <Link href="/login">
                   <Button variant="ghost">Entrar</Button>
@@ -578,23 +616,40 @@ export default function Home() {
         <section
           ref={heroRef}
           className="relative pt-20 pb-32 px-4"
-          style={{ perspective: "1000px" }}
+          style={{
+            perspective: "1000px",
+            backgroundImage: "url('/hero-background.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
         >
-          <div className="max-w-7xl mx-auto">
+          {/* Overlay between background and text: transparent top -> white bottom */}
+          <div
+            className="absolute inset-0 pointer-events-none z-10"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
+            }}
+          />
+
+          <div className="max-w-7xl mx-auto relative z-20">
             <LaunchCountdown heroRef={heroRef} />
             <div className="text-center space-y-6">
               <div className="inline-flex items-center justify-center gap-3">
                 <span className="text-3xl">🕊️</span>
-                <span className="text-3xl md:text-4xl font-extrabold">TôLivre</span>
+                <span className="text-3xl md:text-4xl font-extrabold">
+                  TôLivre
+                </span>
               </div>
 
               <h1 className="hero-title text-3xl md:text-4xl font-bold leading-tight">
-                Se liberte sua agenda. Ganhe tempo de verdade.
+                Se liberte da sua agenda. Ganhe tempo de verdade.
               </h1>
 
               <p className="hero-subtitle text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
                 O sistema de agendamento online que trabalha por você, enquanto
-                você trabalha melhor e vive com mais liberdade.
+                você trabalha e vive com mais liberdade.
               </p>
 
               <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -625,62 +680,35 @@ export default function Home() {
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <Clock className="w-5 h-5 text-blue-500" />
-                  <span className="text-sm font-semibold">Mensagens no WhatsApp</span>
+                  <span className="text-sm font-semibold">
+                    Mensagens no WhatsApp
+                  </span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
                   <MessageCircle className="w-5 h-5 text-purple-500" />
-                  <span className="text-sm font-semibold">Agendamento 24/7</span>
+                  <span className="text-sm font-semibold">
+                    Agendamento 24/7
+                  </span>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* New section: Sua agenda não deveria te prender */}
-        <section className="py-20 px-6 bg-background/0">
-          <div className="max-w-5xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Sua agenda não deveria te prender</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
-              Mensagens no WhatsApp. Confirmações manuais. Remarcações de última hora. Clientes que esquecem o horário.
-            </p>
-            <p className="text-base text-muted-foreground max-w-3xl mx-auto mb-6">
-              Tudo isso rouba o que você mais precisa: tempo. O TôLivre automatiza seus agendamentos para que você pare de correr atrás da agenda — e volte a ter controle do seu dia.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-8 text-left mt-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-3">✨ O que o TôLivre faz por você</h3>
-                <ul className="space-y-3 text-muted-foreground">
-                  <li className="flex items-start gap-3"><span className="text-2xl">🗓️</span><div><strong>Agendamentos automáticos</strong><div className="text-sm">Seus clientes agendam sozinhos, no horário disponível, sem trocas infinitas de mensagens.</div></div></li>
-                  <li className="flex items-start gap-3"><span className="text-2xl">🔔</span><div><strong>Lembretes automáticos</strong><div className="text-sm">Reduza faltas com lembretes inteligentes por mensagem, sem esforço.</div></div></li>
-                  <li className="flex items-start gap-3"><span className="text-2xl">🔄</span><div><strong>Menos retrabalho</strong><div className="text-sm">Chega de remarcar tudo manualmente. Sua agenda se organiza sozinha.</div></div></li>
-                  <li className="flex items-start gap-3"><span className="text-2xl">🤝</span><div><strong>Atendimento mais profissional</strong><div className="text-sm">Transmita organização, confiança e modernidade desde o primeiro contato.</div></div></li>
-                </ul>
+              {/* Down arrow CTA (pulse animation) */}
+              <div className="mt-8 flex justify-center">
+                <button
+                  aria-label="Ver funcionalidades"
+                  onClick={() => scrollToRef(featuresRef)}
+                  className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-md hover:scale-105 transition-transform cursor-pointer"
+                  style={{ zIndex: 30 }}
+                >
+                  <ChevronDown
+                    className="w-6 h-6 text-primary"
+                    style={{
+                      animation: "pulseScale 1.6s infinite ease-in-out",
+                    }}
+                  />
+                </button>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-3">🧠 Menos mensagens. Mais tempo livre.</h3>
-                <p className="text-muted-foreground mb-4">Com o TôLivre, sua agenda:</p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                  <li>fica organizada</li>
-                  <li>funciona sozinha</li>
-                  <li>respeita seus horários</li>
-                </ul>
 
-                <p className="mt-6 text-muted-foreground">Você ganha previsibilidade, tranquilidade e liberdade para focar no que realmente importa.</p>
-
-                <div className="mt-6 flex gap-3">
-                  <Link href="/login?tab=register">
-                    <Button className="bg-gradient-to-r from-primary to-blue-600">Começar grátis</Button>
-                  </Link>
-                  <Link href="/demonstracao">
-                    <Button variant="outline">Criar minha agenda agora</Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10 text-sm text-muted-foreground">
-              <p>👩‍💼👨‍🔧 Feito para profissionais de serviços — autônomos, clínicas, salões, estúdios e prestadores de serviço em geral.</p>
+              <style>{`@keyframes pulseScale { 0% { transform: translateY(0) scale(1); opacity:1 } 50% { transform: translateY(6px) scale(0.98); opacity:0.85 } 100% { transform: translateY(0) scale(1); opacity:1 } }`}</style>
             </div>
           </div>
         </section>
