@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import IconLogo from "@/components/ui/icon-logo";
+import Image from "next/image";
 import {
   Calendar,
   MessageCircle,
@@ -14,6 +15,8 @@ import {
   CheckCircle,
   ArrowRight,
   ChevronDown,
+  Menu,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -49,6 +52,8 @@ export default function Home() {
     { label: "Preços", ref: pricingRef },
     { label: "Contato", ref: ctaRef },
   ];
+
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   function scrollToRef(ref: { current?: HTMLElement | null } | null) {
     const el = ref && ref.current ? ref.current : null;
@@ -576,7 +581,7 @@ export default function Home() {
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-50 border-b bg-background/80 backdrop-blur-lg">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center gap-2">
@@ -585,7 +590,7 @@ export default function Home() {
                 </div>
                 <span className="text-2xl font-bold">TôLivre</span>
               </div>
-              <div className="hidden md:flex md:flex-1 md:justify-center">
+              <div className="hidden md:flex md:flex-1 md:justify-center justify-center items-center">
                 <div className="flex items-center gap-4">
                   {navItems.map((item) => (
                     <button
@@ -599,6 +604,57 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
+                {/* Mobile hamburger */}
+                <div className="md:hidden">
+                  <button
+                    aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+                    onClick={() => setMobileOpen((v) => !v)}
+                    className="p-2 rounded-md bg-transparent hover:bg-surface/5"
+                  >
+                    {mobileOpen ? (
+                      <X className="w-6 h-6 text-foreground" />
+                    ) : (
+                      <Menu className="w-6 h-6 text-foreground" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Buttons visible only on md+ */}
+                <div className="hidden md:flex items-center gap-4">
+                  <Link href="/login">
+                    <Button variant="ghost">Entrar</Button>
+                  </Link>
+                  <Link href="/login?tab=register">
+                    <Button className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90">
+                      Começar Grátis
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        {/* Spacer to offset fixed header height */}
+        <div className="h-16" aria-hidden />
+
+        {/* Mobile menu dropdown */}
+        {mobileOpen && (
+          <div className="md:hidden absolute left-0 right-0 top-[64px] z-40 bg-background border-b shadow-lg">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3">
+              {navItems.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    scrollToRef(item.ref);
+                  }}
+                  className="text-left w-full text-lg text-foreground py-2"
+                >
+                  {item.label}
+                </button>
+              ))}
+
+              <div className="pt-2 border-t mt-2 flex flex-col gap-2">
                 <Link href="/login">
                   <Button variant="ghost">Entrar</Button>
                 </Link>
@@ -610,12 +666,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </nav>
+        )}
 
         {/* Hero Section */}
         <section
           ref={heroRef}
-          className="relative pt-20 pb-32 px-4"
+          className="relative pt-20 px-4 h-screen"
           style={{
             perspective: "1000px",
             backgroundImage: "url('/hero-background.jpg')",
@@ -636,20 +692,13 @@ export default function Home() {
           <div className="max-w-7xl mx-auto relative z-20">
             <LaunchCountdown heroRef={heroRef} />
             <div className="text-center space-y-6">
-              <div className="inline-flex items-center justify-center gap-3">
-                <span className="text-3xl">🕊️</span>
-                <span className="text-3xl md:text-4xl font-extrabold">
-                  TôLivre
-                </span>
-              </div>
-
               <h1 className="hero-title text-3xl md:text-4xl font-bold leading-tight">
                 Se liberte da sua agenda. Ganhe tempo de verdade.
               </h1>
 
               <p className="hero-subtitle text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                O sistema de agendamento online que trabalha por você, enquanto
-                você trabalha e vive com mais liberdade.
+                Agendamentos confirmados automaticamente. Menos faltas, mais
+                pontualidade, tudo em um só sistema.
               </p>
 
               <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -679,15 +728,15 @@ export default function Home() {
                   <span className="text-sm font-semibold">14 dias grátis</span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
-                  <Clock className="w-5 h-5 text-blue-500" />
+                  <Image src="/logo.svg" alt="TôLivre" width={18} height={18} />
                   <span className="text-sm font-semibold">
-                    Mensagens no WhatsApp
+                    Confirmação automática (WhatsApp)
                   </span>
                 </div>
                 <div className="hero-badge flex items-center gap-2 bg-card border border-border rounded-full px-6 py-3 hover:scale-110 transition-all duration-300">
-                  <MessageCircle className="w-5 h-5 text-purple-500" />
+                  <Image src="/logo.svg" alt="TôLivre" width={18} height={18} />
                   <span className="text-sm font-semibold">
-                    Agendamento 24/7
+                    Agendamento 24/7 com confirmação
                   </span>
                 </div>
               </div>
@@ -760,16 +809,16 @@ export default function Home() {
               {[
                 {
                   icon: MessageCircle,
-                  title: "Lembretes Automáticos",
+                      title: "Confirmação automática (WhatsApp) e lembretes",
                   description:
-                    "Reduza no-shows em até 80% com lembretes automáticos por WhatsApp. Seus clientes nunca mais esquecem um agendamento.",
+                    "Confirme presença e reduza no-shows em até 80% com confirmações automáticas e lembretes por WhatsApp. Seus clientes recebem aviso e confirmação em tempo real.",
                   gradient: "from-green-500 to-emerald-600",
                 },
                 {
                   icon: Calendar,
                   title: "Agendamento 24/7",
                   description:
-                    "Seus clientes podem agendar a qualquer hora do dia, mesmo quando você está dormindo ou atendendo. Nunca perca uma venda.",
+                    "Seus clientes podem agendar a qualquer hora do dia, e recebem confirmação instantânea por WhatsApp. Nunca perca uma venda.",
                   gradient: "from-blue-500 to-cyan-600",
                 },
                 {
@@ -859,9 +908,9 @@ export default function Home() {
                   icon: "🏥",
                   title: "Clínicas & Consultórios",
                   description:
-                    "Médicos, dentistas, psicólogos e terapeutas. Lembretes automáticos, gestão de pacientes e histórico completo.",
+                    "Médicos, dentistas, psicólogos e terapeutas. Confirmação automática (WhatsApp), gestão de pacientes e histórico completo.",
                   benefits: [
-                    "Confirmação WhatsApp",
+                    "Confirmação automática (WhatsApp)",
                     "Histórico de consultas",
                     "5h/semana economizadas",
                   ],
@@ -991,7 +1040,7 @@ export default function Home() {
                   role: "Gerente - Clínica Med+",
                   avatar: "CM",
                   rating: 5,
-                  text: "A integração com WhatsApp foi um divisor de águas. Nossos pacientes recebem lembretes automáticos e nunca mais tivemos horários vagos.",
+                  text: "A integração com WhatsApp foi um divisor de águas. Nossos pacientes recebem confirmação automática e lembretes, e nunca mais tivemos horários vagos.",
                 },
                 {
                   name: "Ana Costa",

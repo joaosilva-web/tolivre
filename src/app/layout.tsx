@@ -23,11 +23,25 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "TôLivre - Sistema de Agendamentos",
-  description: "Plataforma completa para gestão de agendamentos e serviços",
+  description:
+    "Plataforma de agendamento com confirmações automáticas via WhatsApp para reduzir no‑shows e otimizar seu tempo.",
   icons: {
     icon: "/logo.svg",
     shortcut: "/logo.svg",
     apple: "/logo.svg",
+  },
+  openGraph: {
+    title: "TôLivre - Agendamentos com confirmação automática",
+    description:
+      "Agendamentos confirmados automaticamente por WhatsApp — menos faltas, mais pontualidade. Experimente 14 dias grátis.",
+    images: ["/logo.svg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TôLivre - Agendamentos com confirmação automática",
+    description:
+      "Agendamentos confirmados automaticamente por WhatsApp — menos faltas, mais pontualidade.",
+    images: ["/logo.svg"],
   },
 };
 
