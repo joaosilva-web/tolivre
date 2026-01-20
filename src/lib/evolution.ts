@@ -42,5 +42,3 @@ export async function sendWhatsAppText(
   return res.json();
 }
 
-const evolutionClient = { sendWhatsAppText };
-export default evolutionClient;

@@ -60,7 +60,7 @@ function ensureSock() {
   return sock;
 }
 
-export async function sendMessage(to: string, content: AnyMessageContent) {
+async function sendMessage(to: string, content: AnyMessageContent) {
   await initWhatsApp();
   const s = ensureSock();
   // `to` should be full JID (like '5511999999999@s.whatsapp.net') or plain phone number
@@ -72,13 +72,4 @@ export async function sendText(to: string, text: string) {
   return sendMessage(to, { text });
 }
 
-export function getSocketInstance() {
-  return sock;
-}
 
-export default {
-  initWhatsApp,
-  sendMessage,
-  sendText,
-  getSocketInstance,
-};

@@ -106,4 +106,3 @@ export function uiToPrisma(
   };
 }
 
-export default prismaToUI;

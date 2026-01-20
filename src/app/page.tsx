@@ -809,7 +809,7 @@ export default function Home() {
               {[
                 {
                   icon: MessageCircle,
-                      title: "Confirmação automática (WhatsApp) e lembretes",
+                  title: "Confirmação automática (WhatsApp) e lembretes",
                   description:
                     "Confirme presença e reduza no-shows em até 80% com confirmações automáticas e lembretes por WhatsApp. Seus clientes recebem aviso e confirmação em tempo real.",
                   gradient: "from-green-500 to-emerald-600",

@@ -159,6 +159,15 @@ exports.Prisma.CompanyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChairScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  number: 'number',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WorkingHoursScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -218,6 +227,7 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   professionalId: 'professionalId',
+  chairId: 'chairId',
   clientName: 'clientName',
   clientId: 'clientId',
   serviceId: 'serviceId',
@@ -494,6 +504,7 @@ exports.Prisma.ModelName = {
   Lead: 'Lead',
   RateLimit: 'RateLimit',
   Company: 'Company',
+  Chair: 'Chair',
   WorkingHours: 'WorkingHours',
   WorkingHourException: 'WorkingHourException',
   Service: 'Service',

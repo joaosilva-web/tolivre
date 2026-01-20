@@ -65,10 +65,6 @@ export const PLANS = {
 
 export type PlanName = keyof typeof PLANS;
 
-export function getPlanLimits(plan: PlanName) {
-  return PLANS[plan].features;
-}
-
 export function checkAppointmentLimit(
   subscription: Subscription | null,
   currentCount: number
@@ -93,37 +89,4 @@ export function checkAppointmentLimit(
     }
   }
   return { allowed: true };
-}
-
-export function checkProfessionalLimit(
-  subscription: Subscription | null,
-  currentCount: number
-): { allowed: boolean; message?: string } {
-  if (!subscription || subscription.status !== "ACTIVE") {
-    const limit = PLANS.TRIAL.features.professionals;
-    // Trial tem professionals ilimitados
-    if (limit !== "unlimited" && currentCount >= limit) {
-      return {
-        allowed: false,
-        message: `Limite de ${limit} profissional atingido no plano gratuito. Faça upgrade para adicionar mais.`,
-      };
-    }
-  } else {
-    const planName = subscription.plan as PlanName;
-    const limit = PLANS[planName].features.professionals;
-    if (limit !== "unlimited" && currentCount >= limit) {
-      return {
-        allowed: false,
-        message: `Limite de ${limit} profissionais atingido. Faça upgrade do plano.`,
-      };
-    }
-  }
-  return { allowed: true };
-}
-
-export function getCurrentPlan(subscription: Subscription | null): PlanName {
-  if (!subscription || subscription.status !== "ACTIVE") {
-    return "TRIAL";
-  }
-  return subscription.plan as PlanName;
 }

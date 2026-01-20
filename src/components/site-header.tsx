@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { CircleQuestionMark } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 import { NotificationBell } from "@/components/notification-bell";
 import { TrialTimer } from "@/components/trial-timer";
 
@@ -14,9 +17,10 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
-          Document
-        </h1>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-3">
+          {/* Dynamic breadcrumb based on pathname */}
+          <Breadcrumb />
+        </nav>
         <TrialTimer />
         <div className="ml-auto flex items-center gap-2">
           <NotificationBell />
@@ -33,5 +37,69 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+  );
+}
+
+function mapSegmentToLabel(seg: string) {
+  const map: Record<string, string> = {
+    dashboard: "Dashboard",
+    settings: "Configurações",
+    profile: "Perfil",
+    services: "Serviços",
+    appointments: "Agendamentos",
+    "working-hours": "Horários",
+    integrations: "Integrações",
+    login: "Entrar",
+    demonstracao: "Demonstração",
+  };
+
+  if (map[seg]) return map[seg];
+  const label = decodeURIComponent(seg).replace(/-/g, " ");
+  return label.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function Breadcrumb() {
+  const pathname = usePathname() || "/";
+  const segments = pathname.split("/").filter(Boolean);
+
+  const items = useMemo(() => {
+    const acc: { label: string; href: string }[] = [
+      { label: "Dashboard", href: "/dashboard" },
+    ];
+    let cur = "";
+    for (const seg of segments) {
+      cur += `/${seg}`;
+      // Avoid duplicating the 'dashboard' root segment
+      if (seg === "dashboard") continue;
+      acc.push({ label: mapSegmentToLabel(seg), href: cur });
+    }
+    return acc;
+  }, [pathname]);
+
+  return (
+    <div className="flex items-center gap-2">
+      {items.map((it, idx) => {
+        const isLast = idx === items.length - 1;
+        return isLast ? (
+          <span
+            key={it.href}
+            className="text-base font-medium bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent"
+            aria-current="page"
+          >
+            {it.label}
+          </span>
+        ) : (
+          <span key={it.href} className="flex items-center gap-2">
+            <Link
+              href={it.href}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              {it.label}
+            </Link>
+            <span className="text-sm text-muted-foreground">/</span>
+          </span>
+        );
+      })}
+    </div>
   );
 }

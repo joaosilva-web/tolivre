@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { preferenceClient } from "@/lib/mercadopago";
+import { createOrRetrieveProduct, createOrRetrievePrice, createCheckoutSession } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
@@ -106,72 +106,47 @@ export async function POST(req: NextRequest) {
       return api.badRequest("Empresa não encontrada");
     }
 
-    // Validar URL base e remover barra final se existir
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    baseUrl = baseUrl.replace(/\/+$/, ""); // Remove todas as barras do final
+    // URLs de sucesso e cancelamento
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const successUrl = `${baseUrl}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/escolher-plano?payment=cancelled`;
 
-    if (!baseUrl) {
-      console.error("[Checkout] NEXT_PUBLIC_APP_URL não configurado");
-      return api.serverError("Configuração de URL inválida");
-    }
+    console.log("[Stripe Checkout] Base URL:", baseUrl);
+    console.log("[Stripe Checkout] Success URL:", successUrl);
+    console.log("[Stripe Checkout] Cancel URL:", cancelUrl);
 
-    const backUrls = {
-      success: `${baseUrl}/dashboard/assinatura/success`,
-      failure: `${baseUrl}/dashboard/assinatura/failure`,
-      pending: `${baseUrl}/dashboard/assinatura/pending`,
-    };
+    // Criar produto no Stripe (se não existir)
+    const product = await createOrRetrieveProduct(
+      plan.id.toLowerCase(),
+      plan.name,
+      `Assinatura mensal do plano ${plan.name}`
+    );
 
-    console.log("[Checkout] Base URL:", baseUrl);
-    console.log("[Checkout] Back URLs:", backUrls);
+    // Criar preço no Stripe (se não existir)
+    const price = await createOrRetrievePrice(
+      product.id,
+      plan.price,
+      "brl",
+      `Plano ${plan.name} - Mensal`
+    );
 
-    // Criar preferência de pagamento no Mercado Pago
-    // Mercado Pago não aceita localhost em back_urls e notification_url
-    const isLocalhost =
-      baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1");
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const preferenceBody: any = {
-      items: [
-        {
-          id: plan.id,
-          title: `ToLivre - Plano ${plan.name}`,
-          description: `Assinatura mensal do plano ${plan.name}`,
-          quantity: 1,
-          unit_price: plan.price,
-          currency_id: "BRL",
-        },
-      ],
-      payer: {
-        email: company.email || user.email,
-        name: company.nomeFantasia,
-      },
-      external_reference: user.companyId,
+    // Criar sessão de checkout no Stripe
+    const session = await createCheckoutSession({
+      priceId: price.id,
+      customerEmail: company.email || user.email,
+      customerName: company.nomeFantasia || user.name,
+      successUrl,
+      cancelUrl,
       metadata: {
         company_id: user.companyId,
         plan: parsed.plan,
+        user_id: user.id,
       },
-    };
-
-    // Apenas adicionar back_urls e notification_url em produção
-    if (!isLocalhost) {
-      preferenceBody.back_urls = backUrls;
-      preferenceBody.auto_return = "approved";
-      preferenceBody.notification_url = `${baseUrl}/api/webhooks/mercadopago`;
-    }
-
-    console.log(
-      "[Checkout] Creating preference with:",
-      JSON.stringify(preferenceBody, null, 2)
-    );
-
-    const preference = await preferenceClient.create({
-      body: preferenceBody,
     });
 
     return api.ok({
-      preferenceId: preference.id,
-      initPoint: preference.init_point,
-      sandboxInitPoint: preference.sandbox_init_point,
+      sessionId: session.id,
+      url: session.url,
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
