@@ -3,21 +3,25 @@
 import { useEffect, useState } from "react";
 import useSession from "@/hooks/useSession";
 import {
-  Loader2,
-  Save,
-  Eye,
-  Plus,
-  Trash2,
-  Star,
-  Link as LinkIcon,
-  Palette,
-  Image as ImageIcon,
-  Globe,
   AlertCircle,
+  Eye,
+  Globe,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  Loader2,
+  Palette,
+  Plus,
+  Save,
+  Star,
+  Trash2,
+  Upload,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset } from "@/components/ui/sidebar";
 
 interface Testimonial {
   id?: string;
@@ -56,6 +60,9 @@ export default function CompanyPageSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [pageExists, setPageExists] = useState(false);
+  const [uploadingField, setUploadingField] = useState<
+    "logo" | "coverImage" | null
+  >(null);
 
   const [config, setConfig] = useState<PageConfig>({
     slug: "",
@@ -162,11 +169,46 @@ export default function CompanyPageSettings() {
   const updateTestimonial = (
     index: number,
     field: keyof Testimonial,
-    value: string | number
+    value: string | number,
   ) => {
     const updated = [...testimonials];
     updated[index] = { ...updated[index], [field]: value };
     setTestimonials(updated);
+  };
+
+  const handleImageUpload = async (
+    field: "logo" | "coverImage",
+    file: File,
+  ) => {
+    setUploadingField(field);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("field", field);
+
+      const res = await fetch("/api/company/page/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setConfig((prev) => ({ ...prev, [field]: data.data.value }));
+        toast.success("Imagem atualizada com sucesso");
+      } else {
+        const err = await res.json();
+        toast.error(err.error || "Erro ao enviar imagem");
+      }
+    } catch (err) {
+      console.error("Erro ao enviar imagem:", err);
+      toast.error("Erro ao enviar imagem");
+    } finally {
+      setUploadingField(null);
+    }
+  };
+
+  const handleRemoveImage = (field: "logo" | "coverImage") => {
+    setConfig((prev) => ({ ...prev, [field]: "" }));
   };
 
   const handlePreview = () => {
@@ -179,9 +221,12 @@ export default function CompanyPageSettings() {
 
   if (sessionLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </SidebarInset>
     );
   }
 
@@ -195,426 +240,524 @@ export default function CompanyPageSettings() {
 
   if (isEmployee) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center max-w-md">
-          <AlertCircle className="w-16 h-16 mx-auto mb-4 text-orange-500" />
-          <h1 className="text-2xl font-bold mb-2">Acesso Restrito</h1>
-          <p className="text-muted-foreground">
-            Apenas donos e gerentes podem configurar a página da empresa.
-          </p>
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col px-4 lg:px-6 py-8 items-center justify-center">
+          <div className="text-center max-w-md">
+            <AlertCircle className="w-16 h-16 mx-auto mb-4 text-orange-500" />
+            <h1 className="text-2xl font-bold mb-2">Acesso Restrito</h1>
+            <p className="text-muted-foreground">
+              Apenas donos e gerentes podem configurar a página da empresa.
+            </p>
+          </div>
         </div>
-      </div>
+      </SidebarInset>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Página Personalizada</h1>
-          <p className="text-muted-foreground">
-            Configure a página pública da sua empresa para seus clientes
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handlePreview}>
-            <Eye className="mr-2 w-4 h-4" />
-            Visualizar
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? (
-              <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="mr-2 w-4 h-4" />
-            )}
-            Salvar
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-8">
-        {/* Informações Básicas */}
-        <section className="bg-card border rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Globe className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold">Informações Básicas</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <SidebarInset>
+      <SiteHeader />
+      <div className="flex flex-1 flex-col">
+        <div className="container mx-auto px-4 py-8 max-w-5xl">
+          <div className="flex items-center justify-between mb-8 gap-3 flex-wrap">
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Nome da Página *
-              </label>
-              <input
-                type="text"
-                value={config.title}
-                onChange={(e) =>
-                  setConfig({ ...config, title: e.target.value })
-                }
-                placeholder="Nome da sua empresa"
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              <h1 className="text-4xl font-bold mb-2">Página Personalizada</h1>
+              <p className="text-muted-foreground">
+                Configure a página pública da sua empresa para seus clientes
+              </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Slug (URL) *
-              </label>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
-                  tolivre.com/
-                </span>
-                <input
-                  type="text"
-                  value={config.slug}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      slug: e.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9-]/g, ""),
-                    })
-                  }
-                  placeholder="minha-empresa"
-                  className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handlePreview}>
+                <Eye className="mr-2 w-4 h-4" />
+                Visualizar
+              </Button>
+              <Button onClick={handleSave} disabled={saving}>
+                {saving ? (
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 w-4 h-4" />
+                )}
+                Salvar
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            {/* Informações Básicas */}
+            <section className="bg-card border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Globe className="w-5 h-5 text-primary" />
+                <h2 className="text-2xl font-bold">Informações Básicas</h2>
               </div>
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">
-                Descrição / História
-              </label>
-              <textarea
-                value={config.description}
-                onChange={(e) =>
-                  setConfig({ ...config, description: e.target.value })
-                }
-                placeholder="Conte a história da sua empresa..."
-                rows={4}
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Endereço</label>
-              <input
-                type="text"
-                value={config.address}
-                onChange={(e) =>
-                  setConfig({ ...config, address: e.target.value })
-                }
-                placeholder="Rua, número, cidade"
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">WhatsApp</label>
-              <input
-                type="text"
-                value={config.whatsapp}
-                onChange={(e) =>
-                  setConfig({ ...config, whatsapp: e.target.value })
-                }
-                placeholder="5511999999999"
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Imagens */}
-        <section className="bg-card border rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <ImageIcon className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold">Imagens</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                URL do Logo
-              </label>
-              <input
-                type="url"
-                value={config.logo}
-                onChange={(e) => setConfig({ ...config, logo: e.target.value })}
-                placeholder="https://..."
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                URL da Imagem de Capa
-              </label>
-              <input
-                type="url"
-                value={config.coverImage}
-                onChange={(e) =>
-                  setConfig({ ...config, coverImage: e.target.value })
-                }
-                placeholder="https://..."
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Cores */}
-        <section className="bg-card border rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Palette className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold">Cores da Marca</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Cor Primária
-              </label>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={config.primaryColor}
-                  onChange={(e) =>
-                    setConfig({ ...config, primaryColor: e.target.value })
-                  }
-                  className="w-16 h-10 rounded border cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={config.primaryColor}
-                  onChange={(e) =>
-                    setConfig({ ...config, primaryColor: e.target.value })
-                  }
-                  className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Cor de Acento
-              </label>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={config.accentColor}
-                  onChange={(e) =>
-                    setConfig({ ...config, accentColor: e.target.value })
-                  }
-                  className="w-16 h-10 rounded border cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={config.accentColor}
-                  onChange={(e) =>
-                    setConfig({ ...config, accentColor: e.target.value })
-                  }
-                  className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Redes Sociais */}
-        <section className="bg-card border rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <LinkIcon className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold">Redes Sociais</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Instagram
-              </label>
-              <input
-                type="url"
-                value={config.instagram}
-                onChange={(e) =>
-                  setConfig({ ...config, instagram: e.target.value })
-                }
-                placeholder="https://instagram.com/..."
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Facebook</label>
-              <input
-                type="url"
-                value={config.facebook}
-                onChange={(e) =>
-                  setConfig({ ...config, facebook: e.target.value })
-                }
-                placeholder="https://facebook.com/..."
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Depoimentos */}
-        <section className="bg-card border rounded-xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Star className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-bold">Depoimentos</h2>
-            </div>
-            <Button onClick={addTestimonial} variant="outline" size="sm">
-              <Plus className="mr-2 w-4 h-4" />
-              Adicionar
-            </Button>
-          </div>
-          <div className="space-y-4">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Nome da Página *
+                  </label>
+                  <input
+                    type="text"
+                    value={config.title}
+                    onChange={(e) =>
+                      setConfig({ ...config, title: e.target.value })
+                    }
+                    placeholder="Nome da sua empresa"
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Slug (URL) *
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      tolivre.com/
+                    </span>
                     <input
                       type="text"
-                      value={testimonial.authorName}
+                      value={config.slug}
                       onChange={(e) =>
-                        updateTestimonial(index, "authorName", e.target.value)
+                        setConfig({
+                          ...config,
+                          slug: e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z0-9-]/g, ""),
+                        })
                       }
-                      placeholder="Nome do cliente"
-                      className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="minha-empresa"
+                      className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">Estrelas:</span>
-                      <select
-                        value={testimonial.rating}
-                        onChange={(e) =>
-                          updateTestimonial(
-                            index,
-                            "rating",
-                            parseInt(e.target.value)
-                          )
-                        }
-                        className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-2">
+                    Descrição / História
+                  </label>
+                  <textarea
+                    value={config.description}
+                    onChange={(e) =>
+                      setConfig({ ...config, description: e.target.value })
+                    }
+                    placeholder="Conte a história da sua empresa..."
+                    rows={4}
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Endereço
+                  </label>
+                  <input
+                    type="text"
+                    value={config.address}
+                    onChange={(e) =>
+                      setConfig({ ...config, address: e.target.value })
+                    }
+                    placeholder="Rua, número, cidade"
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    WhatsApp
+                  </label>
+                  <input
+                    type="text"
+                    value={config.whatsapp}
+                    onChange={(e) =>
+                      setConfig({ ...config, whatsapp: e.target.value })
+                    }
+                    placeholder="5511999999999"
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Imagens */}
+            <section className="bg-card border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <ImageIcon className="w-5 h-5 text-primary" />
+                <h2 className="text-2xl font-bold">Imagens</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">Logo</label>
+                  <div className="flex items-center gap-3">
+                    <div className="h-16 w-16 rounded-lg border bg-muted flex items-center justify-center overflow-hidden">
+                      {config.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={config.logo}
+                          alt="Logo"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">
+                          Sem logo
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="cursor-pointer">
+                        <div className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
+                          {uploadingField === "logo" ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Upload className="h-4 w-4" />
+                          )}
+                          {config.logo ? "Trocar logo" : "Enviar logo"}
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleImageUpload("logo", file);
+                          }}
+                        />
+                      </label>
+                      {config.logo && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="justify-start px-0 text-muted-foreground"
+                          onClick={() => handleRemoveImage("logo")}
+                        >
+                          <X className="h-4 w-4 mr-2" /> Remover
+                        </Button>
+                      )}
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeTestimonial(index)}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
                 </div>
-                <textarea
-                  value={testimonial.text}
-                  onChange={(e) =>
-                    updateTestimonial(index, "text", e.target.value)
-                  }
-                  placeholder="Depoimento do cliente..."
-                  rows={2}
-                  className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                />
+
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">
+                    Banner / Capa
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="h-16 w-24 rounded-lg border bg-muted flex items-center justify-center overflow-hidden">
+                      {config.coverImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={config.coverImage}
+                          alt="Capa"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">
+                          Sem capa
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="cursor-pointer">
+                        <div className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
+                          {uploadingField === "coverImage" ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Upload className="h-4 w-4" />
+                          )}
+                          {config.coverImage ? "Trocar capa" : "Enviar capa"}
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleImageUpload("coverImage", file);
+                          }}
+                        />
+                      </label>
+                      {config.coverImage && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="justify-start px-0 text-muted-foreground"
+                          onClick={() => handleRemoveImage("coverImage")}
+                        >
+                          <X className="h-4 w-4 mr-2" /> Remover
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
+            </section>
 
-        {/* Exibição */}
-        <section className="bg-card border rounded-xl p-6">
-          <h2 className="text-2xl font-bold mb-6">O que Exibir</h2>
-          <div className="space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={config.showServices}
-                onChange={(e) =>
-                  setConfig({ ...config, showServices: e.target.checked })
-                }
-                className="w-5 h-5 rounded border-gray-300"
-              />
-              <span>Mostrar Serviços</span>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={config.showTestimonials}
-                onChange={(e) =>
-                  setConfig({ ...config, showTestimonials: e.target.checked })
-                }
-                className="w-5 h-5 rounded border-gray-300"
-              />
-              <span>Mostrar Depoimentos</span>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={config.showAbout}
-                onChange={(e) =>
-                  setConfig({ ...config, showAbout: e.target.checked })
-                }
-                className="w-5 h-5 rounded border-gray-300"
-              />
-              <span>Mostrar Sobre Nós</span>
-            </label>
-          </div>
-        </section>
+            {/* Cores */}
+            <section className="bg-card border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Palette className="w-5 h-5 text-primary" />
+                <h2 className="text-2xl font-bold">Cores da Marca</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Cor Primária
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={config.primaryColor}
+                      onChange={(e) =>
+                        setConfig({ ...config, primaryColor: e.target.value })
+                      }
+                      className="w-16 h-10 rounded border cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.primaryColor}
+                      onChange={(e) =>
+                        setConfig({ ...config, primaryColor: e.target.value })
+                      }
+                      className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Cor de Acento
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={config.accentColor}
+                      onChange={(e) =>
+                        setConfig({ ...config, accentColor: e.target.value })
+                      }
+                      className="w-16 h-10 rounded border cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.accentColor}
+                      onChange={(e) =>
+                        setConfig({ ...config, accentColor: e.target.value })
+                      }
+                      className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
 
-        {/* SEO */}
-        <section className="bg-card border rounded-xl p-6">
-          <h2 className="text-2xl font-bold mb-6">SEO</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Meta Título (máx. 60 caracteres)
-              </label>
-              <input
-                type="text"
-                value={config.metaTitle}
-                onChange={(e) =>
-                  setConfig({ ...config, metaTitle: e.target.value })
-                }
-                placeholder="Título para mecanismos de busca"
-                maxLength={60}
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                {config.metaTitle.length}/60
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Meta Descrição (máx. 160 caracteres)
-              </label>
-              <textarea
-                value={config.metaDescription}
-                onChange={(e) =>
-                  setConfig({ ...config, metaDescription: e.target.value })
-                }
-                placeholder="Descrição para mecanismos de busca"
-                maxLength={160}
-                rows={3}
-                className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                {config.metaDescription.length}/160
-              </p>
-            </div>
+            {/* Redes Sociais */}
+            <section className="bg-card border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <LinkIcon className="w-5 h-5 text-primary" />
+                <h2 className="text-2xl font-bold">Redes Sociais</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Instagram
+                  </label>
+                  <input
+                    type="url"
+                    value={config.instagram}
+                    onChange={(e) =>
+                      setConfig({ ...config, instagram: e.target.value })
+                    }
+                    placeholder="https://instagram.com/..."
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Facebook
+                  </label>
+                  <input
+                    type="url"
+                    value={config.facebook}
+                    onChange={(e) =>
+                      setConfig({ ...config, facebook: e.target.value })
+                    }
+                    placeholder="https://facebook.com/..."
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Depoimentos */}
+            <section className="bg-card border rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-primary" />
+                  <h2 className="text-2xl font-bold">Depoimentos</h2>
+                </div>
+                <Button onClick={addTestimonial} variant="outline" size="sm">
+                  <Plus className="mr-2 w-4 h-4" />
+                  Adicionar
+                </Button>
+              </div>
+              <div className="space-y-4">
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          value={testimonial.authorName}
+                          onChange={(e) =>
+                            updateTestimonial(
+                              index,
+                              "authorName",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Nome do cliente"
+                          className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Estrelas:</span>
+                          <select
+                            value={testimonial.rating}
+                            onChange={(e) =>
+                              updateTestimonial(
+                                index,
+                                "rating",
+                                parseInt(e.target.value),
+                              )
+                            }
+                            className="px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {[1, 2, 3, 4, 5].map((n) => (
+                              <option key={n} value={n}>
+                                {n}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeTestimonial(index)}
+                        className="text-red-500 hover:text-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <textarea
+                      value={testimonial.text}
+                      onChange={(e) =>
+                        updateTestimonial(index, "text", e.target.value)
+                      }
+                      placeholder="Depoimento do cliente..."
+                      rows={2}
+                      className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Exibição */}
+            <section className="bg-card border rounded-xl p-6">
+              <h2 className="text-2xl font-bold mb-6">O que Exibir</h2>
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.showServices}
+                    onChange={(e) =>
+                      setConfig({ ...config, showServices: e.target.checked })
+                    }
+                    className="w-5 h-5 rounded border-gray-300"
+                  />
+                  <span>Mostrar Serviços</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.showTestimonials}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        showTestimonials: e.target.checked,
+                      })
+                    }
+                    className="w-5 h-5 rounded border-gray-300"
+                  />
+                  <span>Mostrar Depoimentos</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.showAbout}
+                    onChange={(e) =>
+                      setConfig({ ...config, showAbout: e.target.checked })
+                    }
+                    className="w-5 h-5 rounded border-gray-300"
+                  />
+                  <span>Mostrar Sobre Nós</span>
+                </label>
+              </div>
+            </section>
+
+            {/* SEO */}
+            <section className="bg-card border rounded-xl p-6">
+              <h2 className="text-2xl font-bold mb-6">SEO</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Meta Título (máx. 60 caracteres)
+                  </label>
+                  <input
+                    type="text"
+                    value={config.metaTitle}
+                    onChange={(e) =>
+                      setConfig({ ...config, metaTitle: e.target.value })
+                    }
+                    placeholder="Título para mecanismos de busca"
+                    maxLength={60}
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {config.metaTitle.length}/60
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Meta Descrição (máx. 160 caracteres)
+                  </label>
+                  <textarea
+                    value={config.metaDescription}
+                    onChange={(e) =>
+                      setConfig({ ...config, metaDescription: e.target.value })
+                    }
+                    placeholder="Descrição para mecanismos de busca"
+                    maxLength={160}
+                    rows={3}
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {config.metaDescription.length}/160
+                  </p>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
+
+          <div className="flex justify-end gap-4 mt-8 pb-8">
+            <Button variant="outline" onClick={handlePreview}>
+              <Eye className="mr-2 w-4 h-4" />
+              Visualizar
+            </Button>
+            <Button onClick={handleSave} disabled={saving} size="lg">
+              {saving ? (
+                <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+              ) : (
+                <Save className="mr-2 w-5 h-5" />
+              )}
+              Salvar Configurações
+            </Button>
+          </div>
+        </div>
       </div>
-
-      <div className="flex justify-end gap-4 mt-8 pb-8">
-        <Button variant="outline" onClick={handlePreview}>
-          <Eye className="mr-2 w-4 h-4" />
-          Visualizar
-        </Button>
-        <Button onClick={handleSave} disabled={saving} size="lg">
-          {saving ? (
-            <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-          ) : (
-            <Save className="mr-2 w-5 h-5" />
-          )}
-          Salvar Configurações
-        </Button>
-      </div>
-    </div>
+    </SidebarInset>
   );
 }
