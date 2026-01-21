@@ -5,12 +5,7 @@ import {
   IconPlug,
   IconBuilding,
   IconCalendar,
-  IconCamera,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
   IconHelp,
   IconReport,
   IconSearch,
@@ -18,7 +13,7 @@ import {
   IconCreditCard,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/nav-documents";
+// Removed NavDocuments import as it will no longer be used
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -36,12 +31,12 @@ import IconLogo from "./ui/icon-logo";
 const data = {
   navMain: [
     {
-      title: "Dashboard",
+      title: "Início",
       url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Appointments",
+      title: "Agendamentos",
       url: "/dashboard/appointments",
       icon: IconCalendar,
       items: [
@@ -60,7 +55,7 @@ const data = {
       ],
     },
     {
-      title: "Company",
+      title: "Empresa",
       url: "/dashboard/company",
       icon: IconBuilding,
       items: [
@@ -119,7 +114,7 @@ const data = {
       icon: IconSettings,
       items: [
         {
-          title: "Exceções de Horários",
+          title: "Exceções de Horário",
           url: "/dashboard/settings/exceptions",
         },
       ],
@@ -130,86 +125,21 @@ const data = {
       icon: IconCreditCard,
     },
   ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Configurações",
       url: "#",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
+      title: "Ajuda",
       url: "#",
       icon: IconHelp,
     },
     {
-      title: "Search",
+      title: "Buscar",
       url: "#",
       icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
     },
   ],
 };
@@ -236,7 +166,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
+        {/* NavDocuments has been removed */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

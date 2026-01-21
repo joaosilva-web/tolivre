@@ -24,6 +24,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function NavMain({
   items,
@@ -38,17 +39,23 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const pathname = usePathname();
+
+  const isExact = (url: string) => pathname === url;
+  const isInSection = (url: string) =>
+    pathname === url || pathname?.startsWith(`${url}/`);
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              tooltip="Quick Create"
+              tooltip="Criar rápido"
               className="bg-gradient-to-r from-primary to-blue-600 text-white hover:opacity-90 hover:scale-[1.02] active:opacity-90 min-w-8 duration-200 ease-linear"
             >
               <IconCirclePlusFilled />
-              <span>Quick Create</span>
+              <span>Criar rápido</span>
             </SidebarMenuButton>
             <Button
               size="icon"
@@ -61,17 +68,23 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) =>
-            item.items ? (
+          {items.map((item) => {
+            const sectionOpen = isInSection(item.url);
+            const sectionExact = isExact(item.url);
+
+            return item.items ? (
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen
+                defaultOpen={sectionOpen}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className={sectionExact ? "text-primary" : ""}
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                       <IconChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -79,15 +92,22 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
+                      {item.items?.map((subItem) => {
+                        const subActive = isExact(subItem.url);
+                        return (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={subActive ? "text-primary" : ""}
+                              aria-current={subActive ? "page" : undefined}
+                            >
+                              <Link href={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>
@@ -95,14 +115,18 @@ export function NavMain({
             ) : (
               <Link href={item.url} key={item.title}>
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton tooltip={item.title}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    className={isExact(item.url) ? "text-primary" : ""}
+                    aria-current={isExact(item.url) ? "page" : undefined}
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </Link>
-            )
-          )}
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
