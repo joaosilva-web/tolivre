@@ -18,7 +18,7 @@ export interface UIAppointment {
  * Faz parsing seguro de campos opcionais (price, serviceId/startTime etc.).
  */
 export function prismaToUI(
-  appt: PrismaAppointment | null | undefined
+  appt: PrismaAppointment | null | undefined,
 ): UIAppointment | null {
   if (!appt) return null;
 
@@ -70,7 +70,7 @@ export function prismaToUI(
     clientId:
       (appt as unknown as Record<string, unknown>).clientId !== undefined
         ? (String(
-            (appt as unknown as Record<string, unknown>).clientId
+            (appt as unknown as Record<string, unknown>).clientId,
           ) as string)
         : undefined,
     service: String(service),
@@ -91,7 +91,7 @@ export function prismaToUI(
 import { parseDateTimeLocal } from "@/lib/date";
 
 export function uiToPrisma(
-  form: Partial<UIAppointment> & { serviceId?: string }
+  form: Partial<UIAppointment> & { serviceId?: string },
 ) {
   const startTime = form.date
     ? parseDateTimeLocal(String(form.date)).toISOString()
@@ -105,4 +105,3 @@ export function uiToPrisma(
     startTime,
   };
 }
-

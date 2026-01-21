@@ -13,7 +13,7 @@ function ensureKey() {
 
 export async function sendWhatsAppText(
   to: string,
-  body: string
+  body: string,
 ): Promise<EvolutionResponse> {
   ensureKey();
   const url = `${EVOLUTION_API_URL.replace(/\/$/, "")}/v1/messages`;
@@ -41,4 +41,3 @@ export async function sendWhatsAppText(
 
   return res.json();
 }
-

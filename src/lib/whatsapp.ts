@@ -40,7 +40,7 @@ export async function initWhatsApp() {
           console.log(
             "[whatsapp] message upsert",
             m.key?.remoteJid,
-            m.message ? Object.keys(m.message) : null
+            m.message ? Object.keys(m.message) : null,
           );
         }
       } catch (err) {
@@ -55,7 +55,7 @@ export async function initWhatsApp() {
 function ensureSock() {
   if (!sock)
     throw new Error(
-      "WhatsApp socket not initialized. Call initWhatsApp() first."
+      "WhatsApp socket not initialized. Call initWhatsApp() first.",
     );
   return sock;
 }
@@ -71,5 +71,3 @@ async function sendMessage(to: string, content: AnyMessageContent) {
 export async function sendText(to: string, text: string) {
   return sendMessage(to, { text });
 }
-
-
