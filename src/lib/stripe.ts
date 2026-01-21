@@ -12,7 +12,7 @@ const isProduction = process.env.NODE_ENV === "production";
 if (!isTestKey && !isProduction) {
   console.warn(
     "[Stripe] ⚠️ AVISO: Usando chaves de produção em ambiente de desenvolvimento. " +
-      "Use chaves de teste (sk_test_...) para desenvolvimento."
+      "Use chaves de teste (sk_test_...) para desenvolvimento.",
   );
 }
 
@@ -29,9 +29,11 @@ export async function createOrRetrievePrice(
   productId: string,
   amount: number,
   currency: string = "brl",
-  name: string
+  name: string,
 ) {
   try {
+    const unitAmount = Math.round(amount * 100); // Stripe exige inteiro em centavos
+
     // Buscar se já existe um preço ativo para este produto com o mesmo valor
     const existingPrices = await stripe.prices.list({
       product: productId,
@@ -39,7 +41,7 @@ export async function createOrRetrievePrice(
     });
 
     const existingPrice = existingPrices.data.find(
-      (price) => price.unit_amount === amount * 100 // Stripe trabalha com centavos
+      (price) => price.unit_amount === unitAmount,
     );
 
     if (existingPrice) {
@@ -49,7 +51,7 @@ export async function createOrRetrievePrice(
     // Criar novo preço se não existir
     const price = await stripe.prices.create({
       product: productId,
-      unit_amount: amount * 100, // Converter para centavos
+      unit_amount: unitAmount,
       currency: currency,
       recurring: {
         interval: "month",
@@ -68,11 +70,13 @@ export async function createOrRetrievePrice(
 export async function createOrRetrieveProduct(
   productId: string,
   name: string,
-  description?: string
+  description?: string,
 ) {
   try {
     // Tentar buscar produto existente
-    const existingProduct = await stripe.products.retrieve(productId).catch(() => null);
+    const existingProduct = await stripe.products
+      .retrieve(productId)
+      .catch(() => null);
 
     if (existingProduct) {
       return existingProduct;
@@ -132,4 +136,3 @@ export async function createCheckoutSession({
     throw error;
   }
 }
-

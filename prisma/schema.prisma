@@ -307,20 +307,21 @@ model PageTestimonial {
 }
 
 model Subscription {
-  id                  String             @id @default(cuid())
-  companyId           String             @unique
-  company             Company            @relation(fields: [companyId], references: [id])
-  plan                SubscriptionPlan   @default(TRIAL)
-  status              SubscriptionStatus @default(ACTIVE)
-  mpSubscriptionId    String?            @unique // ID da assinatura no Mercado Pago
-  mpPreapprovalPlanId String? // ID do plano de assinatura no MP
-  currentPeriodStart  DateTime           @default(now())
-  currentPeriodEnd    DateTime? // Null para plano FREE
-  cancelAtPeriodEnd   Boolean            @default(false)
-  canceledAt          DateTime?
-  trialEndsAt         DateTime? // Para trial de 14 dias
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  id                   String             @id @default(cuid())
+  companyId            String             @unique
+  company              Company            @relation(fields: [companyId], references: [id])
+  plan                 SubscriptionPlan   @default(TRIAL)
+  status               SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String?            @unique // ID da assinatura no Stripe
+  stripeCustomerId     String?
+  stripePriceId        String?
+  currentPeriodStart   DateTime           @default(now())
+  currentPeriodEnd     DateTime? // Null para plano FREE
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  trialEndsAt          DateTime? // Para trial de 14 dias
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
 
   payments Payment[]
 }
@@ -340,17 +341,17 @@ enum SubscriptionStatus {
 }
 
 model Payment {
-  id             String        @id @default(cuid())
-  subscriptionId String
-  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
-  mpPaymentId    String        @unique // ID do pagamento no Mercado Pago
-  amount         Float
-  currency       String        @default("BRL")
-  status         PaymentStatus @default(PENDING)
-  paymentMethod  String? // pix, credit_card, debit_card, boleto
-  paidAt         DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                    String        @id @default(cuid())
+  subscriptionId        String
+  subscription          Subscription  @relation(fields: [subscriptionId], references: [id])
+  stripePaymentIntentId String?       @unique // ID do pagamento no Stripe
+  amount                Float
+  currency              String        @default("BRL")
+  status                PaymentStatus @default(PENDING)
+  paymentMethod         String? // pix, credit_card, debit_card, boleto
+  paidAt                DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 
   @@index([subscriptionId])
 }

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return api.badRequest("Plano inválido");
     }
 
-    // Simular ativação de assinatura
+    // Simular ativação de assinatura (Stripe)
     const currentPeriodEnd = new Date();
     currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
 
@@ -30,14 +30,14 @@ export async function POST(req: NextRequest) {
         companyId: user.companyId,
         plan: plan,
         status: "ACTIVE",
-        mpSubscriptionId: `test-${Date.now()}`,
+        stripeSubscriptionId: `test-${Date.now()}`,
         currentPeriodStart: new Date(),
         currentPeriodEnd,
       },
       update: {
         plan: plan,
         status: "ACTIVE",
-        mpSubscriptionId: `test-${Date.now()}`,
+        stripeSubscriptionId: `test-${Date.now()}`,
         currentPeriodStart: new Date(),
         currentPeriodEnd,
         cancelAtPeriodEnd: false,
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     await prisma.payment.create({
       data: {
         subscriptionId: subscription.id,
-        mpPaymentId: `test-payment-${Date.now()}`,
+        stripePaymentIntentId: `test-payment-${Date.now()}`,
         amount:
           plan === "BASIC" ? 69.9 : plan === "PROFESSIONAL" ? 99.9 : 169.9,
         currency: "BRL",
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     });
 
     console.log(
-      `[Simulate Payment] Subscription activated for company ${user.companyId}`
+      `[Simulate Payment] Subscription activated for company ${user.companyId}`,
     );
 
     return api.ok({

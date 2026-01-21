@@ -29,11 +29,6 @@ export type RateLimit = $Result.DefaultSelection<Prisma.$RateLimitPayload>
  */
 export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
 /**
- * Model Chair
- * 
- */
-export type Chair = $Result.DefaultSelection<Prisma.$ChairPayload>
-/**
  * Model WorkingHours
  * 
  */
@@ -404,16 +399,6 @@ export class PrismaClient<
     * ```
     */
   get company(): Prisma.CompanyDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.chair`: Exposes CRUD operations for the **Chair** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Chairs
-    * const chairs = await prisma.chair.findMany()
-    * ```
-    */
-  get chair(): Prisma.ChairDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.workingHours`: Exposes CRUD operations for the **WorkingHours** model.
@@ -1037,7 +1022,6 @@ export namespace Prisma {
     Lead: 'Lead',
     RateLimit: 'RateLimit',
     Company: 'Company',
-    Chair: 'Chair',
     WorkingHours: 'WorkingHours',
     WorkingHourException: 'WorkingHourException',
     Service: 'Service',
@@ -1074,7 +1058,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "lead" | "rateLimit" | "company" | "chair" | "workingHours" | "workingHourException" | "service" | "professionalService" | "user" | "appointment" | "client" | "tag" | "clientTag" | "companyPage" | "pageTestimonial" | "subscription" | "payment" | "loginHistory" | "loginAttempt" | "userSession" | "auditLog" | "userSecuritySettings"
+      modelProps: "lead" | "rateLimit" | "company" | "workingHours" | "workingHourException" | "service" | "professionalService" | "user" | "appointment" | "client" | "tag" | "clientTag" | "companyPage" | "pageTestimonial" | "subscription" | "payment" | "loginHistory" | "loginAttempt" | "userSession" | "auditLog" | "userSecuritySettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1297,80 +1281,6 @@ export namespace Prisma {
           count: {
             args: Prisma.CompanyCountArgs<ExtArgs>
             result: $Utils.Optional<CompanyCountAggregateOutputType> | number
-          }
-        }
-      }
-      Chair: {
-        payload: Prisma.$ChairPayload<ExtArgs>
-        fields: Prisma.ChairFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ChairFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ChairFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          findFirst: {
-            args: Prisma.ChairFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ChairFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          findMany: {
-            args: Prisma.ChairFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>[]
-          }
-          create: {
-            args: Prisma.ChairCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          createMany: {
-            args: Prisma.ChairCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ChairCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>[]
-          }
-          delete: {
-            args: Prisma.ChairDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          update: {
-            args: Prisma.ChairUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          deleteMany: {
-            args: Prisma.ChairDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ChairUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ChairUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>[]
-          }
-          upsert: {
-            args: Prisma.ChairUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ChairPayload>
-          }
-          aggregate: {
-            args: Prisma.ChairAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateChair>
-          }
-          groupBy: {
-            args: Prisma.ChairGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ChairGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ChairCountArgs<ExtArgs>
-            result: $Utils.Optional<ChairCountAggregateOutputType> | number
           }
         }
       }
@@ -2805,7 +2715,6 @@ export namespace Prisma {
     lead?: LeadOmit
     rateLimit?: RateLimitOmit
     company?: CompanyOmit
-    chair?: ChairOmit
     workingHours?: WorkingHoursOmit
     workingHourException?: WorkingHourExceptionOmit
     service?: ServiceOmit
@@ -2910,7 +2819,6 @@ export namespace Prisma {
     workingHours: number
     services: number
     tags: number
-    chairs: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2920,7 +2828,6 @@ export namespace Prisma {
     workingHours?: boolean | CompanyCountOutputTypeCountWorkingHoursArgs
     services?: boolean | CompanyCountOutputTypeCountServicesArgs
     tags?: boolean | CompanyCountOutputTypeCountTagsArgs
-    chairs?: boolean | CompanyCountOutputTypeCountChairsArgs
   }
 
   // Custom InputTypes
@@ -2974,44 +2881,6 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TagWhereInput
-  }
-
-  /**
-   * CompanyCountOutputType without action
-   */
-  export type CompanyCountOutputTypeCountChairsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ChairWhereInput
-  }
-
-
-  /**
-   * Count Type ChairCountOutputType
-   */
-
-  export type ChairCountOutputType = {
-    appointments: number
-  }
-
-  export type ChairCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    appointments?: boolean | ChairCountOutputTypeCountAppointmentsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * ChairCountOutputType without action
-   */
-  export type ChairCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ChairCountOutputType
-     */
-    select?: ChairCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * ChairCountOutputType without action
-   */
-  export type ChairCountOutputTypeCountAppointmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AppointmentWhereInput
   }
 
 
@@ -5654,7 +5523,6 @@ export namespace Prisma {
     companyPage?: boolean | Company$companyPageArgs<ExtArgs>
     subscription?: boolean | Company$subscriptionArgs<ExtArgs>
     tags?: boolean | Company$tagsArgs<ExtArgs>
-    chairs?: boolean | Company$chairsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -5731,7 +5599,6 @@ export namespace Prisma {
     companyPage?: boolean | Company$companyPageArgs<ExtArgs>
     subscription?: boolean | Company$subscriptionArgs<ExtArgs>
     tags?: boolean | Company$tagsArgs<ExtArgs>
-    chairs?: boolean | Company$chairsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5748,7 +5615,6 @@ export namespace Prisma {
       companyPage: Prisma.$CompanyPagePayload<ExtArgs> | null
       subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
       tags: Prisma.$TagPayload<ExtArgs>[]
-      chairs: Prisma.$ChairPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6171,7 +6037,6 @@ export namespace Prisma {
     companyPage<T extends Company$companyPageArgs<ExtArgs> = {}>(args?: Subset<T, Company$companyPageArgs<ExtArgs>>): Prisma__CompanyPageClient<$Result.GetResult<Prisma.$CompanyPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subscription<T extends Company$subscriptionArgs<ExtArgs> = {}>(args?: Subset<T, Company$subscriptionArgs<ExtArgs>>): Prisma__SubscriptionClient<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tags<T extends Company$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Company$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    chairs<T extends Company$chairsArgs<ExtArgs> = {}>(args?: Subset<T, Company$chairsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6789,30 +6654,6 @@ export namespace Prisma {
   }
 
   /**
-   * Company.chairs
-   */
-  export type Company$chairsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    where?: ChairWhereInput
-    orderBy?: ChairOrderByWithRelationInput | ChairOrderByWithRelationInput[]
-    cursor?: ChairWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ChairScalarFieldEnum | ChairScalarFieldEnum[]
-  }
-
-  /**
    * Company without action
    */
   export type CompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6828,1141 +6669,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CompanyInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Chair
-   */
-
-  export type AggregateChair = {
-    _count: ChairCountAggregateOutputType | null
-    _avg: ChairAvgAggregateOutputType | null
-    _sum: ChairSumAggregateOutputType | null
-    _min: ChairMinAggregateOutputType | null
-    _max: ChairMaxAggregateOutputType | null
-  }
-
-  export type ChairAvgAggregateOutputType = {
-    number: number | null
-  }
-
-  export type ChairSumAggregateOutputType = {
-    number: number | null
-  }
-
-  export type ChairMinAggregateOutputType = {
-    id: string | null
-    companyId: string | null
-    name: string | null
-    number: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type ChairMaxAggregateOutputType = {
-    id: string | null
-    companyId: string | null
-    name: string | null
-    number: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type ChairCountAggregateOutputType = {
-    id: number
-    companyId: number
-    name: number
-    number: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type ChairAvgAggregateInputType = {
-    number?: true
-  }
-
-  export type ChairSumAggregateInputType = {
-    number?: true
-  }
-
-  export type ChairMinAggregateInputType = {
-    id?: true
-    companyId?: true
-    name?: true
-    number?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type ChairMaxAggregateInputType = {
-    id?: true
-    companyId?: true
-    name?: true
-    number?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type ChairCountAggregateInputType = {
-    id?: true
-    companyId?: true
-    name?: true
-    number?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type ChairAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Chair to aggregate.
-     */
-    where?: ChairWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Chairs to fetch.
-     */
-    orderBy?: ChairOrderByWithRelationInput | ChairOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ChairWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Chairs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Chairs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Chairs
-    **/
-    _count?: true | ChairCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ChairAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ChairSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ChairMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ChairMaxAggregateInputType
-  }
-
-  export type GetChairAggregateType<T extends ChairAggregateArgs> = {
-        [P in keyof T & keyof AggregateChair]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateChair[P]>
-      : GetScalarType<T[P], AggregateChair[P]>
-  }
-
-
-
-
-  export type ChairGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ChairWhereInput
-    orderBy?: ChairOrderByWithAggregationInput | ChairOrderByWithAggregationInput[]
-    by: ChairScalarFieldEnum[] | ChairScalarFieldEnum
-    having?: ChairScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ChairCountAggregateInputType | true
-    _avg?: ChairAvgAggregateInputType
-    _sum?: ChairSumAggregateInputType
-    _min?: ChairMinAggregateInputType
-    _max?: ChairMaxAggregateInputType
-  }
-
-  export type ChairGroupByOutputType = {
-    id: string
-    companyId: string
-    name: string
-    number: number | null
-    createdAt: Date
-    updatedAt: Date
-    _count: ChairCountAggregateOutputType | null
-    _avg: ChairAvgAggregateOutputType | null
-    _sum: ChairSumAggregateOutputType | null
-    _min: ChairMinAggregateOutputType | null
-    _max: ChairMaxAggregateOutputType | null
-  }
-
-  type GetChairGroupByPayload<T extends ChairGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ChairGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ChairGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ChairGroupByOutputType[P]>
-            : GetScalarType<T[P], ChairGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ChairSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    name?: boolean
-    number?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    appointments?: boolean | Chair$appointmentsArgs<ExtArgs>
-    _count?: boolean | ChairCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chair"]>
-
-  export type ChairSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    name?: boolean
-    number?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chair"]>
-
-  export type ChairSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    companyId?: boolean
-    name?: boolean
-    number?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["chair"]>
-
-  export type ChairSelectScalar = {
-    id?: boolean
-    companyId?: boolean
-    name?: boolean
-    number?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type ChairOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "number" | "createdAt" | "updatedAt", ExtArgs["result"]["chair"]>
-  export type ChairInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-    appointments?: boolean | Chair$appointmentsArgs<ExtArgs>
-    _count?: boolean | ChairCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type ChairIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }
-  export type ChairIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }
-
-  export type $ChairPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Chair"
-    objects: {
-      company: Prisma.$CompanyPayload<ExtArgs>
-      appointments: Prisma.$AppointmentPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      companyId: string
-      name: string
-      number: number | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["chair"]>
-    composites: {}
-  }
-
-  type ChairGetPayload<S extends boolean | null | undefined | ChairDefaultArgs> = $Result.GetResult<Prisma.$ChairPayload, S>
-
-  type ChairCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ChairFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ChairCountAggregateInputType | true
-    }
-
-  export interface ChairDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Chair'], meta: { name: 'Chair' } }
-    /**
-     * Find zero or one Chair that matches the filter.
-     * @param {ChairFindUniqueArgs} args - Arguments to find a Chair
-     * @example
-     * // Get one Chair
-     * const chair = await prisma.chair.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ChairFindUniqueArgs>(args: SelectSubset<T, ChairFindUniqueArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Chair that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ChairFindUniqueOrThrowArgs} args - Arguments to find a Chair
-     * @example
-     * // Get one Chair
-     * const chair = await prisma.chair.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ChairFindUniqueOrThrowArgs>(args: SelectSubset<T, ChairFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Chair that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairFindFirstArgs} args - Arguments to find a Chair
-     * @example
-     * // Get one Chair
-     * const chair = await prisma.chair.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ChairFindFirstArgs>(args?: SelectSubset<T, ChairFindFirstArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Chair that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairFindFirstOrThrowArgs} args - Arguments to find a Chair
-     * @example
-     * // Get one Chair
-     * const chair = await prisma.chair.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ChairFindFirstOrThrowArgs>(args?: SelectSubset<T, ChairFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Chairs that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Chairs
-     * const chairs = await prisma.chair.findMany()
-     * 
-     * // Get first 10 Chairs
-     * const chairs = await prisma.chair.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const chairWithIdOnly = await prisma.chair.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ChairFindManyArgs>(args?: SelectSubset<T, ChairFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Chair.
-     * @param {ChairCreateArgs} args - Arguments to create a Chair.
-     * @example
-     * // Create one Chair
-     * const Chair = await prisma.chair.create({
-     *   data: {
-     *     // ... data to create a Chair
-     *   }
-     * })
-     * 
-     */
-    create<T extends ChairCreateArgs>(args: SelectSubset<T, ChairCreateArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Chairs.
-     * @param {ChairCreateManyArgs} args - Arguments to create many Chairs.
-     * @example
-     * // Create many Chairs
-     * const chair = await prisma.chair.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ChairCreateManyArgs>(args?: SelectSubset<T, ChairCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Chairs and returns the data saved in the database.
-     * @param {ChairCreateManyAndReturnArgs} args - Arguments to create many Chairs.
-     * @example
-     * // Create many Chairs
-     * const chair = await prisma.chair.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Chairs and only return the `id`
-     * const chairWithIdOnly = await prisma.chair.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ChairCreateManyAndReturnArgs>(args?: SelectSubset<T, ChairCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Chair.
-     * @param {ChairDeleteArgs} args - Arguments to delete one Chair.
-     * @example
-     * // Delete one Chair
-     * const Chair = await prisma.chair.delete({
-     *   where: {
-     *     // ... filter to delete one Chair
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ChairDeleteArgs>(args: SelectSubset<T, ChairDeleteArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Chair.
-     * @param {ChairUpdateArgs} args - Arguments to update one Chair.
-     * @example
-     * // Update one Chair
-     * const chair = await prisma.chair.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ChairUpdateArgs>(args: SelectSubset<T, ChairUpdateArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Chairs.
-     * @param {ChairDeleteManyArgs} args - Arguments to filter Chairs to delete.
-     * @example
-     * // Delete a few Chairs
-     * const { count } = await prisma.chair.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ChairDeleteManyArgs>(args?: SelectSubset<T, ChairDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Chairs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Chairs
-     * const chair = await prisma.chair.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ChairUpdateManyArgs>(args: SelectSubset<T, ChairUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Chairs and returns the data updated in the database.
-     * @param {ChairUpdateManyAndReturnArgs} args - Arguments to update many Chairs.
-     * @example
-     * // Update many Chairs
-     * const chair = await prisma.chair.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Chairs and only return the `id`
-     * const chairWithIdOnly = await prisma.chair.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ChairUpdateManyAndReturnArgs>(args: SelectSubset<T, ChairUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Chair.
-     * @param {ChairUpsertArgs} args - Arguments to update or create a Chair.
-     * @example
-     * // Update or create a Chair
-     * const chair = await prisma.chair.upsert({
-     *   create: {
-     *     // ... data to create a Chair
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Chair we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ChairUpsertArgs>(args: SelectSubset<T, ChairUpsertArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Chairs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairCountArgs} args - Arguments to filter Chairs to count.
-     * @example
-     * // Count the number of Chairs
-     * const count = await prisma.chair.count({
-     *   where: {
-     *     // ... the filter for the Chairs we want to count
-     *   }
-     * })
-    **/
-    count<T extends ChairCountArgs>(
-      args?: Subset<T, ChairCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ChairCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Chair.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ChairAggregateArgs>(args: Subset<T, ChairAggregateArgs>): Prisma.PrismaPromise<GetChairAggregateType<T>>
-
-    /**
-     * Group by Chair.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChairGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ChairGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ChairGroupByArgs['orderBy'] }
-        : { orderBy?: ChairGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ChairGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChairGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Chair model
-   */
-  readonly fields: ChairFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Chair.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ChairClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    appointments<T extends Chair$appointmentsArgs<ExtArgs> = {}>(args?: Subset<T, Chair$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Chair model
-   */
-  interface ChairFieldRefs {
-    readonly id: FieldRef<"Chair", 'String'>
-    readonly companyId: FieldRef<"Chair", 'String'>
-    readonly name: FieldRef<"Chair", 'String'>
-    readonly number: FieldRef<"Chair", 'Int'>
-    readonly createdAt: FieldRef<"Chair", 'DateTime'>
-    readonly updatedAt: FieldRef<"Chair", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Chair findUnique
-   */
-  export type ChairFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter, which Chair to fetch.
-     */
-    where: ChairWhereUniqueInput
-  }
-
-  /**
-   * Chair findUniqueOrThrow
-   */
-  export type ChairFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter, which Chair to fetch.
-     */
-    where: ChairWhereUniqueInput
-  }
-
-  /**
-   * Chair findFirst
-   */
-  export type ChairFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter, which Chair to fetch.
-     */
-    where?: ChairWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Chairs to fetch.
-     */
-    orderBy?: ChairOrderByWithRelationInput | ChairOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Chairs.
-     */
-    cursor?: ChairWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Chairs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Chairs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Chairs.
-     */
-    distinct?: ChairScalarFieldEnum | ChairScalarFieldEnum[]
-  }
-
-  /**
-   * Chair findFirstOrThrow
-   */
-  export type ChairFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter, which Chair to fetch.
-     */
-    where?: ChairWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Chairs to fetch.
-     */
-    orderBy?: ChairOrderByWithRelationInput | ChairOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Chairs.
-     */
-    cursor?: ChairWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Chairs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Chairs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Chairs.
-     */
-    distinct?: ChairScalarFieldEnum | ChairScalarFieldEnum[]
-  }
-
-  /**
-   * Chair findMany
-   */
-  export type ChairFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter, which Chairs to fetch.
-     */
-    where?: ChairWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Chairs to fetch.
-     */
-    orderBy?: ChairOrderByWithRelationInput | ChairOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Chairs.
-     */
-    cursor?: ChairWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Chairs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Chairs.
-     */
-    skip?: number
-    distinct?: ChairScalarFieldEnum | ChairScalarFieldEnum[]
-  }
-
-  /**
-   * Chair create
-   */
-  export type ChairCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Chair.
-     */
-    data: XOR<ChairCreateInput, ChairUncheckedCreateInput>
-  }
-
-  /**
-   * Chair createMany
-   */
-  export type ChairCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Chairs.
-     */
-    data: ChairCreateManyInput | ChairCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Chair createManyAndReturn
-   */
-  export type ChairCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * The data used to create many Chairs.
-     */
-    data: ChairCreateManyInput | ChairCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Chair update
-   */
-  export type ChairUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Chair.
-     */
-    data: XOR<ChairUpdateInput, ChairUncheckedUpdateInput>
-    /**
-     * Choose, which Chair to update.
-     */
-    where: ChairWhereUniqueInput
-  }
-
-  /**
-   * Chair updateMany
-   */
-  export type ChairUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Chairs.
-     */
-    data: XOR<ChairUpdateManyMutationInput, ChairUncheckedUpdateManyInput>
-    /**
-     * Filter which Chairs to update
-     */
-    where?: ChairWhereInput
-    /**
-     * Limit how many Chairs to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Chair updateManyAndReturn
-   */
-  export type ChairUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * The data used to update Chairs.
-     */
-    data: XOR<ChairUpdateManyMutationInput, ChairUncheckedUpdateManyInput>
-    /**
-     * Filter which Chairs to update
-     */
-    where?: ChairWhereInput
-    /**
-     * Limit how many Chairs to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Chair upsert
-   */
-  export type ChairUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Chair to update in case it exists.
-     */
-    where: ChairWhereUniqueInput
-    /**
-     * In case the Chair found by the `where` argument doesn't exist, create a new Chair with this data.
-     */
-    create: XOR<ChairCreateInput, ChairUncheckedCreateInput>
-    /**
-     * In case the Chair was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ChairUpdateInput, ChairUncheckedUpdateInput>
-  }
-
-  /**
-   * Chair delete
-   */
-  export type ChairDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    /**
-     * Filter which Chair to delete.
-     */
-    where: ChairWhereUniqueInput
-  }
-
-  /**
-   * Chair deleteMany
-   */
-  export type ChairDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Chairs to delete
-     */
-    where?: ChairWhereInput
-    /**
-     * Limit how many Chairs to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Chair.appointments
-   */
-  export type Chair$appointmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Appointment
-     */
-    select?: AppointmentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Appointment
-     */
-    omit?: AppointmentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AppointmentInclude<ExtArgs> | null
-    where?: AppointmentWhereInput
-    orderBy?: AppointmentOrderByWithRelationInput | AppointmentOrderByWithRelationInput[]
-    cursor?: AppointmentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AppointmentScalarFieldEnum | AppointmentScalarFieldEnum[]
-  }
-
-  /**
-   * Chair without action
-   */
-  export type ChairDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
   }
 
 
@@ -13774,7 +12480,6 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     professionalId: string | null
-    chairId: string | null
     clientName: string | null
     clientId: string | null
     serviceId: string | null
@@ -13802,7 +12507,6 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     professionalId: string | null
-    chairId: string | null
     clientName: string | null
     clientId: string | null
     serviceId: string | null
@@ -13830,7 +12534,6 @@ export namespace Prisma {
     id: number
     companyId: number
     professionalId: number
-    chairId: number
     clientName: number
     clientId: number
     serviceId: number
@@ -13874,7 +12577,6 @@ export namespace Prisma {
     id?: true
     companyId?: true
     professionalId?: true
-    chairId?: true
     clientName?: true
     clientId?: true
     serviceId?: true
@@ -13902,7 +12604,6 @@ export namespace Prisma {
     id?: true
     companyId?: true
     professionalId?: true
-    chairId?: true
     clientName?: true
     clientId?: true
     serviceId?: true
@@ -13930,7 +12631,6 @@ export namespace Prisma {
     id?: true
     companyId?: true
     professionalId?: true
-    chairId?: true
     clientName?: true
     clientId?: true
     serviceId?: true
@@ -14045,7 +12745,6 @@ export namespace Prisma {
     id: string
     companyId: string
     professionalId: string
-    chairId: string | null
     clientName: string
     clientId: string | null
     serviceId: string
@@ -14092,7 +12791,6 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     professionalId?: boolean
-    chairId?: boolean
     clientName?: boolean
     clientId?: boolean
     serviceId?: boolean
@@ -14116,7 +12814,6 @@ export namespace Prisma {
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14128,7 +12825,6 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     professionalId?: boolean
-    chairId?: boolean
     clientName?: boolean
     clientId?: boolean
     serviceId?: boolean
@@ -14152,7 +12848,6 @@ export namespace Prisma {
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14162,7 +12857,6 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     professionalId?: boolean
-    chairId?: boolean
     clientName?: boolean
     clientId?: boolean
     serviceId?: boolean
@@ -14186,7 +12880,6 @@ export namespace Prisma {
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14196,7 +12889,6 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     professionalId?: boolean
-    chairId?: boolean
     clientName?: boolean
     clientId?: boolean
     serviceId?: boolean
@@ -14220,11 +12912,10 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "chairId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "commissionRate" | "commissionAmount" | "commissionPaid" | "commissionPaidAt" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "commissionRate" | "commissionAmount" | "commissionPaid" | "commissionPaidAt" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
   export type AppointmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14234,7 +12925,6 @@ export namespace Prisma {
   export type AppointmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14242,7 +12932,6 @@ export namespace Prisma {
   export type AppointmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
-    chair?: boolean | Appointment$chairArgs<ExtArgs>
     client?: boolean | Appointment$clientArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     parentAppointment?: boolean | Appointment$parentAppointmentArgs<ExtArgs>
@@ -14253,7 +12942,6 @@ export namespace Prisma {
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
       professional: Prisma.$UserPayload<ExtArgs>
-      chair: Prisma.$ChairPayload<ExtArgs> | null
       client: Prisma.$ClientPayload<ExtArgs> | null
       service: Prisma.$ServicePayload<ExtArgs>
       parentAppointment: Prisma.$AppointmentPayload<ExtArgs> | null
@@ -14263,7 +12951,6 @@ export namespace Prisma {
       id: string
       companyId: string
       professionalId: string
-      chairId: string | null
       clientName: string
       clientId: string | null
       serviceId: string
@@ -14681,7 +13368,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     professional<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    chair<T extends Appointment$chairArgs<ExtArgs> = {}>(args?: Subset<T, Appointment$chairArgs<ExtArgs>>): Prisma__ChairClient<$Result.GetResult<Prisma.$ChairPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     client<T extends Appointment$clientArgs<ExtArgs> = {}>(args?: Subset<T, Appointment$clientArgs<ExtArgs>>): Prisma__ClientClient<$Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     parentAppointment<T extends Appointment$parentAppointmentArgs<ExtArgs> = {}>(args?: Subset<T, Appointment$parentAppointmentArgs<ExtArgs>>): Prisma__AppointmentClient<$Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -14718,7 +13404,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Appointment", 'String'>
     readonly companyId: FieldRef<"Appointment", 'String'>
     readonly professionalId: FieldRef<"Appointment", 'String'>
-    readonly chairId: FieldRef<"Appointment", 'String'>
     readonly clientName: FieldRef<"Appointment", 'String'>
     readonly clientId: FieldRef<"Appointment", 'String'>
     readonly serviceId: FieldRef<"Appointment", 'String'>
@@ -15133,25 +13818,6 @@ export namespace Prisma {
      * Limit how many Appointments to delete.
      */
     limit?: number
-  }
-
-  /**
-   * Appointment.chair
-   */
-  export type Appointment$chairArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Chair
-     */
-    select?: ChairSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Chair
-     */
-    omit?: ChairOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ChairInclude<ExtArgs> | null
-    where?: ChairWhereInput
   }
 
   /**
@@ -20977,8 +19643,9 @@ export namespace Prisma {
     companyId: string | null
     plan: $Enums.SubscriptionPlan | null
     status: $Enums.SubscriptionStatus | null
-    mpSubscriptionId: string | null
-    mpPreapprovalPlanId: string | null
+    stripeSubscriptionId: string | null
+    stripeCustomerId: string | null
+    stripePriceId: string | null
     currentPeriodStart: Date | null
     currentPeriodEnd: Date | null
     cancelAtPeriodEnd: boolean | null
@@ -20993,8 +19660,9 @@ export namespace Prisma {
     companyId: string | null
     plan: $Enums.SubscriptionPlan | null
     status: $Enums.SubscriptionStatus | null
-    mpSubscriptionId: string | null
-    mpPreapprovalPlanId: string | null
+    stripeSubscriptionId: string | null
+    stripeCustomerId: string | null
+    stripePriceId: string | null
     currentPeriodStart: Date | null
     currentPeriodEnd: Date | null
     cancelAtPeriodEnd: boolean | null
@@ -21009,8 +19677,9 @@ export namespace Prisma {
     companyId: number
     plan: number
     status: number
-    mpSubscriptionId: number
-    mpPreapprovalPlanId: number
+    stripeSubscriptionId: number
+    stripeCustomerId: number
+    stripePriceId: number
     currentPeriodStart: number
     currentPeriodEnd: number
     cancelAtPeriodEnd: number
@@ -21027,8 +19696,9 @@ export namespace Prisma {
     companyId?: true
     plan?: true
     status?: true
-    mpSubscriptionId?: true
-    mpPreapprovalPlanId?: true
+    stripeSubscriptionId?: true
+    stripeCustomerId?: true
+    stripePriceId?: true
     currentPeriodStart?: true
     currentPeriodEnd?: true
     cancelAtPeriodEnd?: true
@@ -21043,8 +19713,9 @@ export namespace Prisma {
     companyId?: true
     plan?: true
     status?: true
-    mpSubscriptionId?: true
-    mpPreapprovalPlanId?: true
+    stripeSubscriptionId?: true
+    stripeCustomerId?: true
+    stripePriceId?: true
     currentPeriodStart?: true
     currentPeriodEnd?: true
     cancelAtPeriodEnd?: true
@@ -21059,8 +19730,9 @@ export namespace Prisma {
     companyId?: true
     plan?: true
     status?: true
-    mpSubscriptionId?: true
-    mpPreapprovalPlanId?: true
+    stripeSubscriptionId?: true
+    stripeCustomerId?: true
+    stripePriceId?: true
     currentPeriodStart?: true
     currentPeriodEnd?: true
     cancelAtPeriodEnd?: true
@@ -21148,8 +19820,9 @@ export namespace Prisma {
     companyId: string
     plan: $Enums.SubscriptionPlan
     status: $Enums.SubscriptionStatus
-    mpSubscriptionId: string | null
-    mpPreapprovalPlanId: string | null
+    stripeSubscriptionId: string | null
+    stripeCustomerId: string | null
+    stripePriceId: string | null
     currentPeriodStart: Date
     currentPeriodEnd: Date | null
     cancelAtPeriodEnd: boolean
@@ -21181,8 +19854,9 @@ export namespace Prisma {
     companyId?: boolean
     plan?: boolean
     status?: boolean
-    mpSubscriptionId?: boolean
-    mpPreapprovalPlanId?: boolean
+    stripeSubscriptionId?: boolean
+    stripeCustomerId?: boolean
+    stripePriceId?: boolean
     currentPeriodStart?: boolean
     currentPeriodEnd?: boolean
     cancelAtPeriodEnd?: boolean
@@ -21200,8 +19874,9 @@ export namespace Prisma {
     companyId?: boolean
     plan?: boolean
     status?: boolean
-    mpSubscriptionId?: boolean
-    mpPreapprovalPlanId?: boolean
+    stripeSubscriptionId?: boolean
+    stripeCustomerId?: boolean
+    stripePriceId?: boolean
     currentPeriodStart?: boolean
     currentPeriodEnd?: boolean
     cancelAtPeriodEnd?: boolean
@@ -21217,8 +19892,9 @@ export namespace Prisma {
     companyId?: boolean
     plan?: boolean
     status?: boolean
-    mpSubscriptionId?: boolean
-    mpPreapprovalPlanId?: boolean
+    stripeSubscriptionId?: boolean
+    stripeCustomerId?: boolean
+    stripePriceId?: boolean
     currentPeriodStart?: boolean
     currentPeriodEnd?: boolean
     cancelAtPeriodEnd?: boolean
@@ -21234,8 +19910,9 @@ export namespace Prisma {
     companyId?: boolean
     plan?: boolean
     status?: boolean
-    mpSubscriptionId?: boolean
-    mpPreapprovalPlanId?: boolean
+    stripeSubscriptionId?: boolean
+    stripeCustomerId?: boolean
+    stripePriceId?: boolean
     currentPeriodStart?: boolean
     currentPeriodEnd?: boolean
     cancelAtPeriodEnd?: boolean
@@ -21245,7 +19922,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "plan" | "status" | "mpSubscriptionId" | "mpPreapprovalPlanId" | "currentPeriodStart" | "currentPeriodEnd" | "cancelAtPeriodEnd" | "canceledAt" | "trialEndsAt" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+  export type SubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "plan" | "status" | "stripeSubscriptionId" | "stripeCustomerId" | "stripePriceId" | "currentPeriodStart" | "currentPeriodEnd" | "cancelAtPeriodEnd" | "canceledAt" | "trialEndsAt" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
   export type SubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     payments?: boolean | Subscription$paymentsArgs<ExtArgs>
@@ -21269,8 +19946,9 @@ export namespace Prisma {
       companyId: string
       plan: $Enums.SubscriptionPlan
       status: $Enums.SubscriptionStatus
-      mpSubscriptionId: string | null
-      mpPreapprovalPlanId: string | null
+      stripeSubscriptionId: string | null
+      stripeCustomerId: string | null
+      stripePriceId: string | null
       currentPeriodStart: Date
       currentPeriodEnd: Date | null
       cancelAtPeriodEnd: boolean
@@ -21707,8 +20385,9 @@ export namespace Prisma {
     readonly companyId: FieldRef<"Subscription", 'String'>
     readonly plan: FieldRef<"Subscription", 'SubscriptionPlan'>
     readonly status: FieldRef<"Subscription", 'SubscriptionStatus'>
-    readonly mpSubscriptionId: FieldRef<"Subscription", 'String'>
-    readonly mpPreapprovalPlanId: FieldRef<"Subscription", 'String'>
+    readonly stripeSubscriptionId: FieldRef<"Subscription", 'String'>
+    readonly stripeCustomerId: FieldRef<"Subscription", 'String'>
+    readonly stripePriceId: FieldRef<"Subscription", 'String'>
     readonly currentPeriodStart: FieldRef<"Subscription", 'DateTime'>
     readonly currentPeriodEnd: FieldRef<"Subscription", 'DateTime'>
     readonly cancelAtPeriodEnd: FieldRef<"Subscription", 'Boolean'>
@@ -22177,7 +20856,7 @@ export namespace Prisma {
   export type PaymentMinAggregateOutputType = {
     id: string | null
     subscriptionId: string | null
-    mpPaymentId: string | null
+    stripePaymentIntentId: string | null
     amount: number | null
     currency: string | null
     status: $Enums.PaymentStatus | null
@@ -22190,7 +20869,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateOutputType = {
     id: string | null
     subscriptionId: string | null
-    mpPaymentId: string | null
+    stripePaymentIntentId: string | null
     amount: number | null
     currency: string | null
     status: $Enums.PaymentStatus | null
@@ -22203,7 +20882,7 @@ export namespace Prisma {
   export type PaymentCountAggregateOutputType = {
     id: number
     subscriptionId: number
-    mpPaymentId: number
+    stripePaymentIntentId: number
     amount: number
     currency: number
     status: number
@@ -22226,7 +20905,7 @@ export namespace Prisma {
   export type PaymentMinAggregateInputType = {
     id?: true
     subscriptionId?: true
-    mpPaymentId?: true
+    stripePaymentIntentId?: true
     amount?: true
     currency?: true
     status?: true
@@ -22239,7 +20918,7 @@ export namespace Prisma {
   export type PaymentMaxAggregateInputType = {
     id?: true
     subscriptionId?: true
-    mpPaymentId?: true
+    stripePaymentIntentId?: true
     amount?: true
     currency?: true
     status?: true
@@ -22252,7 +20931,7 @@ export namespace Prisma {
   export type PaymentCountAggregateInputType = {
     id?: true
     subscriptionId?: true
-    mpPaymentId?: true
+    stripePaymentIntentId?: true
     amount?: true
     currency?: true
     status?: true
@@ -22352,7 +21031,7 @@ export namespace Prisma {
   export type PaymentGroupByOutputType = {
     id: string
     subscriptionId: string
-    mpPaymentId: string
+    stripePaymentIntentId: string | null
     amount: number
     currency: string
     status: $Enums.PaymentStatus
@@ -22384,7 +21063,7 @@ export namespace Prisma {
   export type PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     subscriptionId?: boolean
-    mpPaymentId?: boolean
+    stripePaymentIntentId?: boolean
     amount?: boolean
     currency?: boolean
     status?: boolean
@@ -22398,7 +21077,7 @@ export namespace Prisma {
   export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     subscriptionId?: boolean
-    mpPaymentId?: boolean
+    stripePaymentIntentId?: boolean
     amount?: boolean
     currency?: boolean
     status?: boolean
@@ -22412,7 +21091,7 @@ export namespace Prisma {
   export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     subscriptionId?: boolean
-    mpPaymentId?: boolean
+    stripePaymentIntentId?: boolean
     amount?: boolean
     currency?: boolean
     status?: boolean
@@ -22426,7 +21105,7 @@ export namespace Prisma {
   export type PaymentSelectScalar = {
     id?: boolean
     subscriptionId?: boolean
-    mpPaymentId?: boolean
+    stripePaymentIntentId?: boolean
     amount?: boolean
     currency?: boolean
     status?: boolean
@@ -22436,7 +21115,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subscriptionId" | "mpPaymentId" | "amount" | "currency" | "status" | "paymentMethod" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subscriptionId" | "stripePaymentIntentId" | "amount" | "currency" | "status" | "paymentMethod" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subscription?: boolean | SubscriptionDefaultArgs<ExtArgs>
   }
@@ -22455,7 +21134,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       subscriptionId: string
-      mpPaymentId: string
+      stripePaymentIntentId: string | null
       amount: number
       currency: string
       status: $Enums.PaymentStatus
@@ -22889,7 +21568,7 @@ export namespace Prisma {
   interface PaymentFieldRefs {
     readonly id: FieldRef<"Payment", 'String'>
     readonly subscriptionId: FieldRef<"Payment", 'String'>
-    readonly mpPaymentId: FieldRef<"Payment", 'String'>
+    readonly stripePaymentIntentId: FieldRef<"Payment", 'String'>
     readonly amount: FieldRef<"Payment", 'Float'>
     readonly currency: FieldRef<"Payment", 'String'>
     readonly status: FieldRef<"Payment", 'PaymentStatus'>
@@ -29018,18 +27697,6 @@ export namespace Prisma {
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
 
 
-  export const ChairScalarFieldEnum: {
-    id: 'id',
-    companyId: 'companyId',
-    name: 'name',
-    number: 'number',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type ChairScalarFieldEnum = (typeof ChairScalarFieldEnum)[keyof typeof ChairScalarFieldEnum]
-
-
   export const WorkingHoursScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
@@ -29104,7 +27771,6 @@ export namespace Prisma {
     id: 'id',
     companyId: 'companyId',
     professionalId: 'professionalId',
-    chairId: 'chairId',
     clientName: 'clientName',
     clientId: 'clientId',
     serviceId: 'serviceId',
@@ -29212,8 +27878,9 @@ export namespace Prisma {
     companyId: 'companyId',
     plan: 'plan',
     status: 'status',
-    mpSubscriptionId: 'mpSubscriptionId',
-    mpPreapprovalPlanId: 'mpPreapprovalPlanId',
+    stripeSubscriptionId: 'stripeSubscriptionId',
+    stripeCustomerId: 'stripeCustomerId',
+    stripePriceId: 'stripePriceId',
     currentPeriodStart: 'currentPeriodStart',
     currentPeriodEnd: 'currentPeriodEnd',
     cancelAtPeriodEnd: 'cancelAtPeriodEnd',
@@ -29229,7 +27896,7 @@ export namespace Prisma {
   export const PaymentScalarFieldEnum: {
     id: 'id',
     subscriptionId: 'subscriptionId',
-    mpPaymentId: 'mpPaymentId',
+    stripePaymentIntentId: 'stripePaymentIntentId',
     amount: 'amount',
     currency: 'currency',
     status: 'status',
@@ -29726,7 +28393,6 @@ export namespace Prisma {
     companyPage?: XOR<CompanyPageNullableScalarRelationFilter, CompanyPageWhereInput> | null
     subscription?: XOR<SubscriptionNullableScalarRelationFilter, SubscriptionWhereInput> | null
     tags?: TagListRelationFilter
-    chairs?: ChairListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -29756,7 +28422,6 @@ export namespace Prisma {
     companyPage?: CompanyPageOrderByWithRelationInput
     subscription?: SubscriptionOrderByWithRelationInput
     tags?: TagOrderByRelationAggregateInput
-    chairs?: ChairOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -29789,7 +28454,6 @@ export namespace Prisma {
     companyPage?: XOR<CompanyPageNullableScalarRelationFilter, CompanyPageWhereInput> | null
     subscription?: XOR<SubscriptionNullableScalarRelationFilter, SubscriptionWhereInput> | null
     tags?: TagListRelationFilter
-    chairs?: ChairListRelationFilter
   }, "id" | "cnpjCpf">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -29838,71 +28502,6 @@ export namespace Prisma {
     subscriptionStatus?: StringNullableWithAggregatesFilter<"Company"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
-  }
-
-  export type ChairWhereInput = {
-    AND?: ChairWhereInput | ChairWhereInput[]
-    OR?: ChairWhereInput[]
-    NOT?: ChairWhereInput | ChairWhereInput[]
-    id?: StringFilter<"Chair"> | string
-    companyId?: StringFilter<"Chair"> | string
-    name?: StringFilter<"Chair"> | string
-    number?: IntNullableFilter<"Chair"> | number | null
-    createdAt?: DateTimeFilter<"Chair"> | Date | string
-    updatedAt?: DateTimeFilter<"Chair"> | Date | string
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    appointments?: AppointmentListRelationFilter
-  }
-
-  export type ChairOrderByWithRelationInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    name?: SortOrder
-    number?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    company?: CompanyOrderByWithRelationInput
-    appointments?: AppointmentOrderByRelationAggregateInput
-  }
-
-  export type ChairWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: ChairWhereInput | ChairWhereInput[]
-    OR?: ChairWhereInput[]
-    NOT?: ChairWhereInput | ChairWhereInput[]
-    companyId?: StringFilter<"Chair"> | string
-    name?: StringFilter<"Chair"> | string
-    number?: IntNullableFilter<"Chair"> | number | null
-    createdAt?: DateTimeFilter<"Chair"> | Date | string
-    updatedAt?: DateTimeFilter<"Chair"> | Date | string
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    appointments?: AppointmentListRelationFilter
-  }, "id">
-
-  export type ChairOrderByWithAggregationInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    name?: SortOrder
-    number?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: ChairCountOrderByAggregateInput
-    _avg?: ChairAvgOrderByAggregateInput
-    _max?: ChairMaxOrderByAggregateInput
-    _min?: ChairMinOrderByAggregateInput
-    _sum?: ChairSumOrderByAggregateInput
-  }
-
-  export type ChairScalarWhereWithAggregatesInput = {
-    AND?: ChairScalarWhereWithAggregatesInput | ChairScalarWhereWithAggregatesInput[]
-    OR?: ChairScalarWhereWithAggregatesInput[]
-    NOT?: ChairScalarWhereWithAggregatesInput | ChairScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Chair"> | string
-    companyId?: StringWithAggregatesFilter<"Chair"> | string
-    name?: StringWithAggregatesFilter<"Chair"> | string
-    number?: IntNullableWithAggregatesFilter<"Chair"> | number | null
-    createdAt?: DateTimeWithAggregatesFilter<"Chair"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Chair"> | Date | string
   }
 
   export type WorkingHoursWhereInput = {
@@ -30293,7 +28892,6 @@ export namespace Prisma {
     id?: StringFilter<"Appointment"> | string
     companyId?: StringFilter<"Appointment"> | string
     professionalId?: StringFilter<"Appointment"> | string
-    chairId?: StringNullableFilter<"Appointment"> | string | null
     clientName?: StringFilter<"Appointment"> | string
     clientId?: StringNullableFilter<"Appointment"> | string | null
     serviceId?: StringFilter<"Appointment"> | string
@@ -30317,7 +28915,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Appointment"> | Date | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     professional?: XOR<UserScalarRelationFilter, UserWhereInput>
-    chair?: XOR<ChairNullableScalarRelationFilter, ChairWhereInput> | null
     client?: XOR<ClientNullableScalarRelationFilter, ClientWhereInput> | null
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
     parentAppointment?: XOR<AppointmentNullableScalarRelationFilter, AppointmentWhereInput> | null
@@ -30328,7 +28925,6 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     professionalId?: SortOrder
-    chairId?: SortOrderInput | SortOrder
     clientName?: SortOrder
     clientId?: SortOrderInput | SortOrder
     serviceId?: SortOrder
@@ -30352,7 +28948,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
     professional?: UserOrderByWithRelationInput
-    chair?: ChairOrderByWithRelationInput
     client?: ClientOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
     parentAppointment?: AppointmentOrderByWithRelationInput
@@ -30366,7 +28961,6 @@ export namespace Prisma {
     NOT?: AppointmentWhereInput | AppointmentWhereInput[]
     companyId?: StringFilter<"Appointment"> | string
     professionalId?: StringFilter<"Appointment"> | string
-    chairId?: StringNullableFilter<"Appointment"> | string | null
     clientName?: StringFilter<"Appointment"> | string
     clientId?: StringNullableFilter<"Appointment"> | string | null
     serviceId?: StringFilter<"Appointment"> | string
@@ -30390,7 +28984,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Appointment"> | Date | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     professional?: XOR<UserScalarRelationFilter, UserWhereInput>
-    chair?: XOR<ChairNullableScalarRelationFilter, ChairWhereInput> | null
     client?: XOR<ClientNullableScalarRelationFilter, ClientWhereInput> | null
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
     parentAppointment?: XOR<AppointmentNullableScalarRelationFilter, AppointmentWhereInput> | null
@@ -30401,7 +28994,6 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     professionalId?: SortOrder
-    chairId?: SortOrderInput | SortOrder
     clientName?: SortOrder
     clientId?: SortOrderInput | SortOrder
     serviceId?: SortOrder
@@ -30437,7 +29029,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Appointment"> | string
     companyId?: StringWithAggregatesFilter<"Appointment"> | string
     professionalId?: StringWithAggregatesFilter<"Appointment"> | string
-    chairId?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     clientName?: StringWithAggregatesFilter<"Appointment"> | string
     clientId?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     serviceId?: StringWithAggregatesFilter<"Appointment"> | string
@@ -30868,8 +29459,9 @@ export namespace Prisma {
     companyId?: StringFilter<"Subscription"> | string
     plan?: EnumSubscriptionPlanFilter<"Subscription"> | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
-    mpSubscriptionId?: StringNullableFilter<"Subscription"> | string | null
-    mpPreapprovalPlanId?: StringNullableFilter<"Subscription"> | string | null
+    stripeSubscriptionId?: StringNullableFilter<"Subscription"> | string | null
+    stripeCustomerId?: StringNullableFilter<"Subscription"> | string | null
+    stripePriceId?: StringNullableFilter<"Subscription"> | string | null
     currentPeriodStart?: DateTimeFilter<"Subscription"> | Date | string
     currentPeriodEnd?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     cancelAtPeriodEnd?: BoolFilter<"Subscription"> | boolean
@@ -30886,8 +29478,9 @@ export namespace Prisma {
     companyId?: SortOrder
     plan?: SortOrder
     status?: SortOrder
-    mpSubscriptionId?: SortOrderInput | SortOrder
-    mpPreapprovalPlanId?: SortOrderInput | SortOrder
+    stripeSubscriptionId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
+    stripePriceId?: SortOrderInput | SortOrder
     currentPeriodStart?: SortOrder
     currentPeriodEnd?: SortOrderInput | SortOrder
     cancelAtPeriodEnd?: SortOrder
@@ -30902,13 +29495,14 @@ export namespace Prisma {
   export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     companyId?: string
-    mpSubscriptionId?: string
+    stripeSubscriptionId?: string
     AND?: SubscriptionWhereInput | SubscriptionWhereInput[]
     OR?: SubscriptionWhereInput[]
     NOT?: SubscriptionWhereInput | SubscriptionWhereInput[]
     plan?: EnumSubscriptionPlanFilter<"Subscription"> | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
-    mpPreapprovalPlanId?: StringNullableFilter<"Subscription"> | string | null
+    stripeCustomerId?: StringNullableFilter<"Subscription"> | string | null
+    stripePriceId?: StringNullableFilter<"Subscription"> | string | null
     currentPeriodStart?: DateTimeFilter<"Subscription"> | Date | string
     currentPeriodEnd?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     cancelAtPeriodEnd?: BoolFilter<"Subscription"> | boolean
@@ -30918,15 +29512,16 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Subscription"> | Date | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     payments?: PaymentListRelationFilter
-  }, "id" | "companyId" | "mpSubscriptionId">
+  }, "id" | "companyId" | "stripeSubscriptionId">
 
   export type SubscriptionOrderByWithAggregationInput = {
     id?: SortOrder
     companyId?: SortOrder
     plan?: SortOrder
     status?: SortOrder
-    mpSubscriptionId?: SortOrderInput | SortOrder
-    mpPreapprovalPlanId?: SortOrderInput | SortOrder
+    stripeSubscriptionId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
+    stripePriceId?: SortOrderInput | SortOrder
     currentPeriodStart?: SortOrder
     currentPeriodEnd?: SortOrderInput | SortOrder
     cancelAtPeriodEnd?: SortOrder
@@ -30947,8 +29542,9 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"Subscription"> | string
     plan?: EnumSubscriptionPlanWithAggregatesFilter<"Subscription"> | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusWithAggregatesFilter<"Subscription"> | $Enums.SubscriptionStatus
-    mpSubscriptionId?: StringNullableWithAggregatesFilter<"Subscription"> | string | null
-    mpPreapprovalPlanId?: StringNullableWithAggregatesFilter<"Subscription"> | string | null
+    stripeSubscriptionId?: StringNullableWithAggregatesFilter<"Subscription"> | string | null
+    stripeCustomerId?: StringNullableWithAggregatesFilter<"Subscription"> | string | null
+    stripePriceId?: StringNullableWithAggregatesFilter<"Subscription"> | string | null
     currentPeriodStart?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
     currentPeriodEnd?: DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
     cancelAtPeriodEnd?: BoolWithAggregatesFilter<"Subscription"> | boolean
@@ -30964,7 +29560,7 @@ export namespace Prisma {
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     id?: StringFilter<"Payment"> | string
     subscriptionId?: StringFilter<"Payment"> | string
-    mpPaymentId?: StringFilter<"Payment"> | string
+    stripePaymentIntentId?: StringNullableFilter<"Payment"> | string | null
     amount?: FloatFilter<"Payment"> | number
     currency?: StringFilter<"Payment"> | string
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
@@ -30978,7 +29574,7 @@ export namespace Prisma {
   export type PaymentOrderByWithRelationInput = {
     id?: SortOrder
     subscriptionId?: SortOrder
-    mpPaymentId?: SortOrder
+    stripePaymentIntentId?: SortOrderInput | SortOrder
     amount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -30991,7 +29587,7 @@ export namespace Prisma {
 
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    mpPaymentId?: string
+    stripePaymentIntentId?: string
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
@@ -31004,12 +29600,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     subscription?: XOR<SubscriptionScalarRelationFilter, SubscriptionWhereInput>
-  }, "id" | "mpPaymentId">
+  }, "id" | "stripePaymentIntentId">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
     subscriptionId?: SortOrder
-    mpPaymentId?: SortOrder
+    stripePaymentIntentId?: SortOrderInput | SortOrder
     amount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -31030,7 +29626,7 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Payment"> | string
     subscriptionId?: StringWithAggregatesFilter<"Payment"> | string
-    mpPaymentId?: StringWithAggregatesFilter<"Payment"> | string
+    stripePaymentIntentId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     amount?: FloatWithAggregatesFilter<"Payment"> | number
     currency?: StringWithAggregatesFilter<"Payment"> | string
     status?: EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
@@ -31606,7 +30202,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -31636,7 +30231,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -31666,7 +30260,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -31696,7 +30289,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -31758,72 +30350,6 @@ export namespace Prisma {
     contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
     trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ChairCreateInput = {
-    id?: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    company: CompanyCreateNestedOneWithoutChairsInput
-    appointments?: AppointmentCreateNestedManyWithoutChairInput
-  }
-
-  export type ChairUncheckedCreateInput = {
-    id?: string
-    companyId: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    appointments?: AppointmentUncheckedCreateNestedManyWithoutChairInput
-  }
-
-  export type ChairUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    company?: CompanyUpdateOneRequiredWithoutChairsNestedInput
-    appointments?: AppointmentUpdateManyWithoutChairNestedInput
-  }
-
-  export type ChairUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    appointments?: AppointmentUncheckedUpdateManyWithoutChairNestedInput
-  }
-
-  export type ChairCreateManyInput = {
-    id?: string
-    companyId: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ChairUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ChairUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32262,7 +30788,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
@@ -32273,7 +30798,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -32320,7 +30844,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
@@ -32331,7 +30854,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -32360,7 +30882,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -32410,7 +30931,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -32875,8 +31395,9 @@ export namespace Prisma {
     id?: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -32893,8 +31414,9 @@ export namespace Prisma {
     companyId: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -32909,8 +31431,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -32927,8 +31450,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -32944,8 +31468,9 @@ export namespace Prisma {
     companyId: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -32959,8 +31484,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -32975,8 +31501,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -32988,7 +31515,7 @@ export namespace Prisma {
 
   export type PaymentCreateInput = {
     id?: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -33002,7 +31529,7 @@ export namespace Prisma {
   export type PaymentUncheckedCreateInput = {
     id?: string
     subscriptionId: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -33014,7 +31541,7 @@ export namespace Prisma {
 
   export type PaymentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -33028,7 +31555,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     subscriptionId?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -33041,7 +31568,7 @@ export namespace Prisma {
   export type PaymentCreateManyInput = {
     id?: string
     subscriptionId: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -33053,7 +31580,7 @@ export namespace Prisma {
 
   export type PaymentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -33066,7 +31593,7 @@ export namespace Prisma {
   export type PaymentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     subscriptionId?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -33813,12 +32340,6 @@ export namespace Prisma {
     none?: TagWhereInput
   }
 
-  export type ChairListRelationFilter = {
-    every?: ChairWhereInput
-    some?: ChairWhereInput
-    none?: ChairWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -33845,10 +32366,6 @@ export namespace Prisma {
   }
 
   export type TagOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ChairOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33965,71 +32482,9 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type CompanyScalarRelationFilter = {
     is?: CompanyWhereInput
     isNot?: CompanyWhereInput
-  }
-
-  export type ChairCountOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    name?: SortOrder
-    number?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ChairAvgOrderByAggregateInput = {
-    number?: SortOrder
-  }
-
-  export type ChairMaxOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    name?: SortOrder
-    number?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ChairMinOrderByAggregateInput = {
-    id?: SortOrder
-    companyId?: SortOrder
-    name?: SortOrder
-    number?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ChairSumOrderByAggregateInput = {
-    number?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type WorkingHoursCountOrderByAggregateInput = {
@@ -34390,11 +32845,6 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusTypeFilter<$PrismaModel> | $Enums.PaymentStatusType
   }
 
-  export type ChairNullableScalarRelationFilter = {
-    is?: ChairWhereInput | null
-    isNot?: ChairWhereInput | null
-  }
-
   export type ClientNullableScalarRelationFilter = {
     is?: ClientWhereInput | null
     isNot?: ClientWhereInput | null
@@ -34409,7 +32859,6 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     professionalId?: SortOrder
-    chairId?: SortOrder
     clientName?: SortOrder
     clientId?: SortOrder
     serviceId?: SortOrder
@@ -34444,7 +32893,6 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     professionalId?: SortOrder
-    chairId?: SortOrder
     clientName?: SortOrder
     clientId?: SortOrder
     serviceId?: SortOrder
@@ -34472,7 +32920,6 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     professionalId?: SortOrder
-    chairId?: SortOrder
     clientName?: SortOrder
     clientId?: SortOrder
     serviceId?: SortOrder
@@ -34790,8 +33237,9 @@ export namespace Prisma {
     companyId?: SortOrder
     plan?: SortOrder
     status?: SortOrder
-    mpSubscriptionId?: SortOrder
-    mpPreapprovalPlanId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripePriceId?: SortOrder
     currentPeriodStart?: SortOrder
     currentPeriodEnd?: SortOrder
     cancelAtPeriodEnd?: SortOrder
@@ -34806,8 +33254,9 @@ export namespace Prisma {
     companyId?: SortOrder
     plan?: SortOrder
     status?: SortOrder
-    mpSubscriptionId?: SortOrder
-    mpPreapprovalPlanId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripePriceId?: SortOrder
     currentPeriodStart?: SortOrder
     currentPeriodEnd?: SortOrder
     cancelAtPeriodEnd?: SortOrder
@@ -34822,8 +33271,9 @@ export namespace Prisma {
     companyId?: SortOrder
     plan?: SortOrder
     status?: SortOrder
-    mpSubscriptionId?: SortOrder
-    mpPreapprovalPlanId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripePriceId?: SortOrder
     currentPeriodStart?: SortOrder
     currentPeriodEnd?: SortOrder
     cancelAtPeriodEnd?: SortOrder
@@ -34868,7 +33318,7 @@ export namespace Prisma {
   export type PaymentCountOrderByAggregateInput = {
     id?: SortOrder
     subscriptionId?: SortOrder
-    mpPaymentId?: SortOrder
+    stripePaymentIntentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -34885,7 +33335,7 @@ export namespace Prisma {
   export type PaymentMaxOrderByAggregateInput = {
     id?: SortOrder
     subscriptionId?: SortOrder
-    mpPaymentId?: SortOrder
+    stripePaymentIntentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -34898,7 +33348,7 @@ export namespace Prisma {
   export type PaymentMinOrderByAggregateInput = {
     id?: SortOrder
     subscriptionId?: SortOrder
-    mpPaymentId?: SortOrder
+    stripePaymentIntentId?: SortOrder
     amount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -35267,13 +33717,6 @@ export namespace Prisma {
     connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
   }
 
-  export type ChairCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput> | ChairCreateWithoutCompanyInput[] | ChairUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ChairCreateOrConnectWithoutCompanyInput | ChairCreateOrConnectWithoutCompanyInput[]
-    createMany?: ChairCreateManyCompanyInputEnvelope
-    connect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-  }
-
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -35326,13 +33769,6 @@ export namespace Prisma {
     connectOrCreate?: TagCreateOrConnectWithoutCompanyInput | TagCreateOrConnectWithoutCompanyInput[]
     createMany?: TagCreateManyCompanyInputEnvelope
     connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
-  }
-
-  export type ChairUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput> | ChairCreateWithoutCompanyInput[] | ChairUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ChairCreateOrConnectWithoutCompanyInput | ChairCreateOrConnectWithoutCompanyInput[]
-    createMany?: ChairCreateManyCompanyInputEnvelope
-    connect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -35455,20 +33891,6 @@ export namespace Prisma {
     deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
   }
 
-  export type ChairUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput> | ChairCreateWithoutCompanyInput[] | ChairUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ChairCreateOrConnectWithoutCompanyInput | ChairCreateOrConnectWithoutCompanyInput[]
-    upsert?: ChairUpsertWithWhereUniqueWithoutCompanyInput | ChairUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: ChairCreateManyCompanyInputEnvelope
-    set?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    disconnect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    delete?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    connect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    update?: ChairUpdateWithWhereUniqueWithoutCompanyInput | ChairUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: ChairUpdateManyWithWhereWithoutCompanyInput | ChairUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: ChairScalarWhereInput | ChairScalarWhereInput[]
-  }
-
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -35571,84 +33993,6 @@ export namespace Prisma {
     update?: TagUpdateWithWhereUniqueWithoutCompanyInput | TagUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: TagUpdateManyWithWhereWithoutCompanyInput | TagUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
-  }
-
-  export type ChairUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput> | ChairCreateWithoutCompanyInput[] | ChairUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: ChairCreateOrConnectWithoutCompanyInput | ChairCreateOrConnectWithoutCompanyInput[]
-    upsert?: ChairUpsertWithWhereUniqueWithoutCompanyInput | ChairUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: ChairCreateManyCompanyInputEnvelope
-    set?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    disconnect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    delete?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    connect?: ChairWhereUniqueInput | ChairWhereUniqueInput[]
-    update?: ChairUpdateWithWhereUniqueWithoutCompanyInput | ChairUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: ChairUpdateManyWithWhereWithoutCompanyInput | ChairUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: ChairScalarWhereInput | ChairScalarWhereInput[]
-  }
-
-  export type CompanyCreateNestedOneWithoutChairsInput = {
-    create?: XOR<CompanyCreateWithoutChairsInput, CompanyUncheckedCreateWithoutChairsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutChairsInput
-    connect?: CompanyWhereUniqueInput
-  }
-
-  export type AppointmentCreateNestedManyWithoutChairInput = {
-    create?: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput> | AppointmentCreateWithoutChairInput[] | AppointmentUncheckedCreateWithoutChairInput[]
-    connectOrCreate?: AppointmentCreateOrConnectWithoutChairInput | AppointmentCreateOrConnectWithoutChairInput[]
-    createMany?: AppointmentCreateManyChairInputEnvelope
-    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-  }
-
-  export type AppointmentUncheckedCreateNestedManyWithoutChairInput = {
-    create?: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput> | AppointmentCreateWithoutChairInput[] | AppointmentUncheckedCreateWithoutChairInput[]
-    connectOrCreate?: AppointmentCreateOrConnectWithoutChairInput | AppointmentCreateOrConnectWithoutChairInput[]
-    createMany?: AppointmentCreateManyChairInputEnvelope
-    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type CompanyUpdateOneRequiredWithoutChairsNestedInput = {
-    create?: XOR<CompanyCreateWithoutChairsInput, CompanyUncheckedCreateWithoutChairsInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutChairsInput
-    upsert?: CompanyUpsertWithoutChairsInput
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutChairsInput, CompanyUpdateWithoutChairsInput>, CompanyUncheckedUpdateWithoutChairsInput>
-  }
-
-  export type AppointmentUpdateManyWithoutChairNestedInput = {
-    create?: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput> | AppointmentCreateWithoutChairInput[] | AppointmentUncheckedCreateWithoutChairInput[]
-    connectOrCreate?: AppointmentCreateOrConnectWithoutChairInput | AppointmentCreateOrConnectWithoutChairInput[]
-    upsert?: AppointmentUpsertWithWhereUniqueWithoutChairInput | AppointmentUpsertWithWhereUniqueWithoutChairInput[]
-    createMany?: AppointmentCreateManyChairInputEnvelope
-    set?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    disconnect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    delete?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    update?: AppointmentUpdateWithWhereUniqueWithoutChairInput | AppointmentUpdateWithWhereUniqueWithoutChairInput[]
-    updateMany?: AppointmentUpdateManyWithWhereWithoutChairInput | AppointmentUpdateManyWithWhereWithoutChairInput[]
-    deleteMany?: AppointmentScalarWhereInput | AppointmentScalarWhereInput[]
-  }
-
-  export type AppointmentUncheckedUpdateManyWithoutChairNestedInput = {
-    create?: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput> | AppointmentCreateWithoutChairInput[] | AppointmentUncheckedCreateWithoutChairInput[]
-    connectOrCreate?: AppointmentCreateOrConnectWithoutChairInput | AppointmentCreateOrConnectWithoutChairInput[]
-    upsert?: AppointmentUpsertWithWhereUniqueWithoutChairInput | AppointmentUpsertWithWhereUniqueWithoutChairInput[]
-    createMany?: AppointmentCreateManyChairInputEnvelope
-    set?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    disconnect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    delete?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
-    update?: AppointmentUpdateWithWhereUniqueWithoutChairInput | AppointmentUpdateWithWhereUniqueWithoutChairInput[]
-    updateMany?: AppointmentUpdateManyWithWhereWithoutChairInput | AppointmentUpdateManyWithWhereWithoutChairInput[]
-    deleteMany?: AppointmentScalarWhereInput | AppointmentScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutWorkingHoursInput = {
@@ -36085,12 +34429,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type ChairCreateNestedOneWithoutAppointmentsInput = {
-    create?: XOR<ChairCreateWithoutAppointmentsInput, ChairUncheckedCreateWithoutAppointmentsInput>
-    connectOrCreate?: ChairCreateOrConnectWithoutAppointmentsInput
-    connect?: ChairWhereUniqueInput
-  }
-
   export type ClientCreateNestedOneWithoutAppointmentsInput = {
     create?: XOR<ClientCreateWithoutAppointmentsInput, ClientUncheckedCreateWithoutAppointmentsInput>
     connectOrCreate?: ClientCreateOrConnectWithoutAppointmentsInput
@@ -36145,16 +34483,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAppointmentsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAppointmentsInput, UserUpdateWithoutAppointmentsInput>, UserUncheckedUpdateWithoutAppointmentsInput>
-  }
-
-  export type ChairUpdateOneWithoutAppointmentsNestedInput = {
-    create?: XOR<ChairCreateWithoutAppointmentsInput, ChairUncheckedCreateWithoutAppointmentsInput>
-    connectOrCreate?: ChairCreateOrConnectWithoutAppointmentsInput
-    upsert?: ChairUpsertWithoutAppointmentsInput
-    disconnect?: ChairWhereInput | boolean
-    delete?: ChairWhereInput | boolean
-    connect?: ChairWhereUniqueInput
-    update?: XOR<XOR<ChairUpdateToOneWithWhereWithoutAppointmentsInput, ChairUpdateWithoutAppointmentsInput>, ChairUncheckedUpdateWithoutAppointmentsInput>
   }
 
   export type ClientUpdateOneWithoutAppointmentsNestedInput = {
@@ -36822,33 +35150,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumExceptionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ExceptionType | EnumExceptionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ExceptionType[] | ListEnumExceptionTypeFieldRefInput<$PrismaModel>
@@ -36887,6 +35188,17 @@ export namespace Prisma {
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
     notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -37100,7 +35412,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
@@ -37110,7 +35421,6 @@ export namespace Prisma {
   export type AppointmentUncheckedCreateWithoutCompanyInput = {
     id?: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -37288,8 +35598,9 @@ export namespace Prisma {
     id?: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -37304,8 +35615,9 @@ export namespace Prisma {
     id?: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -37346,34 +35658,6 @@ export namespace Prisma {
 
   export type TagCreateManyCompanyInputEnvelope = {
     data: TagCreateManyCompanyInput | TagCreateManyCompanyInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ChairCreateWithoutCompanyInput = {
-    id?: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    appointments?: AppointmentCreateNestedManyWithoutChairInput
-  }
-
-  export type ChairUncheckedCreateWithoutCompanyInput = {
-    id?: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    appointments?: AppointmentUncheckedCreateNestedManyWithoutChairInput
-  }
-
-  export type ChairCreateOrConnectWithoutCompanyInput = {
-    where: ChairWhereUniqueInput
-    create: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type ChairCreateManyCompanyInputEnvelope = {
-    data: ChairCreateManyCompanyInput | ChairCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -37437,7 +35721,6 @@ export namespace Prisma {
     id?: StringFilter<"Appointment"> | string
     companyId?: StringFilter<"Appointment"> | string
     professionalId?: StringFilter<"Appointment"> | string
-    chairId?: StringNullableFilter<"Appointment"> | string | null
     clientName?: StringFilter<"Appointment"> | string
     clientId?: StringNullableFilter<"Appointment"> | string | null
     serviceId?: StringFilter<"Appointment"> | string
@@ -37618,8 +35901,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -37634,8 +35918,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -37674,248 +35959,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Tag"> | Date | string
   }
 
-  export type ChairUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: ChairWhereUniqueInput
-    update: XOR<ChairUpdateWithoutCompanyInput, ChairUncheckedUpdateWithoutCompanyInput>
-    create: XOR<ChairCreateWithoutCompanyInput, ChairUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type ChairUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: ChairWhereUniqueInput
-    data: XOR<ChairUpdateWithoutCompanyInput, ChairUncheckedUpdateWithoutCompanyInput>
-  }
-
-  export type ChairUpdateManyWithWhereWithoutCompanyInput = {
-    where: ChairScalarWhereInput
-    data: XOR<ChairUpdateManyMutationInput, ChairUncheckedUpdateManyWithoutCompanyInput>
-  }
-
-  export type ChairScalarWhereInput = {
-    AND?: ChairScalarWhereInput | ChairScalarWhereInput[]
-    OR?: ChairScalarWhereInput[]
-    NOT?: ChairScalarWhereInput | ChairScalarWhereInput[]
-    id?: StringFilter<"Chair"> | string
-    companyId?: StringFilter<"Chair"> | string
-    name?: StringFilter<"Chair"> | string
-    number?: IntNullableFilter<"Chair"> | number | null
-    createdAt?: DateTimeFilter<"Chair"> | Date | string
-    updatedAt?: DateTimeFilter<"Chair"> | Date | string
-  }
-
-  export type CompanyCreateWithoutChairsInput = {
-    id?: string
-    nomeFantasia: string
-    razaoSocial?: string | null
-    cnpjCpf: string
-    endereco?: string | null
-    telefone?: string | null
-    email?: string | null
-    whatsappEnabled?: boolean
-    whatsappNumber?: string | null
-    uazapiInstanceName?: string | null
-    uazapiInstanceToken?: string | null
-    uazapiConnected?: boolean
-    uazapiProfileName?: string | null
-    contrato?: $Enums.ContractType
-    trialEndsAt?: Date | string | null
-    subscriptionStatus?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutCompanyInput
-    appointments?: AppointmentCreateNestedManyWithoutCompanyInput
-    clients?: ClientCreateNestedManyWithoutCompanyInput
-    workingHours?: WorkingHoursCreateNestedManyWithoutCompanyInput
-    services?: ServiceCreateNestedManyWithoutCompanyInput
-    companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
-    subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
-    tags?: TagCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyUncheckedCreateWithoutChairsInput = {
-    id?: string
-    nomeFantasia: string
-    razaoSocial?: string | null
-    cnpjCpf: string
-    endereco?: string | null
-    telefone?: string | null
-    email?: string | null
-    whatsappEnabled?: boolean
-    whatsappNumber?: string | null
-    uazapiInstanceName?: string | null
-    uazapiInstanceToken?: string | null
-    uazapiConnected?: boolean
-    uazapiProfileName?: string | null
-    contrato?: $Enums.ContractType
-    trialEndsAt?: Date | string | null
-    subscriptionStatus?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
-    appointments?: AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-    clients?: ClientUncheckedCreateNestedManyWithoutCompanyInput
-    workingHours?: WorkingHoursUncheckedCreateNestedManyWithoutCompanyInput
-    services?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
-    companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
-    subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
-    tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyCreateOrConnectWithoutChairsInput = {
-    where: CompanyWhereUniqueInput
-    create: XOR<CompanyCreateWithoutChairsInput, CompanyUncheckedCreateWithoutChairsInput>
-  }
-
-  export type AppointmentCreateWithoutChairInput = {
-    id?: string
-    clientName: string
-    price?: number | null
-    startTime: Date | string
-    endTime: Date | string
-    status?: $Enums.AppointmentStatus
-    paymentStatus?: $Enums.PaymentStatusType
-    paidAmount?: number | null
-    paymentMethod?: string | null
-    paymentDate?: Date | string | null
-    commissionRate?: number | null
-    commissionAmount?: number | null
-    commissionPaid?: boolean
-    commissionPaidAt?: Date | string | null
-    notes?: string | null
-    recurrenceRule?: string | null
-    recurrenceEndDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    company: CompanyCreateNestedOneWithoutAppointmentsInput
-    professional: UserCreateNestedOneWithoutAppointmentsInput
-    client?: ClientCreateNestedOneWithoutAppointmentsInput
-    service: ServiceCreateNestedOneWithoutAppointmentsInput
-    parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
-    childAppointments?: AppointmentCreateNestedManyWithoutParentAppointmentInput
-  }
-
-  export type AppointmentUncheckedCreateWithoutChairInput = {
-    id?: string
-    companyId: string
-    professionalId: string
-    clientName: string
-    clientId?: string | null
-    serviceId: string
-    price?: number | null
-    startTime: Date | string
-    endTime: Date | string
-    status?: $Enums.AppointmentStatus
-    paymentStatus?: $Enums.PaymentStatusType
-    paidAmount?: number | null
-    paymentMethod?: string | null
-    paymentDate?: Date | string | null
-    commissionRate?: number | null
-    commissionAmount?: number | null
-    commissionPaid?: boolean
-    commissionPaidAt?: Date | string | null
-    notes?: string | null
-    recurrenceRule?: string | null
-    recurrenceEndDate?: Date | string | null
-    parentAppointmentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    childAppointments?: AppointmentUncheckedCreateNestedManyWithoutParentAppointmentInput
-  }
-
-  export type AppointmentCreateOrConnectWithoutChairInput = {
-    where: AppointmentWhereUniqueInput
-    create: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput>
-  }
-
-  export type AppointmentCreateManyChairInputEnvelope = {
-    data: AppointmentCreateManyChairInput | AppointmentCreateManyChairInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type CompanyUpsertWithoutChairsInput = {
-    update: XOR<CompanyUpdateWithoutChairsInput, CompanyUncheckedUpdateWithoutChairsInput>
-    create: XOR<CompanyCreateWithoutChairsInput, CompanyUncheckedCreateWithoutChairsInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutChairsInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutChairsInput, CompanyUncheckedUpdateWithoutChairsInput>
-  }
-
-  export type CompanyUpdateWithoutChairsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nomeFantasia?: StringFieldUpdateOperationsInput | string
-    razaoSocial?: NullableStringFieldUpdateOperationsInput | string | null
-    cnpjCpf?: StringFieldUpdateOperationsInput | string
-    endereco?: NullableStringFieldUpdateOperationsInput | string | null
-    telefone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
-    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
-    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
-    contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
-    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutCompanyNestedInput
-    appointments?: AppointmentUpdateManyWithoutCompanyNestedInput
-    clients?: ClientUpdateManyWithoutCompanyNestedInput
-    workingHours?: WorkingHoursUpdateManyWithoutCompanyNestedInput
-    services?: ServiceUpdateManyWithoutCompanyNestedInput
-    companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
-    subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
-    tags?: TagUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type CompanyUncheckedUpdateWithoutChairsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nomeFantasia?: StringFieldUpdateOperationsInput | string
-    razaoSocial?: NullableStringFieldUpdateOperationsInput | string | null
-    cnpjCpf?: StringFieldUpdateOperationsInput | string
-    endereco?: NullableStringFieldUpdateOperationsInput | string | null
-    telefone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
-    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiInstanceName?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiInstanceToken?: NullableStringFieldUpdateOperationsInput | string | null
-    uazapiConnected?: BoolFieldUpdateOperationsInput | boolean
-    uazapiProfileName?: NullableStringFieldUpdateOperationsInput | string | null
-    contrato?: EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
-    trialEndsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
-    appointments?: AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-    clients?: ClientUncheckedUpdateManyWithoutCompanyNestedInput
-    workingHours?: WorkingHoursUncheckedUpdateManyWithoutCompanyNestedInput
-    services?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-    companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
-    subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
-    tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type AppointmentUpsertWithWhereUniqueWithoutChairInput = {
-    where: AppointmentWhereUniqueInput
-    update: XOR<AppointmentUpdateWithoutChairInput, AppointmentUncheckedUpdateWithoutChairInput>
-    create: XOR<AppointmentCreateWithoutChairInput, AppointmentUncheckedCreateWithoutChairInput>
-  }
-
-  export type AppointmentUpdateWithWhereUniqueWithoutChairInput = {
-    where: AppointmentWhereUniqueInput
-    data: XOR<AppointmentUpdateWithoutChairInput, AppointmentUncheckedUpdateWithoutChairInput>
-  }
-
-  export type AppointmentUpdateManyWithWhereWithoutChairInput = {
-    where: AppointmentScalarWhereInput
-    data: XOR<AppointmentUpdateManyMutationInput, AppointmentUncheckedUpdateManyWithoutChairInput>
-  }
-
   export type CompanyCreateWithoutWorkingHoursInput = {
     id?: string
     nomeFantasia: string
@@ -37942,7 +35985,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutWorkingHoursInput = {
@@ -37971,7 +36013,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutWorkingHoursInput = {
@@ -38016,7 +36057,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutWorkingHoursInput = {
@@ -38045,7 +36085,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutServicesInput = {
@@ -38074,7 +36113,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutServicesInput = {
@@ -38103,7 +36141,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutServicesInput = {
@@ -38133,7 +36170,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
     childAppointments?: AppointmentCreateNestedManyWithoutParentAppointmentInput
@@ -38143,7 +36179,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     price?: number | null
@@ -38234,7 +36269,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutServicesInput = {
@@ -38263,7 +36297,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type AppointmentUpsertWithWhereUniqueWithoutServiceInput = {
@@ -38501,7 +36534,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -38530,7 +36562,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -38559,7 +36590,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
@@ -38569,7 +36599,6 @@ export namespace Prisma {
   export type AppointmentUncheckedCreateWithoutProfessionalInput = {
     id?: string
     companyId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -38810,7 +36839,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -38839,7 +36867,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type AppointmentUpsertWithWhereUniqueWithoutProfessionalInput = {
@@ -39041,7 +37068,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutAppointmentsInput = {
@@ -39070,7 +37096,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutAppointmentsInput = {
@@ -39127,29 +37152,6 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutAppointmentsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutAppointmentsInput, UserUncheckedCreateWithoutAppointmentsInput>
-  }
-
-  export type ChairCreateWithoutAppointmentsInput = {
-    id?: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    company: CompanyCreateNestedOneWithoutChairsInput
-  }
-
-  export type ChairUncheckedCreateWithoutAppointmentsInput = {
-    id?: string
-    companyId: string
-    name: string
-    number?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ChairCreateOrConnectWithoutAppointmentsInput = {
-    where: ChairWhereUniqueInput
-    create: XOR<ChairCreateWithoutAppointmentsInput, ChairUncheckedCreateWithoutAppointmentsInput>
   }
 
   export type ClientCreateWithoutAppointmentsInput = {
@@ -39228,7 +37230,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
@@ -39238,7 +37239,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -39289,7 +37289,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     client?: ClientCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     childAppointments?: AppointmentCreateNestedManyWithoutParentAppointmentInput
@@ -39299,7 +37298,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -39370,7 +37368,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
@@ -39399,7 +37396,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutAppointmentsInput = {
@@ -39457,35 +37453,6 @@ export namespace Prisma {
     sessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     securitySettings?: UserSecuritySettingsUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type ChairUpsertWithoutAppointmentsInput = {
-    update: XOR<ChairUpdateWithoutAppointmentsInput, ChairUncheckedUpdateWithoutAppointmentsInput>
-    create: XOR<ChairCreateWithoutAppointmentsInput, ChairUncheckedCreateWithoutAppointmentsInput>
-    where?: ChairWhereInput
-  }
-
-  export type ChairUpdateToOneWithWhereWithoutAppointmentsInput = {
-    where?: ChairWhereInput
-    data: XOR<ChairUpdateWithoutAppointmentsInput, ChairUncheckedUpdateWithoutAppointmentsInput>
-  }
-
-  export type ChairUpdateWithoutAppointmentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    company?: CompanyUpdateOneRequiredWithoutChairsNestedInput
-  }
-
-  export type ChairUncheckedUpdateWithoutAppointmentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ClientUpsertWithoutAppointmentsInput = {
@@ -39587,7 +37554,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
@@ -39597,7 +37563,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -39663,7 +37628,6 @@ export namespace Prisma {
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutClientsInput = {
@@ -39692,7 +37656,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutClientsInput = {
@@ -39722,7 +37685,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutAppointmentsInput
     professional: UserCreateNestedOneWithoutAppointmentsInput
-    chair?: ChairCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
     parentAppointment?: AppointmentCreateNestedOneWithoutChildAppointmentsInput
     childAppointments?: AppointmentCreateNestedManyWithoutParentAppointmentInput
@@ -39732,7 +37694,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     serviceId: string
     price?: number | null
@@ -39825,7 +37786,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutClientsInput = {
@@ -39854,7 +37814,6 @@ export namespace Prisma {
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type AppointmentUpsertWithWhereUniqueWithoutClientInput = {
@@ -39925,7 +37884,6 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutCompanyInput
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTagsInput = {
@@ -39954,7 +37912,6 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTagsInput = {
@@ -40021,7 +37978,6 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutCompanyNestedInput
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTagsInput = {
@@ -40050,7 +38006,6 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ClientTagUpsertWithWhereUniqueWithoutTagInput = {
@@ -40207,7 +38162,6 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutCompanyInput
     subscription?: SubscriptionCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyPageInput = {
@@ -40236,7 +38190,6 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyPageInput = {
@@ -40313,7 +38266,6 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutCompanyNestedInput
     subscription?: SubscriptionUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyPageInput = {
@@ -40342,7 +38294,6 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type PageTestimonialUpsertWithWhereUniqueWithoutCompanyPageInput = {
@@ -40510,7 +38461,6 @@ export namespace Prisma {
     services?: ServiceCreateNestedManyWithoutCompanyInput
     companyPage?: CompanyPageCreateNestedOneWithoutCompanyInput
     tags?: TagCreateNestedManyWithoutCompanyInput
-    chairs?: ChairCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSubscriptionInput = {
@@ -40539,7 +38489,6 @@ export namespace Prisma {
     services?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
     companyPage?: CompanyPageUncheckedCreateNestedOneWithoutCompanyInput
     tags?: TagUncheckedCreateNestedManyWithoutCompanyInput
-    chairs?: ChairUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSubscriptionInput = {
@@ -40549,7 +38498,7 @@ export namespace Prisma {
 
   export type PaymentCreateWithoutSubscriptionInput = {
     id?: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -40561,7 +38510,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedCreateWithoutSubscriptionInput = {
     id?: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -40618,7 +38567,6 @@ export namespace Prisma {
     services?: ServiceUpdateManyWithoutCompanyNestedInput
     companyPage?: CompanyPageUpdateOneWithoutCompanyNestedInput
     tags?: TagUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSubscriptionInput = {
@@ -40647,7 +38595,6 @@ export namespace Prisma {
     services?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
     companyPage?: CompanyPageUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: TagUncheckedUpdateManyWithoutCompanyNestedInput
-    chairs?: ChairUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutSubscriptionInput = {
@@ -40672,7 +38619,7 @@ export namespace Prisma {
     NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
     id?: StringFilter<"Payment"> | string
     subscriptionId?: StringFilter<"Payment"> | string
-    mpPaymentId?: StringFilter<"Payment"> | string
+    stripePaymentIntentId?: StringNullableFilter<"Payment"> | string | null
     amount?: FloatFilter<"Payment"> | number
     currency?: StringFilter<"Payment"> | string
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
@@ -40686,8 +38633,9 @@ export namespace Prisma {
     id?: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -40703,8 +38651,9 @@ export namespace Prisma {
     companyId: string
     plan?: $Enums.SubscriptionPlan
     status?: $Enums.SubscriptionStatus
-    mpSubscriptionId?: string | null
-    mpPreapprovalPlanId?: string | null
+    stripeSubscriptionId?: string | null
+    stripeCustomerId?: string | null
+    stripePriceId?: string | null
     currentPeriodStart?: Date | string
     currentPeriodEnd?: Date | string | null
     cancelAtPeriodEnd?: boolean
@@ -40734,8 +38683,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -40751,8 +38701,9 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     plan?: EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
     status?: EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-    mpSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
-    mpPreapprovalPlanId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     currentPeriodStart?: DateTimeFieldUpdateOperationsInput | Date | string
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelAtPeriodEnd?: BoolFieldUpdateOperationsInput | boolean
@@ -41214,7 +39165,6 @@ export namespace Prisma {
   export type AppointmentCreateManyCompanyInput = {
     id?: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -41267,14 +39217,6 @@ export namespace Prisma {
     id?: string
     name: string
     color?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ChairCreateManyCompanyInput = {
-    id?: string
-    name: string
-    number?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41363,7 +39305,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
@@ -41373,7 +39314,6 @@ export namespace Prisma {
   export type AppointmentUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -41401,7 +39341,6 @@ export namespace Prisma {
   export type AppointmentUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -41534,147 +39473,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ChairUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    appointments?: AppointmentUpdateManyWithoutChairNestedInput
-  }
-
-  export type ChairUncheckedUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    appointments?: AppointmentUncheckedUpdateManyWithoutChairNestedInput
-  }
-
-  export type ChairUncheckedUpdateManyWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    number?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AppointmentCreateManyChairInput = {
-    id?: string
-    companyId: string
-    professionalId: string
-    clientName: string
-    clientId?: string | null
-    serviceId: string
-    price?: number | null
-    startTime: Date | string
-    endTime: Date | string
-    status?: $Enums.AppointmentStatus
-    paymentStatus?: $Enums.PaymentStatusType
-    paidAmount?: number | null
-    paymentMethod?: string | null
-    paymentDate?: Date | string | null
-    commissionRate?: number | null
-    commissionAmount?: number | null
-    commissionPaid?: boolean
-    commissionPaidAt?: Date | string | null
-    notes?: string | null
-    recurrenceRule?: string | null
-    recurrenceEndDate?: Date | string | null
-    parentAppointmentId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AppointmentUpdateWithoutChairInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    clientName?: StringFieldUpdateOperationsInput | string
-    price?: NullableFloatFieldUpdateOperationsInput | number | null
-    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-    paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
-    paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
-    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
-    professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    client?: ClientUpdateOneWithoutAppointmentsNestedInput
-    service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-    parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
-    childAppointments?: AppointmentUpdateManyWithoutParentAppointmentNestedInput
-  }
-
-  export type AppointmentUncheckedUpdateWithoutChairInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    professionalId?: StringFieldUpdateOperationsInput | string
-    clientName?: StringFieldUpdateOperationsInput | string
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceId?: StringFieldUpdateOperationsInput | string
-    price?: NullableFloatFieldUpdateOperationsInput | number | null
-    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-    paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
-    paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
-    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    parentAppointmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    childAppointments?: AppointmentUncheckedUpdateManyWithoutParentAppointmentNestedInput
-  }
-
-  export type AppointmentUncheckedUpdateManyWithoutChairInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
-    professionalId?: StringFieldUpdateOperationsInput | string
-    clientName?: StringFieldUpdateOperationsInput | string
-    clientId?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceId?: StringFieldUpdateOperationsInput | string
-    price?: NullableFloatFieldUpdateOperationsInput | number | null
-    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-    paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
-    paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    commissionPaid?: BoolFieldUpdateOperationsInput | boolean
-    commissionPaidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceRule?: NullableStringFieldUpdateOperationsInput | string | null
-    recurrenceEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    parentAppointmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type AppointmentCreateManyServiceInput = {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     price?: number | null
@@ -41724,7 +39526,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
     childAppointments?: AppointmentUpdateManyWithoutParentAppointmentNestedInput
@@ -41734,7 +39535,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -41762,7 +39562,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -41803,7 +39602,6 @@ export namespace Prisma {
   export type AppointmentCreateManyProfessionalInput = {
     id?: string
     companyId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -41897,7 +39695,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
@@ -41907,7 +39704,6 @@ export namespace Prisma {
   export type AppointmentUncheckedUpdateWithoutProfessionalInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -41935,7 +39731,6 @@ export namespace Prisma {
   export type AppointmentUncheckedUpdateManyWithoutProfessionalInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -42110,7 +39905,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     clientId?: string | null
     serviceId: string
@@ -42155,7 +39949,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     client?: ClientUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     childAppointments?: AppointmentUpdateManyWithoutParentAppointmentNestedInput
@@ -42165,7 +39958,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -42193,7 +39985,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
@@ -42220,7 +40011,6 @@ export namespace Prisma {
     id?: string
     companyId: string
     professionalId: string
-    chairId?: string | null
     clientName: string
     serviceId: string
     price?: number | null
@@ -42271,7 +40061,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutAppointmentsNestedInput
     professional?: UserUpdateOneRequiredWithoutAppointmentsNestedInput
-    chair?: ChairUpdateOneWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
     parentAppointment?: AppointmentUpdateOneWithoutChildAppointmentsNestedInput
     childAppointments?: AppointmentUpdateManyWithoutParentAppointmentNestedInput
@@ -42281,7 +40070,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -42309,7 +40097,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     professionalId?: StringFieldUpdateOperationsInput | string
-    chairId?: NullableStringFieldUpdateOperationsInput | string | null
     clientName?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     price?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -42420,7 +40207,7 @@ export namespace Prisma {
 
   export type PaymentCreateManySubscriptionInput = {
     id?: string
-    mpPaymentId: string
+    stripePaymentIntentId?: string | null
     amount: number
     currency?: string
     status?: $Enums.PaymentStatus
@@ -42432,7 +40219,7 @@ export namespace Prisma {
 
   export type PaymentUpdateWithoutSubscriptionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -42444,7 +40231,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedUpdateWithoutSubscriptionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -42456,7 +40243,7 @@ export namespace Prisma {
 
   export type PaymentUncheckedUpdateManyWithoutSubscriptionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    mpPaymentId?: StringFieldUpdateOperationsInput | string
+    stripePaymentIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus

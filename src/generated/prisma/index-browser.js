@@ -159,15 +159,6 @@ exports.Prisma.CompanyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ChairScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  name: 'name',
-  number: 'number',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.WorkingHoursScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -227,7 +218,6 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   professionalId: 'professionalId',
-  chairId: 'chairId',
   clientName: 'clientName',
   clientId: 'clientId',
   serviceId: 'serviceId',
@@ -317,8 +307,9 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
   companyId: 'companyId',
   plan: 'plan',
   status: 'status',
-  mpSubscriptionId: 'mpSubscriptionId',
-  mpPreapprovalPlanId: 'mpPreapprovalPlanId',
+  stripeSubscriptionId: 'stripeSubscriptionId',
+  stripeCustomerId: 'stripeCustomerId',
+  stripePriceId: 'stripePriceId',
   currentPeriodStart: 'currentPeriodStart',
   currentPeriodEnd: 'currentPeriodEnd',
   cancelAtPeriodEnd: 'cancelAtPeriodEnd',
@@ -331,7 +322,7 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   subscriptionId: 'subscriptionId',
-  mpPaymentId: 'mpPaymentId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
@@ -504,7 +495,6 @@ exports.Prisma.ModelName = {
   Lead: 'Lead',
   RateLimit: 'RateLimit',
   Company: 'Company',
-  Chair: 'Chair',
   WorkingHours: 'WorkingHours',
   WorkingHourException: 'WorkingHourException',
   Service: 'Service',

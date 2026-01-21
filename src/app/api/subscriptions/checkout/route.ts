@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { createOrRetrieveProduct, createOrRetrievePrice, createCheckoutSession } from "@/lib/stripe";
+import stripe, {
+  createOrRetrieveProduct,
+  createOrRetrievePrice,
+  createCheckoutSession,
+} from "@/lib/stripe";
 import prisma from "@/lib/prisma";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
@@ -84,18 +88,10 @@ export async function POST(req: NextRequest) {
       return api.badRequest("Plano inválido");
     }
 
-    // Verificar se já tem assinatura ativa
+    // Verificar se já tem assinatura (para upgrade/downgrade via update do Stripe)
     const existingSubscription = await prisma.subscription.findUnique({
       where: { companyId: user.companyId },
     });
-
-    if (
-      existingSubscription &&
-      existingSubscription.status === "ACTIVE" &&
-      existingSubscription.plan !== "TRIAL"
-    ) {
-      return api.badRequest("Você já possui uma assinatura ativa");
-    }
 
     const company = await prisma.company.findUnique({
       where: { id: user.companyId },
@@ -108,7 +104,7 @@ export async function POST(req: NextRequest) {
 
     // URLs de sucesso e cancelamento
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const successUrl = `${baseUrl}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+    const successUrl = `${baseUrl}/api/subscription/stripe-success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${baseUrl}/escolher-plano?payment=cancelled`;
 
     console.log("[Stripe Checkout] Base URL:", baseUrl);
@@ -119,7 +115,7 @@ export async function POST(req: NextRequest) {
     const product = await createOrRetrieveProduct(
       plan.id.toLowerCase(),
       plan.name,
-      `Assinatura mensal do plano ${plan.name}`
+      `Assinatura mensal do plano ${plan.name}`,
     );
 
     // Criar preço no Stripe (se não existir)
@@ -127,8 +123,100 @@ export async function POST(req: NextRequest) {
       product.id,
       plan.price,
       "brl",
-      `Plano ${plan.name} - Mensal`
+      `Plano ${plan.name} - Mensal`,
     );
+
+    // Se já existe assinatura ativa com Stripe, faz update do price (sem novo checkout)
+    if (
+      existingSubscription?.status === "ACTIVE" &&
+      existingSubscription?.stripeSubscriptionId
+    ) {
+      const stripeSub = await stripe.subscriptions.retrieve(
+        existingSubscription.stripeSubscriptionId,
+      );
+
+      const firstItem = stripeSub.items.data[0];
+
+      const updatedSub = await stripe.subscriptions.update(
+        existingSubscription.stripeSubscriptionId,
+        {
+          items: [
+            {
+              id: firstItem.id,
+              price: price.id,
+            },
+          ],
+          proration_behavior: "create_prorations",
+        },
+      );
+
+      const currentPeriodStart = new Date(
+        updatedSub.current_period_start * 1000,
+      );
+      const currentPeriodEnd = new Date(updatedSub.current_period_end * 1000);
+
+      await prisma.subscription.update({
+        where: { companyId: user.companyId },
+        data: {
+          plan: parsed.plan,
+          status: "ACTIVE",
+          stripePriceId: price.id,
+          currentPeriodStart,
+          currentPeriodEnd,
+          cancelAtPeriodEnd: false,
+          canceledAt: null,
+        },
+      });
+
+      await prisma.company.update({
+        where: { id: user.companyId },
+        data: { contrato: parsed.plan },
+      });
+
+      // Cobrar pró-rata imediatamente
+      try {
+        const invoice = await stripe.invoices.create({
+          customer: stripeSub.customer as string,
+          subscription: stripeSub.id,
+          collection_method: "charge_automatically",
+        });
+
+        const paidInvoice = await stripe.invoices.pay(invoice.id);
+
+        const paymentIntentId =
+          typeof paidInvoice.payment_intent === "string"
+            ? paidInvoice.payment_intent
+            : paidInvoice.payment_intent?.id;
+
+        if (paymentIntentId) {
+          const existingPayment = await prisma.payment.findFirst({
+            where: { stripePaymentIntentId: paymentIntentId },
+            select: { id: true },
+          });
+
+          if (!existingPayment) {
+            await prisma.payment.create({
+              data: {
+                subscriptionId: existingSubscription.id,
+                stripePaymentIntentId: paymentIntentId,
+                amount: paidInvoice.total ? paidInvoice.total / 100 : 0,
+                currency: paidInvoice.currency?.toUpperCase() || "BRL",
+                status: "APPROVED",
+                paymentMethod: "card",
+                paidAt: new Date(),
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.error("[Stripe] Falha ao cobrar pró-rata imediatamente:", err);
+      }
+
+      return api.ok({
+        updated: true,
+        currentPeriodEnd,
+      });
+    }
 
     // Criar sessão de checkout no Stripe
     const session = await createCheckoutSession({
@@ -139,7 +227,7 @@ export async function POST(req: NextRequest) {
       cancelUrl,
       metadata: {
         company_id: user.companyId,
-        plan: parsed.plan,
+        plan_id: parsed.plan,
         user_id: user.id,
       },
     });

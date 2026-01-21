@@ -83,8 +83,8 @@ export default function EscolherPlanoPage() {
     setProcessing(true);
 
     try {
-      // Criar checkout session no Mercado Pago
-      const response = await fetch("/api/subscription/create-checkout", {
+      // Criar sessão de checkout no Stripe
+      const response = await fetch("/api/subscription/stripe-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId }),
@@ -92,8 +92,20 @@ export default function EscolherPlanoPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // Redirecionar para página de pagamento do Mercado Pago
-        window.location.href = data.data.checkoutUrl;
+        if (data.data?.checkoutUrl) {
+          // Primeiro pagamento: redirecionar para o checkout
+          window.location.href = data.data.checkoutUrl;
+          return;
+        }
+
+        if (data.data?.updated) {
+          // Upgrade/downgrade direto: ir para o dashboard
+          router.push("/dashboard?payment=confirmed");
+          return;
+        }
+
+        alert("Plano atualizado com sucesso");
+        router.push("/dashboard");
       } else {
         const error = await response.json();
         alert(error.error || "Erro ao criar checkout");

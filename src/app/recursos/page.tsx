@@ -391,7 +391,7 @@ export default function RecursosPage() {
       icon: CreditCard,
       title: "Pagamentos Online",
       description:
-        "Aceite pagamentos online com integração de gateways como Stripe, PagSeguro e Mercado Pago.",
+        "Aceite pagamentos online com integração ao Stripe (checkout, recorrência e pagamentos em dia).",
       gradient: "from-green-500 to-emerald-600",
       status: "futuro",
       benefits: [

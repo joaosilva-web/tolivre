@@ -67,7 +67,7 @@ export type PlanName = keyof typeof PLANS;
 
 export function checkAppointmentLimit(
   subscription: Subscription | null,
-  currentCount: number
+  currentCount: number,
 ): { allowed: boolean; message?: string } {
   if (!subscription || subscription.status !== "ACTIVE") {
     const limit = PLANS.TRIAL.features.appointments;

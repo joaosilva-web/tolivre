@@ -112,7 +112,7 @@ export default function Home() {
             duration: 1,
             ease: "power3.out",
           },
-          "-=0.6"
+          "-=0.6",
         )
         .from(
           ".hero-cta",
@@ -123,7 +123,7 @@ export default function Home() {
             duration: 0.8,
             ease: "back.out(1.7)",
           },
-          "-=0.4"
+          "-=0.4",
         )
         .from(
           ".hero-badge",
@@ -135,7 +135,7 @@ export default function Home() {
             stagger: 0.1,
             ease: "back.out(2)",
           },
-          "-=0.4"
+          "-=0.4",
         );
 
       // Mouse move parallax effect for hero
@@ -199,7 +199,7 @@ export default function Home() {
             duration: 1,
             delay: index * 0.1,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -227,7 +227,7 @@ export default function Home() {
             duration: 0.6,
             delay: index * 0.05,
             ease: "back.out(1.7)",
-          }
+          },
         );
       });
 
@@ -255,7 +255,7 @@ export default function Home() {
             duration: 1,
             delay: index * 0.15,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -282,7 +282,7 @@ export default function Home() {
             rotationZ: 0,
             duration: 1,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -307,7 +307,7 @@ export default function Home() {
           rotationY: 0,
           duration: 1.2,
           ease: "power3.out",
-        }
+        },
       );
 
       // Comparison table animation with exit
@@ -332,7 +332,7 @@ export default function Home() {
             duration: 0.8,
             delay: index * 0.1,
             ease: "power2.out",
-          }
+          },
         );
       });
 
@@ -359,7 +359,7 @@ export default function Home() {
             duration: 0.8,
             delay: index * 0.08,
             ease: "back.out(1.7)",
-          }
+          },
         );
       });
 
@@ -387,7 +387,7 @@ export default function Home() {
             duration: 0.8,
             delay: index * 0.2,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -419,7 +419,7 @@ export default function Home() {
             onUpdate: function () {
               counter.innerText = Math.ceil(counter.innerText);
             },
-          }
+          },
         );
       });
 
@@ -447,7 +447,7 @@ export default function Home() {
             duration: 0.8,
             delay: index * 0.1,
             ease: "power2.out",
-          }
+          },
         );
       });
 
@@ -477,7 +477,7 @@ export default function Home() {
             duration: 1,
             delay: index * 0.15,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -507,7 +507,7 @@ export default function Home() {
             duration: 1,
             delay: index * 0.15,
             ease: "power3.out",
-          }
+          },
         );
       });
 
@@ -532,7 +532,7 @@ export default function Home() {
           scale: 1,
           duration: 1,
           ease: "power3.out",
-        }
+        },
       );
 
       // Parallax effect for background elements
@@ -1391,7 +1391,7 @@ export default function Home() {
                 {
                   status: "Planejado",
                   title: "Pagamentos Online",
-                  desc: "Integração com gateways de pagamento (Stripe, PagSeguro, Mercado Pago)",
+                  desc: "Integração com pagamentos via Stripe (checkout e recorrência)",
                   date: "Mai 2026",
                 },
                 {
@@ -1432,8 +1432,8 @@ export default function Home() {
                             item.status === "Concluído"
                               ? "bg-green-500/20 text-green-500"
                               : item.status === "Em Desenvolvimento"
-                              ? "bg-blue-500/20 text-blue-500"
-                              : "bg-purple-500/20 text-purple-500"
+                                ? "bg-blue-500/20 text-blue-500"
+                                : "bg-purple-500/20 text-purple-500"
                           }`}
                         >
                           {item.status}
