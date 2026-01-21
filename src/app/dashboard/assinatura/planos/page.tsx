@@ -15,6 +15,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { PLANS, PlanName } from "@/lib/subscriptionLimits";
 import useSession from "@/hooks/useSession";
+import { SidebarInset } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/site-header";
 
 interface SubscriptionData {
   subscription: {
@@ -64,10 +66,20 @@ export default function PlansPage() {
 
       if (res.ok) {
         const data = await res.json();
-        // Usar sandboxInitPoint em desenvolvimento/teste, initPoint em produção
-        const checkoutUrl = data.data.sandboxInitPoint || data.data.initPoint;
-        console.log("[Checkout] Redirecting to:", checkoutUrl);
-        window.location.href = checkoutUrl;
+
+        const checkoutUrl = data?.data?.url || data?.data?.checkoutUrl;
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl;
+          return;
+        }
+
+        if (data?.data?.updated) {
+          router.push("/dashboard?payment=confirmed");
+          return;
+        }
+
+        alert("Plano atualizado com sucesso");
+        router.push("/dashboard");
       } else {
         const error = await res.json();
         alert(error.error || "Erro ao processar upgrade");
@@ -108,162 +120,171 @@ export default function PlansPage() {
 
   if (userLoading || loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </SidebarInset>
     );
   }
 
   const currentPlan = subscriptionData?.subscription?.plan || "TRIAL";
+  const plansList = Object.entries(PLANS).filter(([key]) =>
+    currentPlan === "TRIAL" ? true : key !== "TRIAL",
+  );
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold">Escolha seu plano</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          Comece grátis e faça upgrade quando precisar de mais recursos
-        </p>
-      </div>
+    <SidebarInset>
+      <SiteHeader />
+      <div className="flex flex-1 flex-col">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6 max-w-7xl w-full mx-auto">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl md:text-4xl font-bold">
+              Escolha seu plano
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Comece grátis e faça upgrade quando precisar de mais recursos
+            </p>
+          </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {Object.entries(PLANS).map(([key, plan]) => {
-          const isCurrentPlan = currentPlan === key;
-          const isPlanActive =
-            subscriptionData?.subscription?.status === "ACTIVE";
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {plansList.map(([key, plan]) => {
+              const isCurrentPlan = currentPlan === key;
+              const isPlanActive =
+                subscriptionData?.subscription?.status === "ACTIVE";
 
-          return (
-            <Card
-              key={key}
-              className={`relative ${
-                plan.popular ? "border-primary shadow-lg" : ""
-              }`}
-            >
-              {plan.popular && (
-                <Badge
-                  className="absolute -top-3 left-1/2 -translate-x-1/2"
-                  variant="default"
+              return (
+                <Card
+                  key={key}
+                  className={`relative ${plan.popular ? "border-primary shadow-lg" : ""}`}
                 >
-                  <Sparkles className="mr-1 h-3 w-3" />
-                  Mais Popular
-                </Badge>
-              )}
-
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {plan.displayName}
-                  {isCurrentPlan && isPlanActive && (
-                    <Badge variant="secondary">Atual</Badge>
+                  {plan.popular && (
+                    <Badge
+                      className="absolute -top-3 left-1/2 -translate-x-1/2"
+                      variant="default"
+                    >
+                      <Sparkles className="mr-1 h-3 w-3" />
+                      Mais Popular
+                    </Badge>
                   )}
-                </CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
-              </CardHeader>
 
-              <CardContent>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">R$ {plan.price}</span>
-                  <span className="text-muted-foreground">/mês</span>
-                </div>
-
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600" />
-                    <span className="text-sm">
-                      {plan.features.appointments === "unlimited"
-                        ? "Agendamentos ilimitados"
-                        : `${plan.features.appointments} agendamentos/mês`}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600" />
-                    <span className="text-sm">
-                      {plan.features.professionals === "unlimited"
-                        ? "Profissionais ilimitados"
-                        : `${plan.features.professionals} ${
-                            plan.features.professionals === 1
-                              ? "profissional"
-                              : "profissionais"
-                          }`}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600" />
-                    <span className="text-sm">
-                      Serviços e clientes ilimitados
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600" />
-                    <span className="text-sm">Notificações WhatsApp</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600" />
-                    <span className="text-sm">
-                      Suporte{" "}
-                      {plan.features.support === "24/7"
-                        ? "24/7"
-                        : plan.features.support === "priority"
-                        ? "prioritário"
-                        : "por email"}
-                    </span>
-                  </li>
-                </ul>
-              </CardContent>
-
-              <CardFooter className="flex flex-col gap-2">
-                {key === "FREE" ? (
-                  <Button className="w-full" variant="outline" disabled>
-                    Plano Atual
-                  </Button>
-                ) : isCurrentPlan && isPlanActive ? (
-                  <Button className="w-full" variant="outline" disabled>
-                    Plano Atual
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      className="w-full"
-                      onClick={() => handleUpgrade(key as PlanName)}
-                      disabled={!!processingPlan}
-                    >
-                      {processingPlan === key ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processando...
-                        </>
-                      ) : (
-                        "Assinar"
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      {plan.displayName}
+                      {isCurrentPlan && isPlanActive && (
+                        <Badge variant="secondary">Atual</Badge>
                       )}
-                    </Button>
-                    <Button
-                      className="w-full"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleSimulatePayment(key as PlanName)}
-                      disabled={!!processingPlan}
-                    >
-                      <Zap className="mr-2 h-3 w-3" />
-                      Simular Pagamento (Teste)
-                    </Button>
-                  </>
-                )}
-              </CardFooter>
-            </Card>
-          );
-        })}
-      </div>
+                    </CardTitle>
+                    <CardDescription>{plan.description}</CardDescription>
+                  </CardHeader>
 
-      <div className="mt-12 text-center text-sm text-muted-foreground">
-        <p>Todos os planos incluem 7 dias de garantia de reembolso</p>
-        <p className="mt-2">
-          Tem dúvidas?{" "}
-          <button
-            onClick={() => router.push("/contato")}
-            className="text-primary hover:underline"
-          >
-            Entre em contato
-          </button>
-        </p>
+                  <CardContent>
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold">
+                        R$ {plan.price}
+                      </span>
+                      <span className="text-muted-foreground">/mês</span>
+                    </div>
+
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-sm">
+                          {plan.features.appointments === "unlimited"
+                            ? "Agendamentos ilimitados"
+                            : `${plan.features.appointments} agendamentos/mês`}
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-sm">
+                          {plan.features.professionals === "unlimited"
+                            ? "Profissionais ilimitados"
+                            : `${plan.features.professionals} ${
+                                plan.features.professionals === 1
+                                  ? "profissional"
+                                  : "profissionais"
+                              }`}
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-sm">
+                          Serviços e clientes ilimitados
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-sm">Notificações WhatsApp</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-sm">
+                          Suporte{" "}
+                          {plan.features.support === "24/7"
+                            ? "24/7"
+                            : plan.features.support === "priority"
+                              ? "prioritário"
+                              : "por email"}
+                        </span>
+                      </li>
+                    </ul>
+                  </CardContent>
+
+                  <CardFooter className="flex flex-col gap-2">
+                    {isCurrentPlan && isPlanActive ? (
+                      <Button className="w-full" variant="outline" disabled>
+                        Plano Atual
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          className="w-full"
+                          onClick={() => handleUpgrade(key as PlanName)}
+                          disabled={!!processingPlan}
+                        >
+                          {processingPlan === key ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Processando...
+                            </>
+                          ) : (
+                            "Assinar"
+                          )}
+                        </Button>
+                        <Button
+                          className="w-full"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleSimulatePayment(key as PlanName)}
+                          disabled={!!processingPlan}
+                        >
+                          <Zap className="mr-2 h-3 w-3" />
+                          Simular Pagamento (Teste)
+                        </Button>
+                      </>
+                    )}
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="text-center text-sm text-muted-foreground">
+            <p>Todos os planos incluem 7 dias de garantia de reembolso</p>
+            <p className="mt-2">
+              Tem dúvidas?{" "}
+              <button
+                onClick={() => router.push("/contato")}
+                className="text-primary hover:underline"
+              >
+                Entre em contato
+              </button>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </SidebarInset>
   );
 }
