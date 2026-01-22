@@ -188,6 +188,7 @@ model Appointment {
   startTime      DateTime
   endTime        DateTime
   status         AppointmentStatus @default(PENDING)
+  reminderSentAt DateTime?
 
   // Controle Financeiro
   paymentStatus PaymentStatusType @default(PENDING)
@@ -212,6 +213,9 @@ model Appointment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([startTime])
+  @@index([reminderSentAt])
 }
 
 enum PaymentStatusType {

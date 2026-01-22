@@ -51,6 +51,7 @@ export default function LaunchCountdown({ heroRef }: Props) {
     if (!sourceEl || !banner) return
 
     function onMove(e: MouseEvent) {
+      if (!sourceEl) return
       const { clientX, clientY } = e
       const { left, top, width, height } = sourceEl.getBoundingClientRect()
       const x = (clientX - left) / width - 0.5

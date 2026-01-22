@@ -12487,6 +12487,7 @@ export namespace Prisma {
     startTime: Date | null
     endTime: Date | null
     status: $Enums.AppointmentStatus | null
+    reminderSentAt: Date | null
     paymentStatus: $Enums.PaymentStatusType | null
     paidAmount: number | null
     paymentMethod: string | null
@@ -12514,6 +12515,7 @@ export namespace Prisma {
     startTime: Date | null
     endTime: Date | null
     status: $Enums.AppointmentStatus | null
+    reminderSentAt: Date | null
     paymentStatus: $Enums.PaymentStatusType | null
     paidAmount: number | null
     paymentMethod: string | null
@@ -12541,6 +12543,7 @@ export namespace Prisma {
     startTime: number
     endTime: number
     status: number
+    reminderSentAt: number
     paymentStatus: number
     paidAmount: number
     paymentMethod: number
@@ -12584,6 +12587,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     status?: true
+    reminderSentAt?: true
     paymentStatus?: true
     paidAmount?: true
     paymentMethod?: true
@@ -12611,6 +12615,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     status?: true
+    reminderSentAt?: true
     paymentStatus?: true
     paidAmount?: true
     paymentMethod?: true
@@ -12638,6 +12643,7 @@ export namespace Prisma {
     startTime?: true
     endTime?: true
     status?: true
+    reminderSentAt?: true
     paymentStatus?: true
     paidAmount?: true
     paymentMethod?: true
@@ -12752,6 +12758,7 @@ export namespace Prisma {
     startTime: Date
     endTime: Date
     status: $Enums.AppointmentStatus
+    reminderSentAt: Date | null
     paymentStatus: $Enums.PaymentStatusType
     paidAmount: number | null
     paymentMethod: string | null
@@ -12798,6 +12805,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     status?: boolean
+    reminderSentAt?: boolean
     paymentStatus?: boolean
     paidAmount?: boolean
     paymentMethod?: boolean
@@ -12832,6 +12840,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     status?: boolean
+    reminderSentAt?: boolean
     paymentStatus?: boolean
     paidAmount?: boolean
     paymentMethod?: boolean
@@ -12864,6 +12873,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     status?: boolean
+    reminderSentAt?: boolean
     paymentStatus?: boolean
     paidAmount?: boolean
     paymentMethod?: boolean
@@ -12896,6 +12906,7 @@ export namespace Prisma {
     startTime?: boolean
     endTime?: boolean
     status?: boolean
+    reminderSentAt?: boolean
     paymentStatus?: boolean
     paidAmount?: boolean
     paymentMethod?: boolean
@@ -12912,7 +12923,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "commissionRate" | "commissionAmount" | "commissionPaid" | "commissionPaidAt" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "professionalId" | "clientName" | "clientId" | "serviceId" | "price" | "startTime" | "endTime" | "status" | "reminderSentAt" | "paymentStatus" | "paidAmount" | "paymentMethod" | "paymentDate" | "commissionRate" | "commissionAmount" | "commissionPaid" | "commissionPaidAt" | "notes" | "recurrenceRule" | "recurrenceEndDate" | "parentAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
   export type AppointmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     professional?: boolean | UserDefaultArgs<ExtArgs>
@@ -12958,6 +12969,7 @@ export namespace Prisma {
       startTime: Date
       endTime: Date
       status: $Enums.AppointmentStatus
+      reminderSentAt: Date | null
       paymentStatus: $Enums.PaymentStatusType
       paidAmount: number | null
       paymentMethod: string | null
@@ -13411,6 +13423,7 @@ export namespace Prisma {
     readonly startTime: FieldRef<"Appointment", 'DateTime'>
     readonly endTime: FieldRef<"Appointment", 'DateTime'>
     readonly status: FieldRef<"Appointment", 'AppointmentStatus'>
+    readonly reminderSentAt: FieldRef<"Appointment", 'DateTime'>
     readonly paymentStatus: FieldRef<"Appointment", 'PaymentStatusType'>
     readonly paidAmount: FieldRef<"Appointment", 'Float'>
     readonly paymentMethod: FieldRef<"Appointment", 'String'>
@@ -27778,6 +27791,7 @@ export namespace Prisma {
     startTime: 'startTime',
     endTime: 'endTime',
     status: 'status',
+    reminderSentAt: 'reminderSentAt',
     paymentStatus: 'paymentStatus',
     paidAmount: 'paidAmount',
     paymentMethod: 'paymentMethod',
@@ -28899,6 +28913,7 @@ export namespace Prisma {
     startTime?: DateTimeFilter<"Appointment"> | Date | string
     endTime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFilter<"Appointment"> | $Enums.PaymentStatusType
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
@@ -28932,6 +28947,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     status?: SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
     paymentStatus?: SortOrder
     paidAmount?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
@@ -28968,6 +28984,7 @@ export namespace Prisma {
     startTime?: DateTimeFilter<"Appointment"> | Date | string
     endTime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFilter<"Appointment"> | $Enums.PaymentStatusType
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
@@ -29001,6 +29018,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     status?: SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
     paymentStatus?: SortOrder
     paidAmount?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
@@ -29036,6 +29054,7 @@ export namespace Prisma {
     startTime?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
     endTime?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusWithAggregatesFilter<"Appointment"> | $Enums.AppointmentStatus
+    reminderSentAt?: DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeWithAggregatesFilter<"Appointment"> | $Enums.PaymentStatusType
     paidAmount?: FloatNullableWithAggregatesFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
@@ -30773,6 +30792,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -30805,6 +30825,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -30829,6 +30850,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30861,6 +30883,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30889,6 +30912,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -30912,6 +30936,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30938,6 +30963,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32866,6 +32892,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     status?: SortOrder
+    reminderSentAt?: SortOrder
     paymentStatus?: SortOrder
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
@@ -32900,6 +32927,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     status?: SortOrder
+    reminderSentAt?: SortOrder
     paymentStatus?: SortOrder
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
@@ -32927,6 +32955,7 @@ export namespace Prisma {
     startTime?: SortOrder
     endTime?: SortOrder
     status?: SortOrder
+    reminderSentAt?: SortOrder
     paymentStatus?: SortOrder
     paidAmount?: SortOrder
     paymentMethod?: SortOrder
@@ -35398,6 +35427,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -35428,6 +35458,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -35728,6 +35759,7 @@ export namespace Prisma {
     startTime?: DateTimeFilter<"Appointment"> | Date | string
     endTime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFilter<"Appointment"> | $Enums.PaymentStatusType
     paidAmount?: FloatNullableFilter<"Appointment"> | number | null
     paymentMethod?: StringNullableFilter<"Appointment"> | string | null
@@ -36155,6 +36187,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -36185,6 +36218,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -36576,6 +36610,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -36606,6 +36641,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37215,6 +37251,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37246,6 +37283,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37274,6 +37312,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37305,6 +37344,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37539,6 +37579,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37570,6 +37611,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37670,6 +37712,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -37700,6 +37743,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -39172,6 +39216,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -39291,6 +39336,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39321,6 +39367,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39348,6 +39395,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39483,6 +39531,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -39511,6 +39560,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39541,6 +39591,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39568,6 +39619,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39609,6 +39661,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -39681,6 +39734,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39711,6 +39765,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39738,6 +39793,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39912,6 +39968,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -39934,6 +39991,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39965,6 +40023,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39992,6 +40051,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40017,6 +40077,7 @@ export namespace Prisma {
     startTime: Date | string
     endTime: Date | string
     status?: $Enums.AppointmentStatus
+    reminderSentAt?: Date | string | null
     paymentStatus?: $Enums.PaymentStatusType
     paidAmount?: number | null
     paymentMethod?: string | null
@@ -40046,6 +40107,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40076,6 +40138,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40103,6 +40166,7 @@ export namespace Prisma {
     startTime?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentStatus?: EnumPaymentStatusTypeFieldUpdateOperationsInput | $Enums.PaymentStatusType
     paidAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null

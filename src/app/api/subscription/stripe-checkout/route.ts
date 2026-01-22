@@ -7,6 +7,7 @@ import stripe, {
   createCheckoutSession,
 } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
+import type Stripe from "stripe";
 
 interface PlanConfig {
   id: string;
@@ -117,13 +118,13 @@ export async function POST(req: NextRequest) {
       existingSubscription?.status === "ACTIVE" &&
       existingSubscription?.stripeSubscriptionId
     ) {
-      const stripeSub = await stripe.subscriptions.retrieve(
+      const stripeSub = (await stripe.subscriptions.retrieve(
         existingSubscription.stripeSubscriptionId,
-      );
+      )) as Stripe.Subscription;
 
       const firstItem = stripeSub.items.data[0];
 
-      const updatedSub = await stripe.subscriptions.update(
+      const updatedSub = (await stripe.subscriptions.update(
         existingSubscription.stripeSubscriptionId,
         {
           items: [
@@ -134,12 +135,24 @@ export async function POST(req: NextRequest) {
           ],
           proration_behavior: "create_prorations",
         },
-      );
+      )) as Stripe.Subscription & {
+        current_period_start?: number;
+        current_period_end?: number;
+        currentPeriodStart?: number;
+        currentPeriodEnd?: number;
+      };
+
+      const currentPeriodStartUnix =
+        updatedSub.current_period_start ?? updatedSub.currentPeriodStart;
+      const currentPeriodEndUnix =
+        updatedSub.current_period_end ?? updatedSub.currentPeriodEnd;
 
       const currentPeriodStart = new Date(
-        updatedSub.current_period_start * 1000,
+        (currentPeriodStartUnix ?? Date.now() / 1000) * 1000,
       );
-      const currentPeriodEnd = new Date(updatedSub.current_period_end * 1000);
+      const currentPeriodEnd = new Date(
+        (currentPeriodEndUnix ?? Date.now() / 1000) * 1000,
+      );
 
       await prisma.subscription.update({
         where: { companyId: user.companyId },
@@ -167,12 +180,18 @@ export async function POST(req: NextRequest) {
           collection_method: "charge_automatically",
         });
 
-        const paidInvoice = await stripe.invoices.pay(invoice.id);
+        const paidInvoice = (await stripe.invoices.pay(invoice.id)) as Stripe.Invoice & {
+          payment_intent?: string | Stripe.PaymentIntent | null;
+          paymentIntent?: string | Stripe.PaymentIntent | null;
+        };
+
+        const paymentIntentValue =
+          paidInvoice.payment_intent ?? paidInvoice.paymentIntent;
 
         const paymentIntentId =
-          typeof paidInvoice.payment_intent === "string"
-            ? paidInvoice.payment_intent
-            : paidInvoice.payment_intent?.id;
+          typeof paymentIntentValue === "string"
+            ? paymentIntentValue
+            : paymentIntentValue?.id;
 
         if (paymentIntentId) {
           const existingPayment = await prisma.payment.findFirst({

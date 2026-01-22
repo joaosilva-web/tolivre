@@ -225,6 +225,7 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  reminderSentAt: 'reminderSentAt',
   paymentStatus: 'paymentStatus',
   paidAmount: 'paidAmount',
   paymentMethod: 'paymentMethod',

@@ -4,6 +4,26 @@ const nextConfig: NextConfig = {
   // Output standalone para Docker (produção otimizada)
   output: "standalone",
 
+  // Evita que o Turbopack tente empacotar libs de WhatsApp/logger com arquivos de teste embutidos
+  // que quebram a build (thread-stream/pino/baileys e deps). Mantém essas libs como externas
+  // no servidor.
+  serverExternalPackages: [
+    "baileys",
+    "pino",
+    "thread-stream",
+    "pino-elasticsearch",
+    "jimp",
+    "sharp",
+    "tap",
+    "desm",
+    "fastbench",
+    "why-is-node-running",
+    "keyv",
+    "@cacheable/memory",
+    "@cacheable/utils",
+    "cacheable",
+  ],
+
   typescript: {
     // Only type-check source files, not generated
     ignoreBuildErrors: false,
