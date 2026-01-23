@@ -17,6 +17,21 @@ RUN npm ci --only=production --legacy-peer-deps
 
 # Instalar todas as dependências para build
 FROM base AS builder
+
+# Build-time secrets (pass via build args)
+ARG STRIPE_SECRET_KEY
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+ARG RECAPTCHA_SECRET_KEY
+ARG MERCADO_PAGO_ACCESS_TOKEN
+
+# Expor envs para o build do Next
+ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+ENV RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+ENV MERCADO_PAGO_ACCESS_TOKEN=${MERCADO_PAGO_ACCESS_TOKEN}
+
 RUN npm ci --legacy-peer-deps
 
 # Copiar código fonte
@@ -28,7 +43,10 @@ RUN npx prisma generate
 # Build Next.js
 # Desabilitar telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN POSTGRES_URL="postgresql://temp:temp@localhost:5432/temp" npx prisma generate && npx next build --turbopack
+RUN POSTGRES_URL="postgresql://temp:temp@localhost:5432/temp" \
+  DATABASE_URL="postgresql://temp:temp@localhost:5432/temp" \
+  npx prisma generate && \
+  npx next build --turbopack
 
 # Imagem de produção - apenas o necessário
 FROM node:20-alpine AS runner
