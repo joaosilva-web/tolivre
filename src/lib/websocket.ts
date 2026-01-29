@@ -51,6 +51,7 @@ export function initializeWebSocket(server: HTTPServer) {
   }
 
   io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents>(server, {
+    path: "/ws/socket.io",
     cors: {
       origin: [
         process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",

@@ -16,24 +16,19 @@ No painel do Dokploy → seu projeto → **Ports**:
 
 ### 2️⃣ Adicionar Labels do Traefik
 
-No painel do Dokploy → seu projeto → **Advanced** → **Labels**:
+No painel do Dokploy → seu projeto → **Advanced** → **Traefik Config**:
 
-Adicione estas labels (clique em "Add Label" para cada uma):
-
-```
-traefik.http.routers.tolivre-ws.rule=Host(`tolivre.app`) && PathPrefix(`/ws`)
-traefik.http.routers.tolivre-ws.entrypoints=websecure
-traefik.http.routers.tolivre-ws.tls=true
-traefik.http.routers.tolivre-ws.tls.certresolver=letsencrypt
-traefik.http.services.tolivre-ws.loadbalancer.server.port=3001
+**Encontre esta linha:**
+```yaml
+rule: Host(`tolivre.app`)
 ```
 
-**Explicação das labels:**
-- `rule`: Roteia `/ws` para o WebSocket
-- `entrypoints=websecure`: Usa porta 443 (HTTPS)
-- `tls=true`: Ativa SSL
-- `certresolver`: Usa certificado Let's Encrypt existente
-- `server.port=3001`: Faz proxy para porta interna 3001
+**No router websecure-2 (porta 3001), mude para:**
+```yaml
+rule: Host(`tolivre.app`) && PathPrefix(`/ws`)
+```
+
+**⚠️ IMPORTANTE:** Use `PathPrefix` (não `Path`), pois Socket.IO precisa de `/ws/socket.io/*`.
 
 ### 3️⃣ Verificar Variáveis de Ambiente
 

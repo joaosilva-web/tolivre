@@ -55,15 +55,18 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     // Initialize socket connection
     const isDev = process.env.NODE_ENV === "development";
 
-    // Em dev: http://localhost:3001
+    // Em dev: http://localhost:3001 com path padrão /socket.io
     // Em prod: wss://tolivre.app/ws (path-based routing via Traefik)
     const wsUrl = isDev
       ? "http://localhost:3001"
-      : `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}/ws`;
+      : `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}`;
 
-    console.log(`[WebSocket] Connecting to: ${wsUrl}`);
+    const wsPath = isDev ? "/socket.io" : "/ws/socket.io";
+
+    console.log(`[WebSocket] Connecting to: ${wsUrl} (path: ${wsPath})`);
 
     const socketInstance = io(wsUrl, {
+      path: wsPath,
       transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1000,
