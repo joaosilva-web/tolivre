@@ -119,9 +119,13 @@ export async function PATCH(
     console.log("[RESCHEDULE] Updated successfully:", updated.id);
 
     // Enviar notificação em tempo real para profissionais
-    const oldFormattedDate = format(oldStartTime, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
-    const newFormattedDate = format(newStartTime, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
-    
+    const oldFormattedDate = format(oldStartTime, "dd/MM/yyyy 'às' HH:mm", {
+      locale: ptBR,
+    });
+    const newFormattedDate = format(newStartTime, "dd/MM/yyyy 'às' HH:mm", {
+      locale: ptBR,
+    });
+
     emitNotification(updated.companyId, {
       id: `reschedule-${updated.id}`,
       type: "appointment",

@@ -51,10 +51,14 @@ export function initializeWebSocket(server: HTTPServer) {
 
   io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+      origin: [
+        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+        "http://localhost:3000",
+        "https://tolivre.app",
+        "https://www.tolivre.app",
+      ],
       credentials: true,
     },
-    path: "/api/socket",
   });
 
   io.on("connection", async (socket: Socket) => {

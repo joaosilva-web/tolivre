@@ -46,8 +46,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
 
     // Initialize socket connection
-    const socketInstance = io({
-      path: "/api/socket",
+    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
+    const wsUrl = typeof window !== "undefined" 
+      ? `${window.location.protocol}//${window.location.hostname}:${wsPort}`
+      : `http://localhost:${wsPort}`;
+    
+    const socketInstance = io(wsUrl, {
       transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionDelay: 1000,
