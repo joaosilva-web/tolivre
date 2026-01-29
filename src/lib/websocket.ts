@@ -41,7 +41,8 @@ export interface ClientNotification {
   phone?: string;
 }
 
-let io: SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null = null;
+let io: SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null =
+  null;
 
 export function initializeWebSocket(server: HTTPServer) {
   if (io) {
@@ -111,12 +112,19 @@ export function initializeWebSocket(server: HTTPServer) {
   return io;
 }
 
-export function getIO(): SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null {
+export function getIO(): SocketIOServer<
+  ClientToServerEvents,
+  ServerToClientEvents
+> | null {
   return io;
 }
 
 // Helper functions to emit events
-export function emitToCompany(companyId: string, event: keyof ServerToClientEvents, data: any) {
+export function emitToCompany(
+  companyId: string,
+  event: keyof ServerToClientEvents,
+  data: any,
+) {
   if (!io) {
     console.warn("[WebSocket] IO not initialized");
     return;
@@ -127,13 +135,19 @@ export function emitToCompany(companyId: string, event: keyof ServerToClientEven
   console.log(`[WebSocket] Emitted ${event} to ${roomName}`);
 }
 
-export function emitNotification(companyId: string, notification: NotificationPayload) {
+export function emitNotification(
+  companyId: string,
+  notification: NotificationPayload,
+) {
   emitToCompany(companyId, "notification", notification);
 }
 
-export function emitAppointmentCreated(companyId: string, appointment: AppointmentNotification) {
+export function emitAppointmentCreated(
+  companyId: string,
+  appointment: AppointmentNotification,
+) {
   emitToCompany(companyId, "appointmentCreated", appointment);
-  
+
   emitNotification(companyId, {
     id: `apt-${appointment.id}`,
     type: "appointment",
@@ -144,9 +158,12 @@ export function emitAppointmentCreated(companyId: string, appointment: Appointme
   });
 }
 
-export function emitAppointmentUpdated(companyId: string, appointment: AppointmentNotification) {
+export function emitAppointmentUpdated(
+  companyId: string,
+  appointment: AppointmentNotification,
+) {
   emitToCompany(companyId, "appointmentUpdated", appointment);
-  
+
   emitNotification(companyId, {
     id: `apt-${appointment.id}`,
     type: "appointment",
@@ -157,9 +174,12 @@ export function emitAppointmentUpdated(companyId: string, appointment: Appointme
   });
 }
 
-export function emitAppointmentCanceled(companyId: string, appointment: AppointmentNotification) {
+export function emitAppointmentCanceled(
+  companyId: string,
+  appointment: AppointmentNotification,
+) {
   emitToCompany(companyId, "appointmentCanceled", appointment);
-  
+
   emitNotification(companyId, {
     id: `apt-${appointment.id}`,
     type: "appointment",
@@ -172,7 +192,7 @@ export function emitAppointmentCanceled(companyId: string, appointment: Appointm
 
 export function emitNewClient(companyId: string, client: ClientNotification) {
   emitToCompany(companyId, "newClient", client);
-  
+
   emitNotification(companyId, {
     id: `client-${client.id}`,
     type: "client",

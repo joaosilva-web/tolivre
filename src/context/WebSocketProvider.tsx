@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
 import { io, Socket } from "socket.io-client";
 import useSession from "@/hooks/useSession";
 
@@ -47,10 +54,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     // Initialize socket connection
     const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
-    const wsUrl = typeof window !== "undefined" 
-      ? `${window.location.protocol}//${window.location.hostname}:${wsPort}`
-      : `http://localhost:${wsPort}`;
-    
+    const wsUrl =
+      typeof window !== "undefined"
+        ? `${window.location.protocol}//${window.location.hostname}:${wsPort}`
+        : `http://localhost:${wsPort}`;
+
     const socketInstance = io(wsUrl, {
       transports: ["websocket", "polling"],
       reconnection: true,
@@ -72,9 +80,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     socketInstance.on("notification", (data: NotificationPayload) => {
       console.log("[WebSocket] Notification received:", data);
       setNotifications((prev) => [data, ...prev].slice(0, 50)); // Keep last 50
-      
+
       // Show browser notification if permitted
-      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+      if (
+        typeof window !== "undefined" &&
+        "Notification" in window &&
+        Notification.permission === "granted"
+      ) {
         new Notification(data.title, {
           body: data.message,
           icon: "/favicon.ico",
@@ -101,7 +113,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     setSocket(socketInstance);
 
     // Request notification permission
-    if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+    if (
+      typeof window !== "undefined" &&
+      "Notification" in window &&
+      Notification.permission === "default"
+    ) {
       Notification.requestPermission();
     }
 

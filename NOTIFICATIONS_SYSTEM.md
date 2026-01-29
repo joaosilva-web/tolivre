@@ -47,7 +47,9 @@ O sistema de notificações usa **WebSocket** (Socket.IO) para enviar notificaç
 ## Eventos que Geram Notificações
 
 ### 1. Novo Agendamento (público)
+
 **Arquivo:** `src/app/api/appointments/public/route.ts`
+
 ```typescript
 emitAppointmentCreated(result.companyId, {
   id: result.id,
@@ -60,7 +62,9 @@ emitAppointmentCreated(result.companyId, {
 ```
 
 ### 2. Cliente Confirmou (WhatsApp)
+
 **Arquivo:** `src/app/api/webhooks/uazapi/route.ts`
+
 ```typescript
 emitNotification(appointment.companyId, {
   id: `confirm-${appointmentId}`,
@@ -73,7 +77,9 @@ emitNotification(appointment.companyId, {
 ```
 
 ### 3. Cliente Cancelou (WhatsApp)
+
 **Arquivo:** `src/app/api/webhooks/uazapi/route.ts`
+
 ```typescript
 emitNotification(appointment.companyId, {
   id: `cancel-${appointmentId}`,
@@ -86,7 +92,9 @@ emitNotification(appointment.companyId, {
 ```
 
 ### 4. Reagendamento (Admin)
+
 **Arquivo:** `src/app/api/appointments/[id]/reschedule/route.ts`
+
 ```typescript
 emitNotification(updated.companyId, {
   id: `reschedule-${updated.id}`,
@@ -103,10 +111,13 @@ emitNotification(updated.companyId, {
 ### Desenvolvimento Local
 
 1. **Inicie o servidor:**
+
    ```bash
    npm run dev
    ```
+
    Você verá nos logs:
+
    ```
    [Instrumentation] Initializing WebSocket server...
    [WebSocket] Server initialized
@@ -134,6 +145,7 @@ emitNotification(updated.companyId, {
 ### Produção
 
 1. **Variáveis de ambiente necessárias:**
+
    ```env
    WS_PORT=3001
    NEXT_PUBLIC_WS_PORT=3001
@@ -141,12 +153,13 @@ emitNotification(updated.companyId, {
    ```
 
 2. **Docker Compose:**
+
    ```yaml
    services:
      app:
        ports:
-         - "3000:3000"  # Next.js
-         - "3001:3001"  # WebSocket
+         - "3000:3000" # Next.js
+         - "3001:3001" # WebSocket
        environment:
          - WS_PORT=3001
          - NEXT_PUBLIC_WS_PORT=3001
@@ -165,6 +178,7 @@ emitNotification(updated.companyId, {
    - Se não aparecer, verifique se a porta 3001 está acessível
 
 2. **Verifique logs do servidor:**
+
    ```
    [WebSocket] Client connected: ABC123
    [WebSocket] User 1234 joined room company:5678
@@ -172,9 +186,10 @@ emitNotification(updated.companyId, {
 
 3. **Teste emissão manual:**
    No servidor, você pode testar emitindo uma notificação:
+
    ```typescript
    import { emitNotification } from "@/lib/websocket";
-   
+
    emitNotification("seu-company-id", {
      id: "test-123",
      type: "system",
@@ -187,6 +202,7 @@ emitNotification(updated.companyId, {
 ### WebSocket não conecta
 
 1. **Verifique porta:**
+
    ```bash
    netstat -ano | findstr :3001  # Windows
    lsof -i :3001                 # Linux/Mac

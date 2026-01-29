@@ -41,7 +41,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://api.stripe.com https://*.stripe.com",
+              "connect-src 'self' ws://localhost:3001 wss://localhost:3001 ws://tolivre.app:3001 wss://tolivre.app:3001 https://api.stripe.com https://*.stripe.com",
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
             ].join("; "),
           },
