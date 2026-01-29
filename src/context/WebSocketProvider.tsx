@@ -54,13 +54,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     // Initialize socket connection
     const isDev = process.env.NODE_ENV === "development";
-    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
     
     // Em dev: http://localhost:3001
-    // Em prod (VPS): wss://tolivre.app:3001
+    // Em prod: wss://tolivre.app/ws (path-based routing via Traefik)
     const wsUrl = isDev 
-      ? `http://localhost:${wsPort}` 
-      : `wss://${window.location.hostname}:${wsPort}`;
+      ? "http://localhost:3001" 
+      : `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
     
     console.log(`[WebSocket] Connecting to: ${wsUrl}`);
     
