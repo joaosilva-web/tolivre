@@ -12,23 +12,29 @@ export async function POST(req: NextRequest) {
     console.log("[uazapi webhook] Received:", JSON.stringify(body, null, 2));
 
     // O formato de mensagens interativas do UAZAPI varia dependendo do tipo
-    // Segundo a documentação, mensagens de botão podem vir em diferentes formatos:
-    // 1. body.message.buttonsResponseMessage.selectedButtonId
-    // 2. body.selectedButtonId (formato simplificado)
-    // 3. body.data.selectedButtonId (outro formato possível)
+    // Segundo a documentação e testes, mensagens de botão podem vir em diferentes formatos:
+    // 1. body.message.buttonsResponseMessage.selectedButtonId (formato antigo)
+    // 2. body.message.buttonOrListid (formato atual em produção)
+    // 3. body.message.content.selectedButtonID (formato alternativo)
+    // 4. body.selectedButtonId (formato simplificado)
+    // 5. body.data.selectedButtonId (outro formato possível)
 
     let buttonId: string | undefined;
 
     // Tentar extrair o buttonId de várias formas possíveis
-    if (body.message?.buttonsResponseMessage?.selectedButtonId) {
+    if (body.message?.buttonOrListid) {
+      // Formato atual em produção
+      buttonId = body.message.buttonOrListid;
+    } else if (body.message?.content?.selectedButtonID) {
+      // Formato alternativo em produção
+      buttonId = body.message.content.selectedButtonID;
+    } else if (body.message?.buttonsResponseMessage?.selectedButtonId) {
+      // Formato antigo
       buttonId = body.message.buttonsResponseMessage.selectedButtonId;
     } else if (body.selectedButtonId) {
       buttonId = body.selectedButtonId;
     } else if (body.data?.selectedButtonId) {
       buttonId = body.data.selectedButtonId;
-    } else if (body.key?.id && body.message?.buttonsResponseMessage) {
-      // Às vezes o ID vem no body.key.id
-      buttonId = body.message.buttonsResponseMessage.selectedButtonId;
     }
 
     // Se não encontrou buttonId, não é uma resposta de botão - ignorar
