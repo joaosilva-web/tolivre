@@ -6,10 +6,10 @@ import { getIO } from "@/lib/websocket";
 
 export async function GET(req: NextRequest) {
   const io = getIO();
-  
+
   if (!io) {
     // Return a simple response - Socket.IO will handle this via polling
-    return new Response("Socket.IO server not ready", { 
+    return new Response("Socket.IO server not ready", {
       status: 503,
       headers: {
         "Content-Type": "text/plain",
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   // Socket.IO uses POST for polling transport
   const io = getIO();
-  
+
   if (!io) {
     return new Response("Socket.IO server not ready", { status: 503 });
   }

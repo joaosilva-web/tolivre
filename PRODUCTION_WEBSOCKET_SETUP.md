@@ -1,6 +1,7 @@
 # Configuração de Produção para WebSocket
 
 ## Problema
+
 Em produção, o WebSocket tentava conectar na porta 3001, mas essa porta não estava exposta no Docker/servidor.
 
 ## Solução
@@ -15,8 +16,8 @@ Adicione a porta 3001 no arquivo `docker-compose.yml` ou nas configurações do 
 services:
   app:
     ports:
-      - "3000:3000"  # Next.js
-      - "3001:3001"  # WebSocket
+      - "3000:3000" # Next.js
+      - "3001:3001" # WebSocket
     environment:
       - WS_PORT=3001
       - NEXT_PUBLIC_WS_PORT=3001
