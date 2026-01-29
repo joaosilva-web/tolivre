@@ -53,12 +53,17 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
 
     // Initialize socket connection
-    // In production, use the same origin; in dev, use port 3001
+    // Connect directly to WebSocket port in both dev and production
     const isDev = process.env.NODE_ENV === "development";
-    const wsUrl = isDev ? `http://localhost:3001` : window.location.origin;
+    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
+    
+    // Em dev: http://localhost:3001
+    // Em prod: wss://tolivre.app:3001
+    const wsUrl = isDev 
+      ? `http://localhost:${wsPort}` 
+      : `wss://${window.location.hostname}:${wsPort}`;
     
     const socketInstance = io(wsUrl, {
-      path: isDev ? undefined : "/api/socketio",
       transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1000,
