@@ -52,16 +52,20 @@ export default function IntegrationsPage() {
             <div>
               <h1 className="text-3xl font-bold">Integrações</h1>
               <p className="text-base text-muted-foreground">
-                A única integração necessária é com o WhatsApp oficial do TôLivre. Enviamos todas as mensagens de confirmação, lembrete e
-                reagendamento por lá, sem exigir que você configure ou mantenha um número próprio conectado.
+                A única integração necessária é com o WhatsApp oficial do
+                TôLivre. Enviamos todas as mensagens de confirmação, lembrete e
+                reagendamento por lá, sem exigir que você configure ou mantenha
+                um número próprio conectado.
               </p>
             </div>
           </div>
 
           <Alert>
             <AlertDescription>
-              Todas as notificações saem do mesmo número verificado pelo TôLivre, garantindo consistência e evitando bloqueios por uso indevido.
-              Caso precise de um atendimento personalizado, abra o chat do suporte disponível dentro do painel.
+              Todas as notificações saem do mesmo número verificado pelo
+              TôLivre, garantindo consistência e evitando bloqueios por uso
+              indevido. Caso precise de um atendimento personalizado, abra o
+              chat do suporte disponível dentro do painel.
             </AlertDescription>
           </Alert>
 
@@ -75,8 +79,12 @@ export default function IntegrationsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Automação</p>
-                  <p className="mt-1 text-sm text-foreground">Nenhuma configuração extra.</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                    Automação
+                  </p>
+                  <p className="mt-1 text-sm text-foreground">
+                    Nenhuma configuração extra.
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -88,7 +96,8 @@ export default function IntegrationsPage() {
               <div>
                 <CardTitle>O que acontece por trás</CardTitle>
                 <CardDescription>
-                  A automação roda no servidor do TôLivre e respeita o idioma e horário da sua empresa.
+                  A automação roda no servidor do TôLivre e respeita o idioma e
+                  horário da sua empresa.
                 </CardDescription>
               </div>
             </CardHeader>
@@ -103,7 +112,9 @@ export default function IntegrationsPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <a href="mailto:suporte@tolivre.com">Falar com o time do TôLivre</a>
+                  <a href="mailto:suporte@tolivre.com">
+                    Falar com o time do TôLivre
+                  </a>
                 </Button>
                 <Button size="sm" asChild>
                   <Link href="/dashboard">Voltar ao dashboard</Link>

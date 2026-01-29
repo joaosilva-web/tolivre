@@ -39,7 +39,11 @@ export async function POST(req: NextRequest) {
     const responseText = await response.text().catch(() => "");
 
     if (!response.ok) {
-      console.error("[uazapi-disconnect] API error", response.status, responseText);
+      console.error(
+        "[uazapi-disconnect] API error",
+        response.status,
+        responseText,
+      );
       return api.serverError(
         `Falha ao desconectar instância (status ${response.status})`,
       );

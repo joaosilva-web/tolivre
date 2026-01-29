@@ -86,6 +86,7 @@ export default function PublicBookingPage() {
   >([]);
   const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [datesWithSlots, setDatesWithSlots] = useState<Set<string>>(new Set());
 
   // Booking
   const [bookingLoading, setBookingLoading] = useState(false);
@@ -100,6 +101,13 @@ export default function PublicBookingPage() {
       loadAvailableSlots();
     }
   }, [selectedDate, selectedProfessional, selectedService]);
+
+  // Verificar disponibilidade de datas para os próximos 60 dias quando profissional e serviço são selecionados
+  useEffect(() => {
+    if (selectedProfessional && selectedService && data) {
+      preloadDatesAvailability();
+    }
+  }, [selectedProfessional, selectedService, data]);
 
   // Atualizar favicon e título quando os dados carregarem
   useEffect(() => {
@@ -192,6 +200,74 @@ export default function PublicBookingPage() {
       console.error("Erro ao carregar slots:", err);
     } finally {
       setLoadingSlots(false);
+    }
+  };
+
+  const preloadDatesAvailability = async () => {
+    if (!selectedProfessional || !selectedService || !data) return;
+
+    try {
+      // Buscar horários de trabalho
+      const whRes = await fetch(
+        `/api/working-hours?companyId=${data.companyId}`
+      );
+      if (!whRes.ok) return;
+
+      const whData = await whRes.json();
+      const workHours = whData.data || [];
+
+      if (workHours.length === 0) return;
+
+      const datesSet = new Set<string>();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // Verificar próximos 60 dias
+      for (let i = 0; i < 60; i++) {
+        const checkDate = new Date(today);
+        checkDate.setDate(today.getDate() + i);
+        const dayIndex = checkDate.getDay();
+
+        // Verificar se há working hours para este dia da semana
+        const hasWorkingHours = workHours.some(
+          (wh: WorkingHour) => wh.dayOfWeek === dayIndex
+        );
+
+        if (hasWorkingHours) {
+          // Buscar agendamentos para esta data
+          const dateStr = format(checkDate, "yyyy-MM-dd");
+          try {
+            const apptRes = await fetch(
+              `/api/appointments?professionalId=${selectedProfessional.id}&date=${dateStr}`
+            );
+
+            let appointments: UIAppointment[] = [];
+            if (apptRes.ok) {
+              const apptData = await apptRes.json();
+              appointments = apptData.data || [];
+            }
+
+            // Gerar slots para verificar se há disponibilidade
+            const slots = generateSlots(
+              checkDate,
+              workHours,
+              selectedService.duration,
+              appointments
+            );
+
+            // Se houver pelo menos um slot disponível, adicionar ao set
+            if (slots.some((slot) => slot.available)) {
+              datesSet.add(dateStr);
+            }
+          } catch (err) {
+            console.error(`Erro ao verificar disponibilidade para ${dateStr}:`, err);
+          }
+        }
+      }
+
+      setDatesWithSlots(datesSet);
+    } catch (err) {
+      console.error("Erro ao pré-carregar disponibilidade:", err);
     }
   };
 
@@ -472,7 +548,16 @@ export default function PublicBookingPage() {
                   mode="single"
                   selected={selectedDate}
                   onSelect={handleDateSelect}
-                  disabled={(date) => date < new Date()}
+                  disabled={(date) => {
+                    // Desabilitar datas passadas
+                    if (date < new Date(new Date().setHours(0, 0, 0, 0))) {
+                      return true;
+                    }
+                    
+                    // Desabilitar datas sem horários disponíveis
+                    const dateStr = format(date, "yyyy-MM-dd");
+                    return !datesWithSlots.has(dateStr);
+                  }}
                   locale={ptBR}
                   className="rounded-md border"
                   primaryColor={data.primaryColor}
