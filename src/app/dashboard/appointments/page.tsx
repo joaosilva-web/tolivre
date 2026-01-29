@@ -24,6 +24,7 @@ interface Appointment {
   id: string;
   startTime: string;
   clientName: string;
+  status: string;
   client?: { id: string; name: string } | null;
   service: {
     name: string;
@@ -69,6 +70,56 @@ export default function AppointmentsPage() {
       console.error("Erro ao exportar:", error);
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleStatusChange = async (appointmentId: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/appointments/${appointmentId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (res.ok) {
+        // Atualiza localmente
+        setAppointments((prev) =>
+          prev.map((apt) =>
+            apt.id === appointmentId ? { ...apt, status: newStatus } : apt
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+    }
+  };
+
+  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+    switch (status) {
+      case "CONFIRMED":
+        return "default";
+      case "COMPLETED":
+        return "secondary";
+      case "CANCELED":
+        return "destructive";
+      case "PENDING":
+      default:
+        return "outline";
+    }
+  };
+
+  const getStatusLabel = (status: string): string => {
+    switch (status) {
+      case "PENDING":
+        return "Pendente";
+      case "CONFIRMED":
+        return "Confirmado";
+      case "COMPLETED":
+        return "Concluído";
+      case "CANCELED":
+        return "Cancelado";
+      default:
+        return status;
     }
   };
 
@@ -383,6 +434,24 @@ export default function AppointmentsPage() {
                               <span className="font-medium">
                                 R$ {appointment.service.price.toFixed(2)}
                               </span>
+                              <Select
+                                value={appointment.status}
+                                onValueChange={(value) => handleStatusChange(appointment.id, value)}
+                              >
+                                <SelectTrigger className="w-[140px]">
+                                  <SelectValue>
+                                    <Badge variant={getStatusBadgeVariant(appointment.status)}>
+                                      {getStatusLabel(appointment.status)}
+                                    </Badge>
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="PENDING">Pendente</SelectItem>
+                                  <SelectItem value="CONFIRMED">Confirmado</SelectItem>
+                                  <SelectItem value="COMPLETED">Concluído</SelectItem>
+                                  <SelectItem value="CANCELED">Cancelado</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </div>
                           </div>
                         </CardContent>

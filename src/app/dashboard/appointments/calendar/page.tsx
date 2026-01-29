@@ -17,6 +17,7 @@ import useSession from "@/hooks/useSession";
 import { WeeklyCalendar } from "@/components/weekly-calendar";
 import { addWeeks, startOfWeek, endOfWeek, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { toast } from "sonner";
 
 interface Appointment {
   id: string;
@@ -133,20 +134,20 @@ export default function WeeklyCalendarPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          newStartTime: newStartTime.toISOString(),
+          startTime: newStartTime.toISOString(),
         }),
       });
 
       if (res.ok) {
-        // Reload appointments to show the updated time
+        toast.success("Agendamento reagendado com sucesso");
         loadAppointments();
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao reagendar");
+        toast.error(data.error || "Erro ao reagendar");
       }
     } catch (error) {
       console.error("Erro ao reagendar:", error);
-      alert("Erro ao reagendar");
+      toast.error("Erro ao reagendar");
     }
   };
 

@@ -60,11 +60,27 @@ export function WeeklyCalendar({ appointments, weekStart, onReschedule }: Weekly
     const droppedOn = over.id as string; // formato: "day-YYYY-MM-DD-time-HH:mm"
 
     if (droppedOn.startsWith("day-")) {
-      const parts = droppedOn.split("-");
-      const dateStr = `${parts[1]}-${parts[2]}-${parts[3]}`; // YYYY-MM-DD
-      const timeStr = `${parts[5]}:${parts[6]}`; // HH:mm
+      // Remove o prefixo "day-" e separa a data e hora
+      const withoutPrefix = droppedOn.substring(4); // remove "day-"
+      const timeIndex = withoutPrefix.indexOf("-time-");
+      
+      if (timeIndex === -1) {
+        console.error("Formato de ID inválido:", droppedOn);
+        setActiveId(null);
+        return;
+      }
+      
+      const dateStr = withoutPrefix.substring(0, timeIndex); // YYYY-MM-DD
+      const timeStr = withoutPrefix.substring(timeIndex + 6); // HH:mm (remove "-time-")
 
       const newStartTime = new Date(`${dateStr}T${timeStr}:00`);
+      
+      // Validar se a data é válida
+      if (isNaN(newStartTime.getTime())) {
+        console.error("Data inválida criada:", { dateStr, timeStr, droppedOn });
+        setActiveId(null);
+        return;
+      }
 
       setIsRescheduling(true);
       try {

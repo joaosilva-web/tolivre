@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
+import { getUserFromCookie } from "@/app/libs/auth";
 
 // Request validation
 const createAppointmentSchema = z.object({
@@ -124,5 +125,58 @@ export async function POST(req: NextRequest) {
 
     const error = err as Error;
     return api.serverError(error.message || "Erro ao criar agendamento");
+  }
+}
+// PATCH - Atualizar status do agendamento
+const updateStatusSchema = z.object({
+  status: z.enum(["PENDING", "CONFIRMED", "COMPLETED", "CANCELED"]),
+});
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await getUserFromCookie();
+    if (!user) return api.unauthorized();
+
+    const { id } = await params;
+    const body = await req.json();
+    const { status } = updateStatusSchema.parse(body);
+
+    // Busca o agendamento
+    const appointment = await prisma.appointment.findUnique({
+      where: { id },
+      select: { companyId: true },
+    });
+
+    if (!appointment) {
+      return api.notFound("Agendamento não encontrado");
+    }
+
+    // Verifica se o usuário tem permissão
+    if (user.companyId && user.companyId !== appointment.companyId) {
+      return api.forbidden("Sem permissão para editar este agendamento");
+    }
+
+    // Atualiza o status
+    const updated = await prisma.appointment.update({
+      where: { id },
+      data: { status },
+      include: {
+        service: true,
+        professional: true,
+        client: true,
+      },
+    });
+
+    return api.ok(updated);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return api.badRequest("Status inválido", err.issues);
+    }
+
+    const error = err as Error;
+    return api.serverError(error.message || "Erro ao atualizar status");
   }
 }
