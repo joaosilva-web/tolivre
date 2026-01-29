@@ -2,10 +2,22 @@ import { NextRequest } from "next/server";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
+
+    // Verifica se é staff interno do ToLivre
+    if (!isToLivreStaff(user.email)) {
+      return api.forbidden("Acesso restrito à equipe interna do ToLivre");
+    }
+
     if (!user.companyId) return api.forbidden("Empresa não identificada");
 
     const prisma = (await import("@/lib/prisma")).default;

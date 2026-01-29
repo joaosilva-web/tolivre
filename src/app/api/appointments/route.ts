@@ -224,14 +224,17 @@ export async function POST(req: NextRequest) {
         });
 
         if (company?.telefone && clientPhone) {
-          const startLocal = new Date(parsed.startTime).toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          
+          const startLocal = new Date(parsed.startTime).toLocaleString(
+            "pt-BR",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            },
+          );
+
           const messageText =
             `Olá *${clientNameToUse}*!\n\n` +
             `Recebemos sua solicitação de agendamento:\n\n` +

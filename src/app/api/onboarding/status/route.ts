@@ -4,11 +4,29 @@ import { getUserFromCookie, JWTPayload } from "@/app/libs/auth";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
+
 export async function GET(req: NextRequest) {
   const user: JWTPayload | null = await getUserFromCookie();
   if (!user) return api.unauthorized();
 
   try {
+    // Staff do ToLivre não precisa de onboarding
+    if (isToLivreStaff(user.email)) {
+      return api.ok({
+        needsOnboarding: false,
+        hasCompany: true,
+        hasEssentialData: true,
+        hasServices: true,
+        hasWorkingHours: true,
+        isToLivreStaff: true,
+      });
+    }
+
     // Se o usuário não tem companyId, precisa de onboarding
     if (!user.companyId) {
       return api.ok({
@@ -54,7 +72,7 @@ export async function GET(req: NextRequest) {
     const needsOnboarding = !hasEssentialData;
 
     console.log(
-      `[Onboarding Status] User: ${user.id}, Company: ${user.companyId}`
+      `[Onboarding Status] User: ${user.id}, Company: ${user.companyId}`,
     );
     console.log(`  - hasEssentialData: ${hasEssentialData}`);
     console.log(`  - servicesCount: ${servicesCount}`);

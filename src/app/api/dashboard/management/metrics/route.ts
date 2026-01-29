@@ -4,6 +4,12 @@ import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
 
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
+
 const RANGE_LOOKUP = {
   "7d": 7,
   "30d": 30,
@@ -35,9 +41,9 @@ export async function GET(req: NextRequest) {
   const user = await getUserFromCookie();
   if (!user) return api.unauthorized();
 
-  const companyId = user.companyId;
-  if (!companyId) {
-    return api.badRequest("Informe a empresa para acessar o dashboard");
+  // Verifica se é staff interno do ToLivre
+  if (!isToLivreStaff(user.email)) {
+    return api.forbidden("Acesso restrito à equipe interna do ToLivre");
   }
 
   const { searchParams } = new URL(req.url);
@@ -48,10 +54,11 @@ export async function GET(req: NextRequest) {
   const now = new Date();
   const startDate = subDays(now, rangeDays);
 
+  // Staff do ToLivre vê métricas de TODAS as empresas do sistema
+  // Busca agendamentos criados no período (não por data de início)
   const appointments = await prisma.appointment.findMany({
     where: {
-      companyId,
-      startTime: {
+      createdAt: {
         gte: startDate,
         lte: now,
       },
@@ -61,10 +68,13 @@ export async function GET(req: NextRequest) {
       paidAmount: true,
       price: true,
       status: true,
+      createdAt: true,
     },
   });
 
   const appointmentVolume = appointments.length;
+
+  // Conta profissionais únicos que tiveram agendamentos no período
   const uniqueProfessionals = new Set(
     appointments.map((apt) => apt.professionalId),
   );
@@ -95,14 +105,10 @@ export async function GET(req: NextRequest) {
     { confirmed: 0, rescheduled: 0, canceled: 0 },
   );
 
+  // Calcula média de avaliações de todas as empresas do sistema
   const ratingAggregate = await prisma.pageTestimonial.aggregate({
     _avg: {
       rating: true,
-    },
-    where: {
-      companyPage: {
-        companyId,
-      },
     },
   });
 

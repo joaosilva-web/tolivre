@@ -12,7 +12,10 @@ export async function POST(req: NextRequest) {
     console.log("[uazapi webhook] Received:", JSON.stringify(body, null, 2));
 
     // Verificar se é uma resposta de botão (menu interativo)
-    if (body.type === "button_reply" || body.messageType === "buttonsResponseMessage") {
+    if (
+      body.type === "button_reply" ||
+      body.messageType === "buttonsResponseMessage"
+    ) {
       const buttonId = body.selectedButtonId || body.id;
 
       if (!buttonId) {
@@ -90,10 +93,7 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        console.log(
-          "[uazapi webhook] Appointment confirmed:",
-          appointmentId,
-        );
+        console.log("[uazapi webhook] Appointment confirmed:", appointmentId);
       } else if (action === "cancel") {
         // Cancelar agendamento
         await prisma.appointment.update({

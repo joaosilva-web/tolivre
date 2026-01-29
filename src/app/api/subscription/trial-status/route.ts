@@ -3,6 +3,12 @@ import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
 
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
+
 export async function GET(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
@@ -10,11 +16,21 @@ export async function GET(req: NextRequest) {
       "[trial-status API] User:",
       user?.id,
       "CompanyId:",
-      user?.companyId
+      user?.companyId,
     );
 
     if (!user) {
       return api.unauthorized();
+    }
+
+    // Staff do ToLivre é isento de pagamentos
+    if (isToLivreStaff(user.email)) {
+      return api.ok({
+        isInTrial: false,
+        trialEndsAt: null,
+        subscriptionStatus: "active",
+        isToLivreStaff: true,
+      });
     }
 
     if (!user.companyId) {

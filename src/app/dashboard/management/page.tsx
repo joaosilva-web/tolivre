@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,6 +20,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { ManagementMetricsResponse } from "@/app/api/dashboard/management/metrics/route";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Pie, PieChart, Cell, Legend } from "recharts";
+
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
 
 const timelineOptions = [
   { label: "7 dias", value: "7d" },
@@ -66,6 +79,16 @@ const formatCompactCurrency = (value: number) =>
 const formatNumber = (value: number) => numberFormatter.format(value);
 
 export default function ManagementDashboardPage() {
+  const router = useRouter();
+  const { user, loading: sessionLoading } = useSession();
+
+  // Verificação de autorização - apenas staff interno do ToLivre
+  useEffect(() => {
+    if (!sessionLoading && !isToLivreStaff(user?.email)) {
+      router.push("/dashboard");
+    }
+  }, [user?.email, sessionLoading, router]);
+
   const [range, setRange] = useState<TimelineRange>("30d");
   const [metrics, setMetrics] = useState<ManagementMetricsResponse | null>(
     null,
@@ -93,7 +116,6 @@ export default function ManagementDashboardPage() {
   const [previewResult, setPreviewResult] = useState<string | null>(null);
   const [polling, setPolling] = useState(false);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
-  const { user } = useSession();
   const companyId = user?.companyId;
 
   const rangeDescription = useMemo(() => descriptions[range], [range]);
@@ -105,7 +127,6 @@ export default function ManagementDashboardPage() {
   );
 
   const fetchMetrics = useCallback(async () => {
-    if (!companyId) return;
     setMetricsLoading(true);
     setMetricsError(null);
 
@@ -133,7 +154,7 @@ export default function ManagementDashboardPage() {
     } finally {
       setMetricsLoading(false);
     }
-  }, [companyId, range]);
+  }, [range]);
 
   const stopPolling = useCallback(() => {
     if (pollingRef.current) {
@@ -455,6 +476,23 @@ export default function ManagementDashboardPage() {
     connectionState?.message ??
     "Conecte o canal oficial para enviar confirmações e lembretes do TôLivre.";
 
+  // Tela de loading durante verificação de autorização
+  if (sessionLoading || !isToLivreStaff(user?.email)) {
+    return (
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 items-center justify-center">
+          {sessionLoading ? (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <p>Verificando autorização...</p>
+            </div>
+          ) : null}
+        </div>
+      </SidebarInset>
+    );
+  }
+
   return (
     <SidebarInset>
       <SiteHeader />
@@ -552,7 +590,59 @@ export default function ManagementDashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-56 w-full rounded-2xl bg-gradient-to-r from-primary/10 via-secondary/10 to-transparent" />
+              {metrics && (
+                <ChartContainer
+                  config={{
+                    confirmados: {
+                      label: "Confirmados",
+                      color: "hsl(142, 76%, 36%)",
+                    },
+                    reagendamentos: {
+                      label: "Reagendamentos",
+                      color: "hsl(38, 92%, 50%)",
+                    },
+                    cancelamentos: {
+                      label: "Cancelamentos",
+                      color: "hsl(0, 84%, 60%)",
+                    },
+                  }}
+                  className="mx-auto h-56 w-full max-w-md"
+                >
+                  <PieChart>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Pie
+                      data={[
+                        {
+                          name: "Confirmados",
+                          value: distribution.confirmed,
+                          fill: "var(--color-confirmados)",
+                        },
+                        {
+                          name: "Reagendamentos",
+                          value: distribution.rescheduled,
+                          fill: "var(--color-reagendamentos)",
+                        },
+                        {
+                          name: "Cancelamentos",
+                          value: distribution.canceled,
+                          fill: "var(--color-cancelamentos)",
+                        },
+                      ].filter((item) => item.value > 0)}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                    />
+                  </PieChart>
+                </ChartContainer>
+              )}
+              {!metrics && (
+                <div className="h-56 w-full rounded-2xl bg-gradient-to-r from-primary/10 via-secondary/10 to-transparent" />
+              )}
               <div className="mt-4 grid gap-3 md:grid-cols-3">
                 {[
                   {

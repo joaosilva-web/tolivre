@@ -27,124 +27,152 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import IconLogo from "./ui/icon-logo";
+import { useSessionContext } from "@/context/SessionProvider";
 
-const data = {
-  navMain: [
-    {
-      title: "Início",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Agendamentos",
-      url: "/dashboard/appointments",
-      icon: IconCalendar,
-      items: [
-        {
-          title: "Lista",
-          url: "/dashboard/appointments",
-        },
-        {
-          title: "Calendário",
-          url: "/dashboard/appointments/calendar",
-        },
-        {
-          title: "Novo Agendamento",
-          url: "/dashboard/appointments/new",
-        },
-      ],
-    },
-    {
-      title: "Empresa",
-      url: "/dashboard/company",
-      icon: IconBuilding,
-      items: [
-        {
-          title: "Visão Geral",
-          url: "/dashboard/company",
-        },
-        {
-          title: "Equipe",
-          url: "/dashboard/company/team",
-        },
-        {
-          title: "Página Pública",
-          url: "/dashboard/company/page-settings",
-        },
-      ],
-    },
-    {
-      title: "Relatórios",
-      url: "/dashboard/financial",
-      icon: IconReport,
-      items: [
-        {
-          title: "Financeiro",
-          url: "/dashboard/financial",
-        },
-        {
-          title: "Comissões",
-          url: "/dashboard/reports/commissions",
-        },
-      ],
-    },
-    {
-      title: "Gestão TôLivre",
-      url: "/dashboard/management",
-      icon: IconGauge,
-    },
-    {
-      title: "Segurança",
-      url: "/dashboard/security",
-      icon: IconSettings,
-      items: [
-        {
-          title: "Visão Geral",
-          url: "/dashboard/security",
-        },
-        {
-          title: "Autenticação 2FA",
-          url: "/dashboard/security/2fa",
-        },
-      ],
-    },
-    {
-      title: "Configurações",
-      url: "/dashboard/settings/exceptions",
-      icon: IconSettings,
-      items: [
-        {
-          title: "Exceções de Horário",
-          url: "/dashboard/settings/exceptions",
-        },
-      ],
-    },
-    {
-      title: "Assinatura",
-      url: "/dashboard/assinatura",
-      icon: IconCreditCard,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Configurações",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Ajuda",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Buscar",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-};
+// Helper para verificar se é usuário interno do ToLivre
+function isToLivreStaff(email?: string): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@tolivre.app");
+}
+
+const baseNavMain = [
+  {
+    title: "Início",
+    url: "/dashboard",
+    icon: IconDashboard,
+  },
+  {
+    title: "Agendamentos",
+    url: "/dashboard/appointments",
+    icon: IconCalendar,
+    items: [
+      {
+        title: "Lista",
+        url: "/dashboard/appointments",
+      },
+      {
+        title: "Calendário",
+        url: "/dashboard/appointments/calendar",
+      },
+      {
+        title: "Novo Agendamento",
+        url: "/dashboard/appointments/new",
+      },
+    ],
+  },
+  {
+    title: "Empresa",
+    url: "/dashboard/company",
+    icon: IconBuilding,
+    items: [
+      {
+        title: "Visão Geral",
+        url: "/dashboard/company",
+      },
+      {
+        title: "Equipe",
+        url: "/dashboard/company/team",
+      },
+      {
+        title: "Página Pública",
+        url: "/dashboard/company/page-settings",
+      },
+    ],
+  },
+  {
+    title: "Relatórios",
+    url: "/dashboard/financial",
+    icon: IconReport,
+    items: [
+      {
+        title: "Financeiro",
+        url: "/dashboard/financial",
+      },
+      {
+        title: "Comissões",
+        url: "/dashboard/reports/commissions",
+      },
+    ],
+  },
+];
+
+// Menu exclusivo da equipe interna TôLivre
+const internalNavItems = [
+  {
+    title: "Gestão TôLivre",
+    url: "/dashboard/management",
+    icon: IconGauge,
+  },
+];
+
+const commonNavItems = [
+  {
+    title: "Segurança",
+    url: "/dashboard/security",
+    icon: IconSettings,
+    items: [
+      {
+        title: "Visão Geral",
+        url: "/dashboard/security",
+      },
+      {
+        title: "Autenticação 2FA",
+        url: "/dashboard/security/2fa",
+      },
+    ],
+  },
+  {
+    title: "Configurações",
+    url: "/dashboard/settings/exceptions",
+    icon: IconSettings,
+    items: [
+      {
+        title: "Exceções de Horário",
+        url: "/dashboard/settings/exceptions",
+      },
+    ],
+  },
+  {
+    title: "Assinatura",
+    url: "/dashboard/assinatura",
+    icon: IconCreditCard,
+  },
+];
+
+const navSecondary = [
+  {
+    title: "Configurações",
+    url: "#",
+    icon: IconSettings,
+  },
+  {
+    title: "Ajuda",
+    url: "#",
+    icon: IconHelp,
+  },
+  {
+    title: "Buscar",
+    url: "#",
+    icon: IconSearch,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useSessionContext();
+
+  // Constrói o menu dinamicamente baseado no usuário
+  const navMain = React.useMemo(() => {
+    // Staff do ToLivre vê apenas o menu de Gestão TôLivre
+    if (isToLivreStaff(user?.email)) {
+      return internalNavItems;
+    }
+
+    // Usuários normais veem todos os menus exceto Gestão TôLivre
+    const items = [...baseNavMain];
+    items.push(...commonNavItems);
+    return items;
+  }, [user?.email]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -165,9 +193,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         {/* NavDocuments has been removed */}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
