@@ -130,7 +130,7 @@ export default function PublicBookingPage() {
     // Cleanup: restaurar favicon e título originais ao desmontar
     return () => {
       const link = document.querySelector(
-        "link[rel*='icon']"
+        "link[rel*='icon']",
       ) as HTMLLinkElement;
       if (link) {
         link.href = "/favicon.ico";
@@ -166,22 +166,30 @@ export default function PublicBookingPage() {
 
       // Buscar horários de trabalho
       const whRes = await fetch(
-        `/api/working-hours?companyId=${data.companyId}`
+        `/api/working-hours?companyId=${data.companyId}`,
       );
       if (whRes.ok) {
         const whData = await whRes.json();
         setWorkingHours(whData.data || []);
 
-        // Buscar agendamentos existentes do profissional na data
+        // Buscar agendamentos existentes na data
         const dateStr = format(selectedDate, "yyyy-MM-dd");
         const apptRes = await fetch(
-          `/api/appointments?professionalId=${selectedProfessional.id}&date=${dateStr}`
+          `/api/appointments?companyId=${data.companyId}&from=${dateStr}&to=${dateStr}`,
         );
 
         let appointments: UIAppointment[] = [];
         if (apptRes.ok) {
           const apptData = await apptRes.json();
-          appointments = apptData.data || [];
+          const allAppointments = apptData.data || [];
+          // Filtrar apenas appointments do profissional selecionado e mapear para UIAppointment
+          appointments = allAppointments
+            .filter((appt: any) => appt.professionalId === selectedProfessional.id)
+            .map((appt: any) => ({
+              ...appt,
+              date: appt.startTime, // generateSlots espera o campo 'date'
+              service: appt.service?.name || appt.serviceId || "",
+            }));
         }
 
         setExistingAppointments(appointments);
@@ -191,7 +199,7 @@ export default function PublicBookingPage() {
           selectedDate,
           whData.data || [],
           selectedService.duration,
-          appointments
+          appointments,
         );
 
         setAvailableSlots(slots);
@@ -209,7 +217,7 @@ export default function PublicBookingPage() {
     try {
       // Buscar horários de trabalho
       const whRes = await fetch(
-        `/api/working-hours?companyId=${data.companyId}`
+        `/api/working-hours?companyId=${data.companyId}`,
       );
       if (!whRes.ok) return;
 
@@ -230,7 +238,7 @@ export default function PublicBookingPage() {
 
         // Verificar se há working hours para este dia da semana
         const hasWorkingHours = workHours.some(
-          (wh: WorkingHour) => wh.dayOfWeek === dayIndex
+          (wh: WorkingHour) => wh.dayOfWeek === dayIndex,
         );
 
         if (hasWorkingHours) {
@@ -238,13 +246,21 @@ export default function PublicBookingPage() {
           const dateStr = format(checkDate, "yyyy-MM-dd");
           try {
             const apptRes = await fetch(
-              `/api/appointments?professionalId=${selectedProfessional.id}&date=${dateStr}`
+              `/api/appointments?companyId=${data.companyId}&from=${dateStr}&to=${dateStr}`,
             );
 
             let appointments: UIAppointment[] = [];
             if (apptRes.ok) {
               const apptData = await apptRes.json();
-              appointments = apptData.data || [];
+              const allAppointments = apptData.data || [];
+              // Filtrar apenas appointments do profissional selecionado e mapear para UIAppointment
+              appointments = allAppointments
+                .filter((appt: any) => appt.professionalId === selectedProfessional.id)
+                .map((appt: any) => ({
+                  ...appt,
+                  date: appt.startTime, // generateSlots espera o campo 'date'
+                  service: appt.service?.name || appt.serviceId || "",
+                }));
             }
 
             // Gerar slots para verificar se há disponibilidade
@@ -252,7 +268,7 @@ export default function PublicBookingPage() {
               checkDate,
               workHours,
               selectedService.duration,
-              appointments
+              appointments,
             );
 
             // Se houver pelo menos um slot disponível, adicionar ao set
@@ -260,7 +276,10 @@ export default function PublicBookingPage() {
               datesSet.add(dateStr);
             }
           } catch (err) {
-            console.error(`Erro ao verificar disponibilidade para ${dateStr}:`, err);
+            console.error(
+              `Erro ao verificar disponibilidade para ${dateStr}:`,
+              err,
+            );
           }
         }
       }
@@ -276,7 +295,7 @@ export default function PublicBookingPage() {
     // Filtrar profissionais que oferecem este serviço
     const professionalsWithService =
       data?.professionals.filter((prof) =>
-        prof.services.some((s) => s.service.id === service.id)
+        prof.services.some((s) => s.service.id === service.id),
       ) || [];
 
     // Se só houver um profissional, selecionar automaticamente
@@ -298,7 +317,6 @@ export default function PublicBookingPage() {
   };
 
   const handleSlotSelect = (slot: AvailableSlot) => {
-    if (!slot.available) return;
     setSelectedSlot(slot);
     setCurrentStep(4);
   };
@@ -399,7 +417,7 @@ export default function PublicBookingPage() {
 
   const availableProfessionals = selectedService
     ? data.professionals.filter((prof) =>
-        prof.services.some((s) => s.service.id === selectedService.id)
+        prof.services.some((s) => s.service.id === selectedService.id),
       )
     : data.professionals;
 
@@ -553,7 +571,7 @@ export default function PublicBookingPage() {
                     if (date < new Date(new Date().setHours(0, 0, 0, 0))) {
                       return true;
                     }
-                    
+
                     // Desabilitar datas sem horários disponíveis
                     const dateStr = format(date, "yyyy-MM-dd");
                     return !datesWithSlots.has(dateStr);
@@ -574,36 +592,33 @@ export default function PublicBookingPage() {
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="w-8 h-8 animate-spin text-primary" />
                   </div>
-                ) : availableSlots.length === 0 ? (
+                ) : availableSlots.filter((slot) => slot.available).length === 0 ? (
                   <p className="text-muted-foreground text-center py-8">
                     Nenhum horário disponível nesta data
                   </p>
                 ) : (
                   <div className="grid grid-cols-3 gap-2 max-h-96 overflow-y-auto">
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => handleSlotSelect(slot)}
-                        disabled={!slot.available}
-                        className={`py-3 px-4 rounded-lg border font-semibold transition-all ${
-                          slot.available
-                            ? "hover:shadow-lg cursor-pointer"
-                            : "opacity-50 cursor-not-allowed"
-                        } ${
-                          selectedSlot?.time === slot.time
-                            ? "text-white"
-                            : "bg-card"
-                        }`}
-                        style={{
-                          backgroundColor:
+                    {availableSlots
+                      .filter((slot) => slot.available)
+                      .map((slot) => (
+                        <button
+                          key={slot.time}
+                          onClick={() => handleSlotSelect(slot)}
+                          className={`py-3 px-4 rounded-lg border font-semibold transition-all hover:shadow-lg cursor-pointer ${
                             selectedSlot?.time === slot.time
-                              ? data.primaryColor
-                              : undefined,
-                        }}
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
+                              ? "text-white"
+                              : "bg-card"
+                          }`}
+                          style={{
+                            backgroundColor:
+                              selectedSlot?.time === slot.time
+                                ? data.primaryColor
+                                : undefined,
+                          }}
+                        >
+                          {slot.time}
+                        </button>
+                      ))}
                   </div>
                 )}
               </div>
