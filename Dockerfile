@@ -46,7 +46,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN POSTGRES_URL="postgresql://temp:temp@localhost:5432/temp" \
   DATABASE_URL="postgresql://temp:temp@localhost:5432/temp" \
   npx prisma generate && \
-  npx next build --turbopack
+  npx next build
 
 # Imagem de produção - apenas o necessário
 FROM node:20-alpine AS runner
