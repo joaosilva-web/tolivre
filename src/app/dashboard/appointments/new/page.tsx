@@ -116,11 +116,15 @@ export default function NewAppointmentPage() {
   // store date as a Date object
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
-  
+
   // Recurrence fields
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurrenceRule, setRecurrenceRule] = useState<"WEEKLY" | "BIWEEKLY" | "MONTHLY">("WEEKLY");
-  const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date | undefined>();
+  const [recurrenceRule, setRecurrenceRule] = useState<
+    "WEEKLY" | "BIWEEKLY" | "MONTHLY"
+  >("WEEKLY");
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<
+    Date | undefined
+  >();
 
   // Data
   const [services, setServices] = useState<Service[]>([]);
@@ -148,8 +152,8 @@ export default function NewAppointmentPage() {
       try {
         const res = await fetch(
           `/api/clients?companyId=${user.companyId}&q=${encodeURIComponent(
-            q
-          )}&page=${page}&pageSize=10`
+            q,
+          )}&page=${page}&pageSize=10`,
         );
         if (res.ok) {
           const payload = await res.json();
@@ -177,7 +181,7 @@ export default function NewAppointmentPage() {
         setSearchResults([]);
       }
     },
-    [user?.companyId]
+    [user?.companyId],
   );
 
   const searchDebounceRef = useRef<number | null>(null);
@@ -206,7 +210,7 @@ export default function NewAppointmentPage() {
       try {
         // Buscar horários de trabalho
         const whRes = await fetch(
-          `/api/working-hours?companyId=${user.companyId}`
+          `/api/working-hours?companyId=${user.companyId}`,
         );
         if (!whRes.ok) continue;
         const whData = await whRes.json();
@@ -219,7 +223,7 @@ export default function NewAppointmentPage() {
         to.setHours(23, 59, 59, 999);
 
         const apptRes = await fetch(
-          `/api/appointments?companyId=${user.companyId}&from=${from.toISOString()}&to=${to.toISOString()}`
+          `/api/appointments?companyId=${user.companyId}&from=${from.toISOString()}&to=${to.toISOString()}`,
         );
         if (!apptRes.ok) continue;
         const apptData = await apptRes.json();
@@ -236,7 +240,7 @@ export default function NewAppointmentPage() {
           checkDate,
           workingHours,
           selectedService.duration,
-          appointments
+          appointments,
         );
 
         // Se houver pelo menos um slot disponível, adiciona a data
@@ -244,7 +248,10 @@ export default function NewAppointmentPage() {
           datesSet.add(dateStr);
         }
       } catch (err) {
-        console.error(`Erro ao verificar disponibilidade para ${dateStr}:`, err);
+        console.error(
+          `Erro ao verificar disponibilidade para ${dateStr}:`,
+          err,
+        );
       }
     }
 
@@ -266,12 +273,12 @@ export default function NewAppointmentPage() {
       // Build local YYYY-MM-DD string from the provided date (avoid UTC shift)
       const pad = (n: number) => String(n).padStart(2, "0");
       const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-        date.getDate()
+        date.getDate(),
       )}`;
 
       // Buscar horários de trabalho da empresa (com param date)
       const workingHoursRes = await fetch(
-        `/api/working-hours?companyId=${user.companyId}&date=${dateStr}`
+        `/api/working-hours?companyId=${user.companyId}&date=${dateStr}`,
       );
       if (!workingHoursRes.ok) {
         throw new Error("Erro ao buscar horários de trabalho");
@@ -292,7 +299,7 @@ export default function NewAppointmentPage() {
       const from = dateStr;
       const to = from;
       const appointmentsRes = await fetch(
-        `/api/appointments?companyId=${user.companyId}&from=${from}&to=${to}`
+        `/api/appointments?companyId=${user.companyId}&from=${from}&to=${to}`,
       );
       if (!appointmentsRes.ok) {
         throw new Error("Erro ao buscar agendamentos existentes");
@@ -315,7 +322,7 @@ export default function NewAppointmentPage() {
           price: 0,
           date: a.startTime,
           status: undefined as unknown as UIAppointment["status"],
-        })
+        }),
       );
 
       const duration = selectedService?.duration || 30;
@@ -324,7 +331,7 @@ export default function NewAppointmentPage() {
         date,
         workingHours,
         duration,
-        existingAppointments
+        existingAppointments,
       );
 
       // Convert AvailableSlot to TimeSlot shape used by this component
@@ -440,12 +447,12 @@ export default function NewAppointmentPage() {
 
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(
-        endDateTime.getMinutes() + selectedService.duration
+        endDateTime.getMinutes() + selectedService.duration,
       );
 
       // Encontrar um profissional disponível para este serviço
       const professionalServiceRes = await fetch(
-        `/api/professional-service?companyId=${user.companyId}`
+        `/api/professional-service?companyId=${user.companyId}`,
       );
       if (!professionalServiceRes.ok) {
         throw new Error("Erro ao buscar profissionais para o serviço");
@@ -455,7 +462,7 @@ export default function NewAppointmentPage() {
         await professionalServiceRes.json()
       ).data;
       const availableProfessional = professionalServices.find(
-        (ps) => ps.serviceId === selectedService.id
+        (ps) => ps.serviceId === selectedService.id,
       );
 
       if (!availableProfessional) {
@@ -463,8 +470,10 @@ export default function NewAppointmentPage() {
       }
 
       // Use recurring API if recurrence is enabled
-      const apiUrl = isRecurring ? "/api/appointments/recurring" : "/api/appointments";
-      
+      const apiUrl = isRecurring
+        ? "/api/appointments/recurring"
+        : "/api/appointments";
+
       const payload: any = {
         companyId: user.companyId,
         professionalId: availableProfessional.professionalId,
@@ -491,7 +500,7 @@ export default function NewAppointmentPage() {
 
       if (res.ok) {
         const data = await res.json();
-        const message = isRecurring 
+        const message = isRecurring
           ? `${data.data.totalCreated || 1} agendamentos criados com sucesso!`
           : "Agendamento criado com sucesso!";
         toast.success(message);
@@ -658,7 +667,7 @@ export default function NewAppointmentPage() {
                                 searchClients(q, 1);
                                 setFocusedIndex(-1);
                               },
-                              250
+                              250,
                             ) as unknown as number;
                           }}
                           onKeyDown={(e) => {
@@ -666,7 +675,7 @@ export default function NewAppointmentPage() {
                             if (e.key === "ArrowDown") {
                               e.preventDefault();
                               setFocusedIndex((fi) =>
-                                Math.min(fi + 1, searchResults.length - 1)
+                                Math.min(fi + 1, searchResults.length - 1),
                               );
                             } else if (e.key === "ArrowUp") {
                               e.preventDefault();
@@ -837,7 +846,9 @@ export default function NewAppointmentPage() {
                                   const err = await res
                                     .json()
                                     .catch(() => null);
-                                  toast.error(err?.error || "Erro ao criar cliente");
+                                  toast.error(
+                                    err?.error || "Erro ao criar cliente",
+                                  );
                                 }
                               } catch (err) {
                                 console.error(err);
@@ -903,7 +914,7 @@ export default function NewAppointmentPage() {
                           const today = new Date();
                           today.setHours(0, 0, 0, 0);
                           if (date < today) return true;
-                          
+
                           // Desabilita datas sem horários disponíveis
                           const dateStr = format(date, "yyyy-MM-dd");
                           return !datesWithSlots.has(dateStr);
@@ -949,7 +960,7 @@ export default function NewAppointmentPage() {
                       ))}
                     </div>
                   )}
-                  
+
                   {/* Recurrence Options */}
                   {selectedTime && (
                     <div className="mt-6 space-y-4 border-t pt-4">
@@ -965,7 +976,7 @@ export default function NewAppointmentPage() {
                           Agendamento recorrente
                         </Label>
                       </div>
-                      
+
                       {isRecurring && (
                         <div className="space-y-4 pl-6">
                           <div>
@@ -973,7 +984,9 @@ export default function NewAppointmentPage() {
                             <select
                               id="recurrenceRule"
                               value={recurrenceRule}
-                              onChange={(e) => setRecurrenceRule(e.target.value as any)}
+                              onChange={(e) =>
+                                setRecurrenceRule(e.target.value as any)
+                              }
                               className="w-full mt-1 rounded-md border border-gray-300 p-2"
                             >
                               <option value="WEEKLY">Semanal</option>
@@ -981,7 +994,7 @@ export default function NewAppointmentPage() {
                               <option value="MONTHLY">Mensal</option>
                             </select>
                           </div>
-                          
+
                           <div className="flex flex-col items-center">
                             <Label className="mb-2">Repetir até</Label>
                             <Calendar
@@ -999,12 +1012,16 @@ export default function NewAppointmentPage() {
                               className="rounded-md border"
                             />
                           </div>
-                          
+
                           <p className="text-sm text-gray-600">
-                            {recurrenceRule === "WEEKLY" && "O agendamento será repetido toda semana"}
-                            {recurrenceRule === "BIWEEKLY" && "O agendamento será repetido a cada 2 semanas"}
-                            {recurrenceRule === "MONTHLY" && "O agendamento será repetido todo mês"}
-                            {recurrenceEndDate && ` até ${recurrenceEndDate.toLocaleDateString("pt-BR")}`}
+                            {recurrenceRule === "WEEKLY" &&
+                              "O agendamento será repetido toda semana"}
+                            {recurrenceRule === "BIWEEKLY" &&
+                              "O agendamento será repetido a cada 2 semanas"}
+                            {recurrenceRule === "MONTHLY" &&
+                              "O agendamento será repetido todo mês"}
+                            {recurrenceEndDate &&
+                              ` até ${recurrenceEndDate.toLocaleDateString("pt-BR")}`}
                           </p>
                         </div>
                       )}

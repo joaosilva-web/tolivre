@@ -70,11 +70,11 @@ export async function POST(req: NextRequest) {
 
     const limitCheck = checkAppointmentLimit(
       subscription,
-      appointmentsThisMonth
+      appointmentsThisMonth,
     );
     if (!limitCheck.allowed) {
       return api.forbidden(
-        limitCheck.message || "Limite de agendamentos atingido"
+        limitCheck.message || "Limite de agendamentos atingido",
       );
     }
 
@@ -119,12 +119,12 @@ export async function POST(req: NextRequest) {
 
       // Buscar ou criar cliente (por telefone ou email)
       let client = null;
-      
+
       // Priorizar busca por telefone se fornecido
       if (parsed.clientPhone) {
         // Normalizar telefone para busca (remover caracteres especiais)
         const normalizedPhone = parsed.clientPhone.replace(/\D/g, "");
-        
+
         client = await tx.client.findFirst({
           where: {
             companyId: parsed.companyId,
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
           },
         });
       }
-      
+
       // Se não encontrou por telefone, tentar por email
       if (!client && parsed.clientEmail) {
         client = await tx.client.findFirst({
@@ -180,21 +180,20 @@ export async function POST(req: NextRequest) {
       return appointment;
     });
 
-    // Enviar notificação via WhatsApp (background, não bloqueia resposta)
+    // Enviar notificação via WhatsApp com menu interativo (background, não bloqueia resposta)
     if (parsed.clientPhone) {
       const formattedDate = format(startTime, "dd/MM/yyyy", { locale: ptBR });
       const formattedTime = format(startTime, "HH:mm", { locale: ptBR });
 
-      const message =
-        `✅ *Agendamento Confirmado*\n\n` +
-        `Olá ${parsed.clientName}!\n\n` +
-        `Seu agendamento foi confirmado:\n\n` +
+      const messageText =
+        `Olá *${parsed.clientName}*!\n\n` +
+        `Recebemos sua solicitação de agendamento:\n\n` +
         `📅 *Data:* ${formattedDate}\n` +
         `⏰ *Horário:* ${formattedTime}\n` +
         `💼 *Serviço:* ${service.name}\n` +
         `👤 *Profissional:* ${professional.name}\n` +
         `🏢 *Local:* ${professional.company?.nomeFantasia || "ToLivre"}\n\n` +
-        `Até lá! 😊`;
+        `Por favor, confirme seu agendamento:`;
 
       // Normalizar telefone
       let phone = parsed.clientPhone.replace(/\D/g, "");
@@ -202,9 +201,19 @@ export async function POST(req: NextRequest) {
         phone = "55" + phone;
       }
 
-      sendWhatsAppMessage.sendText({ to: phone, message }).catch((err) => {
-        console.error("[uazapi] Failed to send booking confirmation:", err);
-      });
+      sendWhatsAppMessage
+        .sendMenu({
+          to: phone,
+          text: messageText,
+          choices: [
+            `✅ Confirmar|confirm_${result.id}`,
+            `❌ Cancelar|cancel_${result.id}`,
+          ],
+          footerText: "ToLivre - Sistema de Agendamentos",
+        })
+        .catch((err) => {
+          console.error("[uazapi] Failed to send booking menu:", err);
+        });
     }
 
     return api.created(result);
@@ -215,7 +224,7 @@ export async function POST(req: NextRequest) {
 
     if (err instanceof Error && err.message === "CONFLICT") {
       return api.badRequest(
-        "Este horário não está mais disponível. Por favor, escolha outro."
+        "Este horário não está mais disponível. Por favor, escolha outro.",
       );
     }
 

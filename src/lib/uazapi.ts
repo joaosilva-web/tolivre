@@ -104,5 +104,87 @@ export async function sendText(opts: {
   }
 }
 
-const uazapi = { sendText };
+export async function sendMenu(opts: {
+  to: string;
+  text: string;
+  choices: string[]; // Formato: "Texto|id"
+  footerText?: string;
+  token?: string;
+}) {
+  const token = opts.token || UAZAPI_TOKEN;
+  if (!UAZAPI_URL || !token) {
+    const msg = "Uazapi not configured (UAZAPI_URL/UAZAPI_TOKEN)";
+    console.warn(msg);
+    return { ok: false, error: msg } as const;
+  }
+
+  const to = normalizePhone(opts.to) || opts.to;
+  const payload = {
+    number: to,
+    type: "button",
+    text: opts.text,
+    choices: opts.choices,
+    footerText: opts.footerText || "",
+  };
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const maskSecret = (value?: string) => {
+    if (!value) return "(missing)";
+    if (value.length <= 8) return `${value[0]}***${value[value.length - 1]}`;
+    return `${value.slice(0, 4)}...${value.slice(-4)}`;
+  };
+  let authHeaderKey = "";
+  if (UAZAPI_HEADER) {
+    if (UAZAPI_HEADER.toLowerCase() === "authorization") {
+      headers["Authorization"] = `Bearer ${token}`;
+      authHeaderKey = "Authorization";
+    } else {
+      headers[UAZAPI_HEADER] = token;
+      authHeaderKey = UAZAPI_HEADER;
+    }
+  } else if (opts.token) {
+    headers["token"] = token;
+    authHeaderKey = "token";
+  } else {
+    headers["Authorization"] = `Bearer ${token}`;
+    authHeaderKey = "Authorization";
+  }
+
+  try {
+    const url = UAZAPI_URL.endsWith("/send/menu")
+      ? UAZAPI_URL
+      : `${UAZAPI_URL}/send/menu`;
+    console.log("[uazapi] POST", url, JSON.stringify(payload));
+    console.log("[uazapi] headers", {
+      authHeaderKey,
+      token: maskSecret(token),
+      accept: "application/json",
+      contentType: headers["Content-Type"],
+    });
+    headers["Accept"] = "application/json";
+    const res = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+    const text = await res.text().catch(() => "");
+    if (!res.ok) {
+      console.error("[uazapi] API error", res.status, text);
+      return { ok: false, status: res.status, body: text } as const;
+    }
+    try {
+      const json = JSON.parse(text || "{}");
+      return { ok: true, status: res.status, body: json } as const;
+    } catch {
+      return { ok: true, status: res.status, body: text } as const;
+    }
+  } catch (err) {
+    console.error("[uazapi] Failed to call API:", err);
+    return { ok: false, error: String(err) } as const;
+  }
+}
+
+const uazapi = { sendText, sendMenu };
 export default uazapi;
