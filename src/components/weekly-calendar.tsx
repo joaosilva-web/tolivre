@@ -3,10 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { format, addDays, isSameDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import {
-  DndContext,
-  DragOverlay,
-} from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { AppointmentCard } from "./appointment-card";
 import { TimeSlot } from "./time-slot";
 
@@ -30,7 +27,11 @@ interface WeeklyCalendarProps {
   onReschedule: (appointmentId: string, newStartTime: Date) => Promise<void>;
 }
 
-export function WeeklyCalendar({ appointments, weekStart, onReschedule }: WeeklyCalendarProps) {
+export function WeeklyCalendar({
+  appointments,
+  weekStart,
+  onReschedule,
+}: WeeklyCalendarProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isRescheduling, setIsRescheduling] = useState(false);
 
@@ -63,18 +64,18 @@ export function WeeklyCalendar({ appointments, weekStart, onReschedule }: Weekly
       // Remove o prefixo "day-" e separa a data e hora
       const withoutPrefix = droppedOn.substring(4); // remove "day-"
       const timeIndex = withoutPrefix.indexOf("-time-");
-      
+
       if (timeIndex === -1) {
         console.error("Formato de ID inválido:", droppedOn);
         setActiveId(null);
         return;
       }
-      
+
       const dateStr = withoutPrefix.substring(0, timeIndex); // YYYY-MM-DD
       const timeStr = withoutPrefix.substring(timeIndex + 6); // HH:mm (remove "-time-")
 
       const newStartTime = new Date(`${dateStr}T${timeStr}:00`);
-      
+
       // Validar se a data é válida
       if (isNaN(newStartTime.getTime())) {
         console.error("Data inválida criada:", { dateStr, timeStr, droppedOn });
@@ -150,7 +151,10 @@ export function WeeklyCalendar({ appointments, weekStart, onReschedule }: Weekly
 
                 {/* Células para cada dia */}
                 {weekDays.map((day) => {
-                  const dayAppointments = getAppointmentsForDayAndTime(day, time);
+                  const dayAppointments = getAppointmentsForDayAndTime(
+                    day,
+                    time,
+                  );
                   const slotId = `day-${format(day, "yyyy-MM-dd")}-time-${time}`;
 
                   return (

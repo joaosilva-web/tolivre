@@ -16,7 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Calendar, Clock, User, Download, Filter, X } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Calendar,
+  Clock,
+  User,
+  Download,
+  Filter,
+  X,
+} from "lucide-react";
 import useSession from "@/hooks/useSession";
 import { gsap } from "gsap";
 
@@ -43,12 +52,14 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  
+
   // Filtros
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [professionals, setProfessionals] = useState<{ id: string; name: string }[]>([]);
+  const [professionals, setProfessionals] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [professionalFilter, setProfessionalFilter] = useState("all");
 
   const handleExportCSV = async () => {
@@ -73,7 +84,10 @@ export default function AppointmentsPage() {
     }
   };
 
-  const handleStatusChange = async (appointmentId: string, newStatus: string) => {
+  const handleStatusChange = async (
+    appointmentId: string,
+    newStatus: string,
+  ) => {
     try {
       const res = await fetch(`/api/appointments/${appointmentId}`, {
         method: "PATCH",
@@ -85,8 +99,8 @@ export default function AppointmentsPage() {
         // Atualiza localmente
         setAppointments((prev) =>
           prev.map((apt) =>
-            apt.id === appointmentId ? { ...apt, status: newStatus } : apt
-          )
+            apt.id === appointmentId ? { ...apt, status: newStatus } : apt,
+          ),
         );
       }
     } catch (error) {
@@ -94,7 +108,9 @@ export default function AppointmentsPage() {
     }
   };
 
-  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+  const getStatusBadgeVariant = (
+    status: string,
+  ): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case "CONFIRMED":
         return "default";
@@ -126,37 +142,43 @@ export default function AppointmentsPage() {
   const loadAppointments = useCallback(async () => {
     try {
       const params = new URLSearchParams();
-      
+
       if (user?.companyId) {
         params.append("companyId", user.companyId);
       }
-      
+
       // Filtro de data
       if (startDate) {
         params.append("fromDatetime", new Date(startDate).toISOString());
       } else {
         params.append("fromDatetime", new Date().toISOString());
       }
-      
+
       if (endDate) {
-        params.append("toDatetime", new Date(endDate + "T23:59:59").toISOString());
+        params.append(
+          "toDatetime",
+          new Date(endDate + "T23:59:59").toISOString(),
+        );
       }
-      
+
       // Filtro de profissional
       if (professionalFilter && professionalFilter !== "all") {
         params.append("professionalId", professionalFilter);
       }
-      
+
       const res = await fetch(`/api/appointments?${params.toString()}`);
       if (res.ok) {
         const payload = await res.json();
         let all = payload?.data ?? payload ?? [];
-        
+
         // Filtro de status (client-side por enquanto)
         if (statusFilter && statusFilter !== "all") {
-          all = all.filter((apt: Appointment & { status?: string }) => apt.status === statusFilter);
+          all = all.filter(
+            (apt: Appointment & { status?: string }) =>
+              apt.status === statusFilter,
+          );
         }
-        
+
         setAppointments(all as Appointment[]);
       }
     } catch (error) {
@@ -251,7 +273,9 @@ export default function AppointmentsPage() {
         <div ref={headerRef} className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Agendamentos
+              </h1>
               <p className="text-muted-foreground">
                 Gerencie os agendamentos da sua empresa
               </p>
@@ -264,7 +288,11 @@ export default function AppointmentsPage() {
                 <Filter className="mr-2 h-4 w-4" />
                 Filtros
               </Button>
-              <Button variant="outline" onClick={handleExportCSV} disabled={exporting}>
+              <Button
+                variant="outline"
+                onClick={handleExportCSV}
+                disabled={exporting}
+              >
                 {exporting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -272,7 +300,9 @@ export default function AppointmentsPage() {
                 )}
                 Exportar CSV
               </Button>
-              <Button onClick={() => router.push("/dashboard/appointments/new")}>
+              <Button
+                onClick={() => router.push("/dashboard/appointments/new")}
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Novo Agendamento
               </Button>
@@ -303,7 +333,10 @@ export default function AppointmentsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="professional">Profissional</Label>
-                    <Select value={professionalFilter} onValueChange={setProfessionalFilter}>
+                    <Select
+                      value={professionalFilter}
+                      onValueChange={setProfessionalFilter}
+                    >
                       <SelectTrigger id="professional">
                         <SelectValue placeholder="Todos" />
                       </SelectTrigger>
@@ -319,7 +352,10 @@ export default function AppointmentsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <Select
+                      value={statusFilter}
+                      onValueChange={setStatusFilter}
+                    >
                       <SelectTrigger id="status">
                         <SelectValue placeholder="Todos" />
                       </SelectTrigger>
@@ -334,10 +370,12 @@ export default function AppointmentsPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <Button onClick={() => {
-                    setLoading(true);
-                    loadAppointments();
-                  }}>
+                  <Button
+                    onClick={() => {
+                      setLoading(true);
+                      loadAppointments();
+                    }}
+                  >
                     Aplicar Filtros
                   </Button>
                   <Button
@@ -436,20 +474,34 @@ export default function AppointmentsPage() {
                               </span>
                               <Select
                                 value={appointment.status}
-                                onValueChange={(value) => handleStatusChange(appointment.id, value)}
+                                onValueChange={(value) =>
+                                  handleStatusChange(appointment.id, value)
+                                }
                               >
                                 <SelectTrigger className="w-[140px]">
                                   <SelectValue>
-                                    <Badge variant={getStatusBadgeVariant(appointment.status)}>
+                                    <Badge
+                                      variant={getStatusBadgeVariant(
+                                        appointment.status,
+                                      )}
+                                    >
                                       {getStatusLabel(appointment.status)}
                                     </Badge>
                                   </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="PENDING">Pendente</SelectItem>
-                                  <SelectItem value="CONFIRMED">Confirmado</SelectItem>
-                                  <SelectItem value="COMPLETED">Concluído</SelectItem>
-                                  <SelectItem value="CANCELED">Cancelado</SelectItem>
+                                  <SelectItem value="PENDING">
+                                    Pendente
+                                  </SelectItem>
+                                  <SelectItem value="CONFIRMED">
+                                    Confirmado
+                                  </SelectItem>
+                                  <SelectItem value="COMPLETED">
+                                    Concluído
+                                  </SelectItem>
+                                  <SelectItem value="CANCELED">
+                                    Cancelado
+                                  </SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>

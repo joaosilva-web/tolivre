@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     });
     if (!wh)
       return api.badRequest(
-        "Horário de funcionamento não configurado para esse dia"
+        "Horário de funcionamento não configurado para esse dia",
       );
 
     // convert start/end to minutes (UTC time-of-day)
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
 
       if (overlapCount > 0) {
         throw new Error(
-          "Já existe agendamento conflitando para esse profissional nesse horário"
+          "Já existe agendamento conflitando para esse profissional nesse horário",
         );
       }
 
@@ -134,7 +134,7 @@ const updateStatusSchema = z.object({
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await getUserFromCookie();

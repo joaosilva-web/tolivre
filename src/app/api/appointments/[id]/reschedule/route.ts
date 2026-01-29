@@ -13,7 +13,7 @@ const RescheduleSchema = z.object({
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await getUserFromCookie();
@@ -22,7 +22,7 @@ export async function PATCH(
     const { id } = await params;
     const body = await req.json();
     console.log("[RESCHEDULE] Received body:", body);
-    
+
     const parsed = RescheduleSchema.parse(body);
     console.log("[RESCHEDULE] Parsed data:", parsed);
 
@@ -52,7 +52,9 @@ export async function PATCH(
     }
 
     const newStartTime = new Date(parsed.startTime);
-    const newEndTime = new Date(newStartTime.getTime() + appointment.service.duration * 60000);
+    const newEndTime = new Date(
+      newStartTime.getTime() + appointment.service.duration * 60000,
+    );
 
     console.log("[RESCHEDULE] New times:", {
       newStartTime,
@@ -118,9 +120,13 @@ export async function PATCH(
     // Enviar notificação via WhatsApp (background)
     const clientPhone = updated.client?.phone;
     if (clientPhone) {
-      const oldFormattedDate = format(oldStartTime, "dd/MM/yyyy", { locale: ptBR });
+      const oldFormattedDate = format(oldStartTime, "dd/MM/yyyy", {
+        locale: ptBR,
+      });
       const oldFormattedTime = format(oldStartTime, "HH:mm", { locale: ptBR });
-      const newFormattedDate = format(newStartTime, "dd/MM/yyyy", { locale: ptBR });
+      const newFormattedDate = format(newStartTime, "dd/MM/yyyy", {
+        locale: ptBR,
+      });
       const newFormattedTime = format(newStartTime, "HH:mm", { locale: ptBR });
 
       const messageText =
@@ -158,10 +164,15 @@ export async function PATCH(
           console.log("[RESCHEDULE] WhatsApp sent successfully:", result);
         })
         .catch((err) => {
-          console.error("[RESCHEDULE] Failed to send WhatsApp notification:", err);
+          console.error(
+            "[RESCHEDULE] Failed to send WhatsApp notification:",
+            err,
+          );
         });
     } else {
-      console.log("[RESCHEDULE] No client phone found, skipping WhatsApp notification");
+      console.log(
+        "[RESCHEDULE] No client phone found, skipping WhatsApp notification",
+      );
     }
 
     return api.ok(updated);
