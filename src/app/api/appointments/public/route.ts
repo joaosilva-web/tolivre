@@ -117,9 +117,26 @@ export async function POST(req: NextRequest) {
         throw new Error("CONFLICT");
       }
 
-      // Buscar ou criar cliente
+      // Buscar ou criar cliente (por telefone ou email)
       let client = null;
-      if (parsed.clientEmail) {
+      
+      // Priorizar busca por telefone se fornecido
+      if (parsed.clientPhone) {
+        // Normalizar telefone para busca (remover caracteres especiais)
+        const normalizedPhone = parsed.clientPhone.replace(/\D/g, "");
+        
+        client = await tx.client.findFirst({
+          where: {
+            companyId: parsed.companyId,
+            phone: {
+              contains: normalizedPhone.slice(-9), // Últimos 9 dígitos (sem DDD/DDI)
+            },
+          },
+        });
+      }
+      
+      // Se não encontrou por telefone, tentar por email
+      if (!client && parsed.clientEmail) {
         client = await tx.client.findFirst({
           where: {
             companyId: parsed.companyId,
@@ -128,6 +145,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // Se não encontrou, criar novo cliente
       if (!client) {
         client = await tx.client.create({
           data: {

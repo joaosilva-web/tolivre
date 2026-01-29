@@ -78,6 +78,7 @@ export default function PublicBookingPage() {
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
+  const [isEditingClientInfo, setIsEditingClientInfo] = useState(false);
 
   // Available slots
   const [workingHours, setWorkingHours] = useState<WorkingHour[]>([]);
@@ -94,7 +95,69 @@ export default function PublicBookingPage() {
 
   useEffect(() => {
     loadPageData();
+    loadClientDataFromStorage();
   }, [slug]);
+
+  // Carregar dados do cliente salvos no localStorage
+  const loadClientDataFromStorage = () => {
+    try {
+      const savedClientData = localStorage.getItem('tolivre_client_data');
+      if (savedClientData) {
+        const clientData = JSON.parse(savedClientData);
+        setClientName(clientData.name || '');
+        setClientEmail(clientData.email || '');
+        // Aplicar máscara ao carregar do localStorage
+        if (clientData.phone) {
+          setClientPhone(formatPhoneNumber(clientData.phone));
+        }
+        // Se tem dados salvos, não iniciar em modo de edição
+        setIsEditingClientInfo(false);
+      } else {
+        // Se não tem dados salvos, iniciar em modo de edição
+        setIsEditingClientInfo(true);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar dados do cliente:', err);
+      setIsEditingClientInfo(true);
+    }
+  };
+
+  // Formatar número de telefone com máscara +55 (99) 99999-9999
+  const formatPhoneNumber = (value: string) => {
+    // Remove tudo que não é número
+    const numbers = value.replace(/\D/g, '');
+    
+    // Adiciona a máscara
+    if (numbers.length === 0) return '';
+    if (numbers.length <= 2) return `+${numbers}`;
+    if (numbers.length <= 4) return `+${numbers.slice(0, 2)} (${numbers.slice(2)}`;
+    if (numbers.length <= 9) return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4)}`;
+    if (numbers.length <= 13) {
+      return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4, 9)}-${numbers.slice(9)}`;
+    }
+    // Limita a 13 dígitos (+55 + DDD + 9 dígitos)
+    return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4, 9)}-${numbers.slice(9, 13)}`;
+  };
+
+  // Handler para mudança de telefone com máscara
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setClientPhone(formatted);
+  };
+
+  // Salvar dados do cliente no localStorage
+  const saveClientDataToStorage = () => {
+    try {
+      const clientData = {
+        name: clientName.trim(),
+        email: clientEmail.trim(),
+        phone: clientPhone.replace(/\D/g, ''), // Salvar apenas números
+      };
+      localStorage.setItem('tolivre_client_data', JSON.stringify(clientData));
+    } catch (err) {
+      console.error('Erro ao salvar dados do cliente:', err);
+    }
+  };
 
   useEffect(() => {
     if (selectedDate && selectedProfessional && selectedService) {
@@ -184,7 +247,9 @@ export default function PublicBookingPage() {
           const allAppointments = apptData.data || [];
           // Filtrar apenas appointments do profissional selecionado e mapear para UIAppointment
           appointments = allAppointments
-            .filter((appt: any) => appt.professionalId === selectedProfessional.id)
+            .filter(
+              (appt: any) => appt.professionalId === selectedProfessional.id,
+            )
             .map((appt: any) => ({
               ...appt,
               date: appt.startTime, // generateSlots espera o campo 'date'
@@ -255,7 +320,10 @@ export default function PublicBookingPage() {
               const allAppointments = apptData.data || [];
               // Filtrar apenas appointments do profissional selecionado e mapear para UIAppointment
               appointments = allAppointments
-                .filter((appt: any) => appt.professionalId === selectedProfessional.id)
+                .filter(
+                  (appt: any) =>
+                    appt.professionalId === selectedProfessional.id,
+                )
                 .map((appt: any) => ({
                   ...appt,
                   date: appt.startTime, // generateSlots espera o campo 'date'
@@ -340,6 +408,9 @@ export default function PublicBookingPage() {
     try {
       setBookingLoading(true);
 
+      // Salvar dados do cliente no localStorage para próximas visitas
+      saveClientDataToStorage();
+
       // Construir data/hora do agendamento
       const [hours, minutes] = selectedSlot.time.split(":").map(Number);
       const appointmentDate = new Date(selectedDate);
@@ -351,7 +422,7 @@ export default function PublicBookingPage() {
         serviceId: selectedService.id,
         clientName: clientName.trim(),
         clientEmail: clientEmail.trim() || undefined,
-        clientPhone: clientPhone.trim() || undefined,
+        clientPhone: clientPhone.replace(/\D/g, '') || undefined, // Enviar apenas números
         startTime: appointmentDate.toISOString(),
       };
 
@@ -592,7 +663,8 @@ export default function PublicBookingPage() {
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="w-8 h-8 animate-spin text-primary" />
                   </div>
-                ) : availableSlots.filter((slot) => slot.available).length === 0 ? (
+                ) : availableSlots.filter((slot) => slot.available).length ===
+                  0 ? (
                   <p className="text-muted-foreground text-center py-8">
                     Nenhum horário disponível nesta data
                   </p>
@@ -692,52 +764,92 @@ export default function PublicBookingPage() {
               {/* Formulário de Dados */}
               <div className="bg-card border rounded-xl p-6">
                 <h3 className="text-xl font-bold mb-4">Suas Informações</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Nome completo *
-                    </label>
-                    <input
-                      type="text"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      placeholder="Seu nome"
-                      className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
-                      style={{ borderColor: data.primaryColor }}
-                      required
-                    />
+                
+                {!isEditingClientInfo && clientName ? (
+                  // Modo visualização - mostra mensagem de boas-vindas
+                  <div className="space-y-4">
+                    <p className="text-lg mb-4">
+                      É bom te ver novamente, <span className="font-bold" style={{ color: data.primaryColor }}>{clientName}</span>! 👋
+                    </p>
+                    
+                    <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-muted-foreground" />
+                        <span><strong>Nome:</strong> {clientName}</span>
+                      </div>
+                      {clientEmail && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-4 h-4 text-muted-foreground" />
+                          <span><strong>E-mail:</strong> {clientEmail}</span>
+                        </div>
+                      )}
+                      {clientPhone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                          <span><strong>Telefone:</strong> {clientPhone}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsEditingClientInfo(true)}
+                      className="w-full mt-4"
+                    >
+                      Alterar informações
+                    </Button>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      E-mail (opcional)
-                    </label>
-                    <input
-                      type="email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      placeholder="seu@email.com"
-                      className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
-                    />
+                ) : (
+                  // Modo edição - mostra formulário
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Nome completo *
+                      </label>
+                      <input
+                        type="text"
+                        value={clientName}
+                        onChange={(e) => setClientName(e.target.value)}
+                        placeholder="Seu nome"
+                        className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
+                        style={{ borderColor: data.primaryColor }}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        E-mail (opcional)
+                      </label>
+                      <input
+                        type="email"
+                        value={clientEmail}
+                        onChange={(e) => setClientEmail(e.target.value)}
+                        placeholder="seu@email.com"
+                        className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Telefone *
+                      </label>
+                      <input
+                        type="tel"
+                        value={clientPhone}
+                        onChange={handlePhoneChange}
+                        placeholder="+55 (00) 00000-0000"
+                        className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Telefone (opcional)
-                    </label>
-                    <input
-                      type="tel"
-                      value={clientPhone}
-                      onChange={(e) => setClientPhone(e.target.value)}
-                      placeholder="(00) 00000-0000"
-                      className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
 
               <Button
                 size="lg"
                 onClick={handleBooking}
-                disabled={bookingLoading || !clientName.trim()}
+                disabled={bookingLoading || !clientName.trim() || !clientPhone.trim()}
                 className="w-full text-lg py-6 hover:opacity-90 transition-opacity text-white inline-flex items-center justify-center rounded-md font-medium cursor-pointer"
                 style={{
                   backgroundColor: data.primaryColor,
