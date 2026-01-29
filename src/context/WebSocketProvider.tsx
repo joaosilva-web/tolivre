@@ -53,15 +53,16 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
 
     // Initialize socket connection
-    // Connect directly to WebSocket port in both dev and production
+    // Only works in development - production doesn't support WebSocket without custom server
     const isDev = process.env.NODE_ENV === "development";
-    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
     
-    // Em dev: http://localhost:3001
-    // Em prod: wss://tolivre.app:3001
-    const wsUrl = isDev 
-      ? `http://localhost:${wsPort}` 
-      : `wss://${window.location.hostname}:${wsPort}`;
+    if (!isDev) {
+      // In production, skip WebSocket (notifications disabled)
+      console.warn("[WebSocket] Disabled in production (Dokploy standalone mode)");
+      return;
+    }
+    
+    const wsUrl = `http://localhost:3001`;
     
     const socketInstance = io(wsUrl, {
       transports: ["polling", "websocket"],
