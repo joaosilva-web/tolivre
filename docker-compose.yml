@@ -79,6 +79,7 @@ services:
 
     ports:
       - "3000:3000"
+      - "3001:3001"
 
     environment:
       # Database (Local PostgreSQL)
@@ -109,6 +110,10 @@ services:
 
       # Resend
       RESEND_API_KEY: ${RESEND_API_KEY}
+
+      # WebSocket
+      WS_PORT: 3001
+      NEXT_PUBLIC_WS_PORT: 3001
 
     volumes:
       - ./uploads:/app/uploads
