@@ -1,6 +1,13 @@
+let wsInitialized = false;
+
 export async function register() {
   // Only run in Node.js runtime (not Edge)
   if (process.env.NEXT_RUNTIME === "nodejs") {
+    if (wsInitialized) {
+      console.log("[Instrumentation] WebSocket already initialized, skipping");
+      return;
+    }
+
     const { Server } = await import("http");
     const { initializeWebSocket } = await import("@/lib/websocket");
 
@@ -14,6 +21,11 @@ export async function register() {
     const wsPort = parseInt(process.env.WS_PORT || "3001");
     httpServer.listen(wsPort, "0.0.0.0", () => {
       console.log(`[WebSocket] Server listening on 0.0.0.0:${wsPort}`);
+      wsInitialized = true;
     });
+  } else {
+    console.log(
+      `[Instrumentation] Skipping WebSocket init - runtime: ${process.env.NEXT_RUNTIME}`,
+    );
   }
 }

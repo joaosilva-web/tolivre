@@ -127,13 +127,19 @@ export function emitToCompany(
   data: any,
 ) {
   if (!io) {
-    console.warn("[WebSocket] IO not initialized");
+    console.warn("[WebSocket] IO not initialized - cannot emit event", event);
+    console.warn("[WebSocket] Attempted to emit to company:", companyId);
+    console.warn("[WebSocket] Please ensure instrumentation.ts is running");
     return;
   }
 
   const roomName = `company:${companyId}`;
   io.to(roomName).emit(event as any, data);
-  console.log(`[WebSocket] Emitted ${event} to ${roomName}`);
+  console.log(`[WebSocket] Emitted ${event} to ${roomName}`, {
+    connectedSockets: io.sockets.sockets.size,
+    roomSockets: io.sockets.adapter.rooms.get(roomName)?.size || 0,
+  });
+}
 }
 
 export function emitNotification(

@@ -6,6 +6,9 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { emitNotification } from "@/lib/websocket";
 
+// Force Node.js runtime to ensure WebSocket is available
+export const runtime = "nodejs";
+
 // POST - Webhook para receber eventos do UAZAPI
 export async function POST(req: NextRequest) {
   try {

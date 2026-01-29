@@ -11,6 +11,7 @@
 ### 1️⃣ Remover Porta 3001 dos Ports
 
 No painel do Dokploy → seu projeto → **Ports**:
+
 - **Deletar** a configuração da porta 3001 que você criou
 - A porta 3001 agora será **apenas interna** (não exposta publicamente)
 
@@ -19,11 +20,13 @@ No painel do Dokploy → seu projeto → **Ports**:
 No painel do Dokploy → seu projeto → **Advanced** → **Traefik Config**:
 
 **Encontre esta linha:**
+
 ```yaml
 rule: Host(`tolivre.app`)
 ```
 
 **No router websecure-2 (porta 3001), mude para:**
+
 ```yaml
 rule: Host(`tolivre.app`) && PathPrefix(`/ws`)
 ```
@@ -35,6 +38,7 @@ rule: Host(`tolivre.app`) && PathPrefix(`/ws`)
 No painel do Dokploy → **Environment**:
 
 Confirme que estas variáveis existem:
+
 - `WS_PORT=3001`
 - `NEXT_PUBLIC_WS_PORT=3001` (pode remover essa, não é mais usada)
 
@@ -53,6 +57,7 @@ Após o deploy:
 1. **Abra o navegador** em `https://tolivre.app/dashboard`
 2. **Abra o F12** (Console)
 3. **Procure por**:
+
    ```
    [WebSocket] Connecting to: wss://tolivre.app/ws
    [WebSocket] Connected
@@ -68,11 +73,13 @@ Após o deploy:
 ### Se não conectar:
 
 1. **Verifique logs do servidor** (Dokploy → Logs):
+
    ```
    [WebSocket] Server listening on 0.0.0.0:3001
    ```
 
 2. **Verifique labels do Traefik**:
+
    ```bash
    docker inspect <container-name> | grep traefik
    ```
@@ -98,7 +105,7 @@ Após o deploy:
 ✅ **Sem porta extra** - Tudo passa pela porta 443  
 ✅ **Mais seguro** - Porta 3001 não exposta publicamente  
 ✅ **Compatível com firewalls** - Muitos firewalls bloqueiam portas customizadas  
-✅ **Melhor DX** - Não precisa abrir portas no VPS  
+✅ **Melhor DX** - Não precisa abrir portas no VPS
 
 ## 🎯 Resultado Final
 
