@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { emitNotification } from "@/lib/websocket";
 
 const RescheduleSchema = z.object({
   startTime: z.string(), // ISO date string
@@ -116,6 +117,19 @@ export async function PATCH(
     });
 
     console.log("[RESCHEDULE] Updated successfully:", updated.id);
+
+    // Enviar notificação em tempo real para profissionais
+    const oldFormattedDate = format(oldStartTime, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+    const newFormattedDate = format(newStartTime, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+    
+    emitNotification(updated.companyId, {
+      id: `reschedule-${updated.id}`,
+      type: "appointment",
+      title: "Agendamento Reagendado",
+      message: `${updated.clientName} foi reagendado de ${oldFormattedDate} para ${newFormattedDate}`,
+      timestamp: new Date().toISOString(),
+      data: { appointmentId: updated.id, action: "rescheduled" },
+    });
 
     // Enviar notificação via WhatsApp (background)
     const clientPhone = updated.client?.phone;

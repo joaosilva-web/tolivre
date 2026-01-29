@@ -4,6 +4,7 @@ import * as api from "@/app/libs/apiResponse";
 import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { emitNotification } from "@/lib/websocket";
 
 // POST - Webhook para receber eventos do UAZAPI
 export async function POST(req: NextRequest) {
@@ -113,6 +114,16 @@ export async function POST(req: NextRequest) {
       }
 
       console.log("[uazapi webhook] Appointment confirmed:", appointmentId);
+
+      // Enviar notificação em tempo real
+      emitNotification(appointment.companyId, {
+        id: `confirm-${appointmentId}`,
+        type: "appointment",
+        title: "Agendamento Confirmado",
+        message: `${appointment.clientName} confirmou o agendamento de ${appointment.service.name}`,
+        timestamp: new Date().toISOString(),
+        data: { appointmentId, action: "confirmed" },
+      });
     } else if (action === "cancel") {
       // Cancelar agendamento
       await prisma.appointment.update({
@@ -140,6 +151,16 @@ export async function POST(req: NextRequest) {
       }
 
       console.log("[uazapi webhook] Appointment canceled:", appointmentId);
+
+      // Enviar notificação em tempo real
+      emitNotification(appointment.companyId, {
+        id: `cancel-${appointmentId}`,
+        type: "appointment",
+        title: "Agendamento Cancelado",
+        message: `${appointment.clientName} cancelou o agendamento de ${appointment.service.name}`,
+        timestamp: new Date().toISOString(),
+        data: { appointmentId, action: "canceled" },
+      });
     }
 
     return api.ok({ received: true });

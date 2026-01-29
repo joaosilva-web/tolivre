@@ -6,6 +6,7 @@ import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
+import { emitAppointmentCreated } from "@/lib/websocket";
 
 const publicAppointmentSchema = z.object({
   companyId: z.string().cuid(),
@@ -178,6 +179,16 @@ export async function POST(req: NextRequest) {
       });
 
       return appointment;
+    });
+
+    // Enviar notificação em tempo real para profissionais da empresa
+    emitAppointmentCreated(result.companyId, {
+      id: result.id,
+      clientName: result.clientName,
+      serviceName: result.service.name,
+      professionalName: result.professional.name,
+      startTime: result.startTime.toISOString(),
+      action: "created",
     });
 
     // Enviar notificação via WhatsApp com menu interativo (background, não bloqueia resposta)
