@@ -13,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -101,11 +102,11 @@ export default function PublicBookingPage() {
   // Carregar dados do cliente salvos no localStorage
   const loadClientDataFromStorage = () => {
     try {
-      const savedClientData = localStorage.getItem('tolivre_client_data');
+      const savedClientData = localStorage.getItem("tolivre_client_data");
       if (savedClientData) {
         const clientData = JSON.parse(savedClientData);
-        setClientName(clientData.name || '');
-        setClientEmail(clientData.email || '');
+        setClientName(clientData.name || "");
+        setClientEmail(clientData.email || "");
         // Aplicar máscara ao carregar do localStorage
         if (clientData.phone) {
           setClientPhone(formatPhoneNumber(clientData.phone));
@@ -117,7 +118,7 @@ export default function PublicBookingPage() {
         setIsEditingClientInfo(true);
       }
     } catch (err) {
-      console.error('Erro ao carregar dados do cliente:', err);
+      console.error("Erro ao carregar dados do cliente:", err);
       setIsEditingClientInfo(true);
     }
   };
@@ -125,13 +126,15 @@ export default function PublicBookingPage() {
   // Formatar número de telefone com máscara +55 (99) 99999-9999
   const formatPhoneNumber = (value: string) => {
     // Remove tudo que não é número
-    const numbers = value.replace(/\D/g, '');
-    
+    const numbers = value.replace(/\D/g, "");
+
     // Adiciona a máscara
-    if (numbers.length === 0) return '';
+    if (numbers.length === 0) return "";
     if (numbers.length <= 2) return `+${numbers}`;
-    if (numbers.length <= 4) return `+${numbers.slice(0, 2)} (${numbers.slice(2)}`;
-    if (numbers.length <= 9) return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4)}`;
+    if (numbers.length <= 4)
+      return `+${numbers.slice(0, 2)} (${numbers.slice(2)}`;
+    if (numbers.length <= 9)
+      return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4)}`;
     if (numbers.length <= 13) {
       return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4, 9)}-${numbers.slice(9)}`;
     }
@@ -151,11 +154,11 @@ export default function PublicBookingPage() {
       const clientData = {
         name: clientName.trim(),
         email: clientEmail.trim(),
-        phone: clientPhone.replace(/\D/g, ''), // Salvar apenas números
+        phone: clientPhone.replace(/\D/g, ""), // Salvar apenas números
       };
-      localStorage.setItem('tolivre_client_data', JSON.stringify(clientData));
+      localStorage.setItem("tolivre_client_data", JSON.stringify(clientData));
     } catch (err) {
-      console.error('Erro ao salvar dados do cliente:', err);
+      console.error("Erro ao salvar dados do cliente:", err);
     }
   };
 
@@ -401,7 +404,7 @@ export default function PublicBookingPage() {
     }
 
     if (!clientName.trim()) {
-      alert("Por favor, informe seu nome");
+      toast.error("Por favor, informe seu nome");
       return;
     }
 
@@ -422,7 +425,7 @@ export default function PublicBookingPage() {
         serviceId: selectedService.id,
         clientName: clientName.trim(),
         clientEmail: clientEmail.trim() || undefined,
-        clientPhone: clientPhone.replace(/\D/g, '') || undefined, // Enviar apenas números
+        clientPhone: clientPhone.replace(/\D/g, "") || undefined, // Enviar apenas números
         startTime: appointmentDate.toISOString(),
       };
 
@@ -437,11 +440,11 @@ export default function PublicBookingPage() {
         setCurrentStep(5);
       } else {
         const errorData = await res.json();
-        alert(errorData.error || "Erro ao criar agendamento");
+        toast.error(errorData.error || "Erro ao criar agendamento");
       }
     } catch (err) {
       console.error("Erro ao criar agendamento:", err);
-      alert("Erro ao criar agendamento. Tente novamente.");
+      toast.error("Erro ao criar agendamento. Tente novamente.");
     } finally {
       setBookingLoading(false);
     }
@@ -764,33 +767,46 @@ export default function PublicBookingPage() {
               {/* Formulário de Dados */}
               <div className="bg-card border rounded-xl p-6">
                 <h3 className="text-xl font-bold mb-4">Suas Informações</h3>
-                
+
                 {!isEditingClientInfo && clientName ? (
                   // Modo visualização - mostra mensagem de boas-vindas
                   <div className="space-y-4">
                     <p className="text-lg mb-4">
-                      É bom te ver novamente, <span className="font-bold" style={{ color: data.primaryColor }}>{clientName}</span>! 👋
+                      É bom te ver novamente,{" "}
+                      <span
+                        className="font-bold"
+                        style={{ color: data.primaryColor }}
+                      >
+                        {clientName}
+                      </span>
+                      ! 👋
                     </p>
-                    
+
                     <div className="bg-muted/50 rounded-lg p-4 space-y-2">
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4 text-muted-foreground" />
-                        <span><strong>Nome:</strong> {clientName}</span>
+                        <span>
+                          <strong>Nome:</strong> {clientName}
+                        </span>
                       </div>
                       {clientEmail && (
                         <div className="flex items-center gap-2">
                           <Mail className="w-4 h-4 text-muted-foreground" />
-                          <span><strong>E-mail:</strong> {clientEmail}</span>
+                          <span>
+                            <strong>E-mail:</strong> {clientEmail}
+                          </span>
                         </div>
                       )}
                       {clientPhone && (
                         <div className="flex items-center gap-2">
                           <Phone className="w-4 h-4 text-muted-foreground" />
-                          <span><strong>Telefone:</strong> {clientPhone}</span>
+                          <span>
+                            <strong>Telefone:</strong> {clientPhone}
+                          </span>
                         </div>
                       )}
                     </div>
-                    
+
                     <Button
                       type="button"
                       variant="outline"
@@ -849,7 +865,9 @@ export default function PublicBookingPage() {
               <Button
                 size="lg"
                 onClick={handleBooking}
-                disabled={bookingLoading || !clientName.trim() || !clientPhone.trim()}
+                disabled={
+                  bookingLoading || !clientName.trim() || !clientPhone.trim()
+                }
                 className="w-full text-lg py-6 hover:opacity-90 transition-opacity text-white inline-flex items-center justify-center rounded-md font-medium cursor-pointer"
                 style={{
                   backgroundColor: data.primaryColor,

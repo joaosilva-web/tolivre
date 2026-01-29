@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import useSession from "@/hooks/useSession";
 import { SiteHeader } from "@/components/site-header";
+import { toast } from "sonner";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -30,6 +32,8 @@ import {
   AvailableSlot,
 } from "@/lib/slotGeneration";
 import { UIAppointment } from "@/lib/appointments";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface Service {
   id: string;
@@ -109,18 +113,19 @@ export default function NewAppointmentPage() {
   const [newClientName, setNewClientName] = useState("");
   const [newClientEmail, setNewClientEmail] = useState("");
   const [newClientPhone, setNewClientPhone] = useState("");
-  // store date as a YYYY-MM-DD string to avoid cross-browser UTC parsing differences
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  // store date as a Date object
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
   
   // Recurrence fields
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceRule, setRecurrenceRule] = useState<"WEEKLY" | "BIWEEKLY" | "MONTHLY">("WEEKLY");
-  const [recurrenceEndDate, setRecurrenceEndDate] = useState<string>("");
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date | undefined>();
 
   // Data
   const [services, setServices] = useState<Service[]>([]);
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+  const [datesWithSlots, setDatesWithSlots] = useState<Set<string>>(new Set());
 
   const loadServices = useCallback(async () => {
     if (!user?.companyId) return;
@@ -183,6 +188,75 @@ export default function NewAppointmentPage() {
       // don't auto-load all clients; we will perform live search when user types
     }
   }, [user?.companyId, loadServices]);
+
+  // Pré-carregar disponibilidade de datas (próximos 60 dias)
+  const preloadDatesAvailability = useCallback(async () => {
+    if (!selectedService || !user?.companyId) return;
+
+    const datesSet = new Set<string>();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Verifica os próximos 60 dias
+    for (let i = 0; i < 60; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(today.getDate() + i);
+      const dateStr = format(checkDate, "yyyy-MM-dd");
+
+      try {
+        // Buscar horários de trabalho
+        const whRes = await fetch(
+          `/api/working-hours?companyId=${user.companyId}`
+        );
+        if (!whRes.ok) continue;
+        const whData = await whRes.json();
+        const workingHours = whData?.data || [];
+
+        // Buscar agendamentos
+        const from = new Date(checkDate);
+        from.setHours(0, 0, 0, 0);
+        const to = new Date(checkDate);
+        to.setHours(23, 59, 59, 999);
+
+        const apptRes = await fetch(
+          `/api/appointments?companyId=${user.companyId}&from=${from.toISOString()}&to=${to.toISOString()}`
+        );
+        if (!apptRes.ok) continue;
+        const apptData = await apptRes.json();
+        const allAppointments = apptData?.data || [];
+
+        // Mapear appointments para formato UIAppointment
+        const appointments = allAppointments.map((appt: any) => ({
+          ...appt,
+          date: appt.startTime,
+        }));
+
+        // Gerar slots para verificar disponibilidade
+        const slots = generateSlots(
+          checkDate,
+          workingHours,
+          selectedService.duration,
+          appointments
+        );
+
+        // Se houver pelo menos um slot disponível, adiciona a data
+        if (slots.some((slot) => slot.available)) {
+          datesSet.add(dateStr);
+        }
+      } catch (err) {
+        console.error(`Erro ao verificar disponibilidade para ${dateStr}:`, err);
+      }
+    }
+
+    setDatesWithSlots(datesSet);
+  }, [selectedService, user?.companyId]);
+
+  // Pré-carregar disponibilidade de datas quando serviço é selecionado
+  useEffect(() => {
+    if (selectedService && user?.companyId) {
+      preloadDatesAvailability();
+    }
+  }, [selectedService, user?.companyId, preloadDatesAvailability]);
 
   const loadAvailableSlots = async (date: Date) => {
     if (!user?.companyId) return;
@@ -285,14 +359,14 @@ export default function NewAppointmentPage() {
     handleNext();
   };
 
-  const handleDateSelect = (dateStr: string | undefined) => {
-    setSelectedDate(dateStr || "");
-    if (dateStr && selectedService) {
-      const [y, m, d] = dateStr.split("-");
-      const date = new Date(Number(y), Number(m) - 1, Number(d));
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date && selectedService) {
       loadAvailableSlots(date);
     }
-    handleNext();
+    if (date) {
+      handleNext();
+    }
   };
 
   const handleCreateAppointment = async () => {
@@ -355,18 +429,14 @@ export default function NewAppointmentPage() {
         }
       }
 
-      // Build start Date in local time from YYYY-MM-DD + selectedTime to avoid UTC day-shift
-      const [y, m, d] = selectedDate.split("-");
+      // Build start Date in local time from Date object + selectedTime to avoid UTC day-shift
+      if (!selectedDate) {
+        toast.error("Selecione uma data");
+        return;
+      }
       const [hours, minutes] = selectedTime.split(":").map(Number);
-      const startDateTime = new Date(
-        Number(y),
-        Number(m) - 1,
-        Number(d),
-        hours,
-        minutes,
-        0,
-        0
-      );
+      const startDateTime = new Date(selectedDate);
+      startDateTime.setHours(hours, minutes, 0, 0);
 
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(
@@ -406,8 +476,9 @@ export default function NewAppointmentPage() {
 
       // Add recurrence fields if enabled
       if (isRecurring && recurrenceEndDate) {
-        const [endY, endM, endD] = recurrenceEndDate.split("-");
-        const endDate = new Date(Number(endY), Number(endM) - 1, Number(endD), 23, 59, 59, 999);
+        // Set end date to end of day
+        const endDate = new Date(recurrenceEndDate);
+        endDate.setHours(23, 59, 59, 999);
         payload.recurrenceRule = recurrenceRule;
         payload.recurrenceEndDate = endDate.toISOString();
       }
@@ -423,15 +494,15 @@ export default function NewAppointmentPage() {
         const message = isRecurring 
           ? `${data.data.totalCreated || 1} agendamentos criados com sucesso!`
           : "Agendamento criado com sucesso!";
-        alert(message);
+        toast.success(message);
         router.push("/dashboard");
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao criar agendamento");
+        toast.error(data.error || "Erro ao criar agendamento");
       }
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
-      alert("Erro ao criar agendamento");
+      toast.error("Erro ao criar agendamento");
     } finally {
       setLoading(false);
     }
@@ -737,7 +808,7 @@ export default function NewAppointmentPage() {
                             onClick={async () => {
                               if (!user?.companyId) return;
                               if (!newClientName.trim()) {
-                                alert("Nome do cliente é obrigatório");
+                                toast.error("Nome do cliente é obrigatório");
                                 return;
                               }
                               setCreatingClient(true);
@@ -766,11 +837,11 @@ export default function NewAppointmentPage() {
                                   const err = await res
                                     .json()
                                     .catch(() => null);
-                                  alert(err?.error || "Erro ao criar cliente");
+                                  toast.error(err?.error || "Erro ao criar cliente");
                                 }
                               } catch (err) {
                                 console.error(err);
-                                alert("Erro ao criar cliente");
+                                toast.error("Erro ao criar cliente");
                               } finally {
                                 setCreatingClient(false);
                               }
@@ -821,17 +892,23 @@ export default function NewAppointmentPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="appointmentDate">
-                        Data do Agendamento *
-                      </Label>
-                      <Input
-                        id="appointmentDate"
-                        type="date"
-                        value={selectedDate || ""}
-                        onChange={(e) => handleDateSelect(e.target.value)}
-                        min={new Date().toISOString().split("T")[0]}
-                        required
+                    <div className="flex flex-col items-center">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDateSelect}
+                        locale={ptBR}
+                        disabled={(date) => {
+                          // Desabilita datas passadas
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          if (date < today) return true;
+                          
+                          // Desabilita datas sem horários disponíveis
+                          const dateStr = format(date, "yyyy-MM-dd");
+                          return !datesWithSlots.has(dateStr);
+                        }}
+                        className="rounded-md border"
                       />
                     </div>
                   </div>
@@ -905,16 +982,21 @@ export default function NewAppointmentPage() {
                             </select>
                           </div>
                           
-                          <div>
-                            <Label htmlFor="recurrenceEndDate">Repetir até</Label>
-                            <Input
-                              id="recurrenceEndDate"
-                              type="date"
-                              value={recurrenceEndDate}
-                              onChange={(e) => setRecurrenceEndDate(e.target.value)}
-                              min={selectedDate}
-                              required={isRecurring}
-                              className="mt-1"
+                          <div className="flex flex-col items-center">
+                            <Label className="mb-2">Repetir até</Label>
+                            <Calendar
+                              mode="single"
+                              selected={recurrenceEndDate}
+                              onSelect={setRecurrenceEndDate}
+                              locale={ptBR}
+                              disabled={(date) => {
+                                // Desabilita datas antes da data selecionada
+                                if (!selectedDate) return true;
+                                const minDate = new Date(selectedDate);
+                                minDate.setHours(0, 0, 0, 0);
+                                return date < minDate;
+                              }}
+                              className="rounded-md border"
                             />
                           </div>
                           
@@ -922,7 +1004,7 @@ export default function NewAppointmentPage() {
                             {recurrenceRule === "WEEKLY" && "O agendamento será repetido toda semana"}
                             {recurrenceRule === "BIWEEKLY" && "O agendamento será repetido a cada 2 semanas"}
                             {recurrenceRule === "MONTHLY" && "O agendamento será repetido todo mês"}
-                            {recurrenceEndDate && ` até ${new Date(recurrenceEndDate).toLocaleDateString("pt-BR")}`}
+                            {recurrenceEndDate && ` até ${recurrenceEndDate.toLocaleDateString("pt-BR")}`}
                           </p>
                         </div>
                       )}
