@@ -29,6 +29,19 @@ const eslintConfig = [
       "@next/next/no-html-link-for-pages": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
       "react-hooks/exhaustive-deps": "warn",
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "JSXAttribute[name.name='style']",
+          message:
+            "Avoid inline style props; prefer CSS classes that reference globals.css tokens or shadcn primitives.",
+        },
+        {
+          selector: "Literal[value=/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/]",
+          message:
+            "Avoid hard-coded hex color literals; centralize palette usage through globals.css variables.",
+        },
+      ],
     },
   },
 ];

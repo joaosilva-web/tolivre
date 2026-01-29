@@ -88,8 +88,8 @@ async function handle(req: NextRequest) {
 
   for (const appt of appointments) {
     const planFromSub = appt.company.subscription?.plan as PlanName | undefined;
-    const planName: PlanName | undefined = planFromSub ||
-      (appt.company.contrato as PlanName | undefined);
+    const planName: PlanName | undefined =
+      planFromSub || (appt.company.contrato as PlanName | undefined);
     const plan = planName ? PLANS[planName] : undefined;
 
     if (plan && !plan.features.whatsapp) {

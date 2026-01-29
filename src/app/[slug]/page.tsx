@@ -107,7 +107,7 @@ export default function PublicCompanyPage() {
     // Cleanup: restaurar favicon e título originais ao desmontar
     return () => {
       const link = document.querySelector(
-        "link[rel*='icon']"
+        "link[rel*='icon']",
       ) as HTMLLinkElement;
       if (link) {
         link.href = "/favicon.ico";
@@ -474,7 +474,7 @@ export default function PublicCompanyPage() {
                       `https://wa.me/${
                         data.whatsapp?.replace(/\D/g, "") || ""
                       }`,
-                      "_blank"
+                      "_blank",
                     )
                   }
                   className="bg-white/10 text-white border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300 text-lg px-8 py-6 cursor-pointer"

@@ -100,11 +100,11 @@ export async function POST(req: NextRequest) {
 
     const limitCheck = checkAppointmentLimit(
       subscription,
-      appointmentsThisMonth
+      appointmentsThisMonth,
     );
     if (!limitCheck.allowed) {
       return api.forbidden(
-        limitCheck.message || "Limite de agendamentos atingido"
+        limitCheck.message || "Limite de agendamentos atingido",
       );
     }
 
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     });
     if (!wh)
       return api.badRequest(
-        "Horário de funcionamento não configurado para esse dia"
+        "Horário de funcionamento não configurado para esse dia",
       );
 
     const startMinutes = start.getUTCHours() * 60 + start.getUTCMinutes();
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
 
       if (overlapCount > 0) {
         const e = new Error(
-          "Já existe agendamento conflitando para esse profissional nesse horário"
+          "Já existe agendamento conflitando para esse profissional nesse horário",
         ) as ErrorWithCode;
         e.code = "OVERLAP";
         throw e;
@@ -196,7 +196,11 @@ export async function POST(req: NextRequest) {
         // fetch company phone and name
         const company = await prisma.company.findUnique({
           where: { id: parsed.companyId },
-          select: { telefone: true, nomeFantasia: true },
+          select: {
+            telefone: true,
+            nomeFantasia: true,
+            uazapiConnected: true,
+          },
         });
 
         // resolve client phone if possible
@@ -235,8 +239,9 @@ export async function POST(req: NextRequest) {
               clientId: parsed.clientId,
               clientPhone,
               payload: { to: clientPhone, from: company.telefone, message },
+              connected: company.uazapiConnected,
               result,
-            }
+            },
           );
         } else {
           console.log(
@@ -244,9 +249,10 @@ export async function POST(req: NextRequest) {
             {
               companyPhone: company?.telefone,
               clientPhone,
+              connected: company?.uazapiConnected,
               companyId: parsed.companyId,
               clientId: parsed.clientId,
-            }
+            },
           );
         }
       } catch (err) {
@@ -292,7 +298,7 @@ export async function POST(req: NextRequest) {
     const e = err as ErrorWithCode;
     if (e?.code === "OVERLAP") return api.conflict(e.message);
     return api.serverError(
-      (err as Error).message || "Erro ao criar agendamento"
+      (err as Error).message || "Erro ao criar agendamento",
     );
   }
 }
@@ -362,7 +368,7 @@ export async function GET(req: NextRequest) {
     return api.ok(appointments);
   } catch (err) {
     return api.serverError(
-      (err as Error).message || "Erro ao listar agendamentos"
+      (err as Error).message || "Erro ao listar agendamentos",
     );
   }
 }

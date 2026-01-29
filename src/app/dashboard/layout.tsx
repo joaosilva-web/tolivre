@@ -43,14 +43,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
+    <SidebarProvider className="dashboard-layout">
       <AppSidebar variant="inset" />
       <SidebarInset>
         <div className="">

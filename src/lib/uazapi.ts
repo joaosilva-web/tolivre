@@ -1,10 +1,14 @@
 // Minimal Uazapi helper for sending plain text messages
 const UAZAPI_URL = (process.env.UAZAPI_URL || "http://localhost:3000").replace(
   /\/$/,
-  ""
+  "",
 );
-const UAZAPI_TOKEN = process.env.UAZAPI_TOKEN || process.env.UAZAPI_KEY || "";
-const UAZAPI_HEADER = process.env.UAZAPI_HEADER || "Authorization"; // e.g. 'Authorization' or 'apikey'
+const UAZAPI_TOKEN =
+  process.env.UAZAPI_INSTANCE_TOKEN ||
+  process.env.UAZAPI_TOKEN ||
+  process.env.UAZAPI_KEY ||
+  "";
+const UAZAPI_HEADER = process.env.UAZAPI_HEADER || "token"; // e.g. 'token', 'Authorization' or 'apikey'
 const UAZAPI_DEFAULT_COUNTRY = (
   process.env.UAZAPI_DEFAULT_COUNTRY || "55"
 ).replace(/\D/g, "");
@@ -23,8 +27,13 @@ function normalizePhone(p?: string) {
   return d;
 }
 
-export async function sendText(opts: { to: string; message: string }) {
-  if (!UAZAPI_URL || !UAZAPI_TOKEN) {
+export async function sendText(opts: {
+  to: string;
+  message: string;
+  token?: string;
+}) {
+  const token = opts.token || UAZAPI_TOKEN;
+  if (!UAZAPI_URL || !token) {
     const msg = "Uazapi not configured (UAZAPI_URL/UAZAPI_TOKEN)";
     console.warn(msg);
     return { ok: false, error: msg } as const;
@@ -37,16 +46,40 @@ export async function sendText(opts: { to: string; message: string }) {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  if (UAZAPI_HEADER && UAZAPI_HEADER.toLowerCase() === "authorization") {
-    headers["Authorization"] = `Bearer ${UAZAPI_TOKEN}`;
+  const maskSecret = (value?: string) => {
+    if (!value) return "(missing)";
+    if (value.length <= 8) return `${value[0]}***${value[value.length - 1]}`;
+    return `${value.slice(0, 4)}...${value.slice(-4)}`;
+  };
+  let authHeaderKey = "";
+  if (UAZAPI_HEADER) {
+    if (UAZAPI_HEADER.toLowerCase() === "authorization") {
+      headers["Authorization"] = `Bearer ${token}`;
+      authHeaderKey = "Authorization";
+    } else {
+      headers[UAZAPI_HEADER] = token;
+      authHeaderKey = UAZAPI_HEADER;
+    }
+  } else if (opts.token) {
+    headers["token"] = token;
+    authHeaderKey = "token";
   } else {
-    headers[UAZAPI_HEADER] = UAZAPI_TOKEN;
+    headers["Authorization"] = `Bearer ${token}`;
+    authHeaderKey = "Authorization";
   }
 
   try {
-    // UAZAPI_URL is expected to be the full endpoint (e.g. https://free.uazapi.com/send/text)
-    const url = UAZAPI_URL;
+    // If env only provides the base URL, append the send endpoint
+    const url = UAZAPI_URL.endsWith("/send/text")
+      ? UAZAPI_URL
+      : `${UAZAPI_URL}/send/text`;
     console.log("[uazapi] POST", url, JSON.stringify(payload));
+    console.log("[uazapi] headers", {
+      authHeaderKey,
+      token: maskSecret(token),
+      accept: "application/json",
+      contentType: headers["Content-Type"],
+    });
     // Ensure Accept header and Content-Type are present
     headers["Accept"] = "application/json";
     const res = await fetch(url, {

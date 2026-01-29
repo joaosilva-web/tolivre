@@ -65,328 +65,67 @@ ToLivre is a **Next.js 15 SaaS appointment booking platform** with a specific mu
 
 ### Debounced Search Implementation
 
-```typescript
-const searchClients = useCallback(
-  debounce(async (query: string) => {
-    if (query.trim().length < 2) {
-      setSearchResults([]);
-      return;
-    }
-    try {
-      const res = await fetch(
-        `/api/clients/search?q=${encodeURIComponent(query)}`
-      );
-      if (res.ok) {
-        const data = await res.json();
-        setSearchResults(data.data || []);
-      }
-    } catch (err) {
-      console.error("Erro ao buscar clientes:", err);
-    }
-  }, 300),
-  []
-);
-```
+````instructions
+# Copilot instructions (project-specific, concise)
 
-### Keyboard Navigation Pattern
+Short summary
+- Next.js App Router app (src/app), Prisma ORM (schema in prisma/), Postgres in Docker. Multi-tenant model: Company → Users → Professionals → Appointments.
 
-- **Focus management** with `focusedIndex` state for dropdown navigation
-- **ArrowUp/ArrowDown** for navigation, **Enter** for selection, **Escape** to close
-- **useRef** for DOM element access and programmatic focus control
+Key files to inspect
+- Auth & API helpers: `src/app/libs/auth.ts`, `src/app/libs/apiResponse.ts`, `src/app/libs/rateLimit.ts`
+- Prisma client location: `src/generated/prisma` (run `npx prisma generate` after schema changes)
+- Booking flow: `src/app/(booking)/` and shared utilities in `src/lib/` and `src/hooks/`
+- UI components: `src/components/` (shadcn/ui pattern), global layout in `src/app/layout.tsx`
 
-## Appointment Booking Flow Details
-
-### 4-Step Wizard Implementation
-
-1. **Service Selection**: Load professional's services, validate selection
-2. **Client Information**: Debounced search + inline client creation
-3. **Date Selection**: Calendar with working hours validation
-4. **Time Selection**: Generate available slots using working hours + existing appointments
-
-### State Management in Booking Wizard
-
-```typescript
-// Form progression state
-const [currentStep, setCurrentStep] = useState(1);
-
-// Service selection
-const [selectedService, setSelectedService] = useState<Service | null>(null);
-
-// Client management with search
-const [clientQuery, setClientQuery] = useState("");
-const [searchResults, setSearchResults] = useState<Client[]>([]);
-const [dropdownOpen, setDropdownOpen] = useState(false);
-const [focusedIndex, setFocusedIndex] = useState<number>(-1);
-const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-
-// Inline client creation
-const [creatingClient, setCreatingClient] = useState(false);
-const [newClientName, setNewClientName] = useState("");
-const [newClientEmail, setNewClientEmail] = useState("");
-
-// Date and time selection
-const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
-const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
-```
-
-### Slot Generation Integration
-
-- **Client-side calculation** using `generateSlots()` utility
-- **Server data dependency**: Working hours + existing appointments
-- **Real-time validation**: Check conflicts before allowing selection
-- **UTC handling**: Generate in local time, convert to UTC for API
-
-### Background WhatsApp Notifications
-
-- **Non-blocking pattern**: Appointment creation succeeds even if WhatsApp fails
-- **Structured logging**: `[uazapi]` prefix for debugging external API calls
-- **Phone normalization**: Strip formatting, add country code if missing
-- **Graceful degradation**: Log errors but don't interrupt user flow
-
-## Debugging Workflows
-
-### Common Development Issues
-
-1. **Windows File Locks**:
-
-   ```bash
-   # Stop all Node processes before prisma operations
-   taskkill /IM node.exe /F
-   npx prisma generate
-   npm run dev
-   ```
-
-2. **Prisma Client Outdated**:
-
-   ```bash
-   # After schema changes, always regenerate
-   npx prisma generate
-   # Restart dev server to pick up changes
-   ```
-
-3. **Database Connection Issues**:
-   ```bash
-   # Verify PostgreSQL is running
-   docker-compose up -d
-   # Check migrations are applied
-   npx prisma migrate status
-   npx prisma migrate deploy
-   ```
-
-### Logging Patterns
-
-- **Structured API errors**: Use `console.error()` with context
-- **External service prefixes**: `[uazapi]`, `[prisma]` for filtering logs
-- **Client-side debugging**: Network tab for API calls, React DevTools for state
-
-### Environment Troubleshooting
-
-- **Check `.env` format**: No quotes around values, proper PostgreSQL URL format
-- **Verify all required vars**: `JWT_SECRET`, `POSTGRES_URL`, `UAZAPI_*` for WhatsApp
-- **Windows path issues**: Use forward slashes in file paths, absolute paths for Prisma
-
-### Testing Database Operations
-
+Build & run (dev) – quick commands
 ```bash
-# Interactive database exploration
-npx prisma studio
-
-# Manual query testing
-npx prisma db seed
-
-# Reset database in development
-npx prisma migrate reset --force
-```
-
-## Additional Integration Patterns
-
-### External API Integration Template
-
-```typescript
-export async function callExternalService(data: unknown) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const body = await response.text();
-
-    if (!response.ok) {
-      console.error("[service] API error", response.status, body);
-      return { ok: false, status: response.status, error: body };
-    }
-
-    return { ok: true, status: response.status, body };
-  } catch (err) {
-    console.error("[service] Failed to call API:", err);
-    return { ok: false, error: String(err) };
-  }
-}
-```
-
-### Background Job Pattern
-
-- **Fire-and-forget approach**: Don't await external API calls in critical paths
-- **Error isolation**: External failures don't break main functionality
-- **Retry logic**: Consider implementing for critical notifications
-- **Status tracking**: Log success/failure for monitoring
-
-### Multi-tenant Data Access
-
-```typescript
-// Always include companyId in queries
-const appointments = await prisma.appointment.findMany({
-  where: {
-    professionalId: user.id,
-    companyId: user.companyId, // Critical for data isolation
-    startTime: { gte: new Date() },
-  },
-});
-
-// Authorization check pattern
-if (resource.companyId !== user.companyId) {
-  return api.forbidden("Access denied to resource");
-}
-```
-
-### Date/Time Handling Best Practices
-
-```typescript
-// Always store UTC in database
-const utcDate = new Date(localDateString + "Z");
-
-// Use date-fns for display formatting
-import { format } from "date-fns";
-const displayDate = format(utcDate, "dd/MM/yyyy HH:mm");
-
-// Working hours validation
-const dayOfWeek = getDayOfWeekUTC(appointmentDate);
-const startMinutes = timeToMinutes(workingHour.startTime);
-```
-
-## Development Workflow
-
-### Essential Commands
-
-```bash
-# Start development (uses Turbopack)
+# dev with Turbopack (Next 16):
+npm install
 npm run dev
 
-# Database operations
-docker-compose up -d          # Start PostgreSQL
-npx prisma migrate dev        # Apply migrations in dev
-npx prisma migrate deploy     # Apply migrations in production
-npx prisma generate          # Regenerate client after schema changes
-
-# Troubleshooting
-npx prisma studio           # Database GUI
-taskkill /IM node.exe /F   # Kill Node processes (Windows file locks)
+# Prisma & DB:
+docker-compose up -d   # starts Postgres (uses docker-compose.yml)
+npx prisma migrate dev
+npx prisma generate
 ```
 
-### File Organization Conventions
+Important conventions & patterns
+- Auth: use `getUserFromCookie()` at API entry; always check `user.companyId` against resource `companyId`.
+- API responses follow envelope `{ success: boolean, data?, error?, errorDetails? }` via `apiResponse` helpers.
+- Use Zod at route entry for validation; map ZodError -> `api.badRequest(...)`.
+- Multi-tenant queries must include `companyId` filters; advisory locks (`pg_advisory_xact_lock`) are used to avoid appointment race conditions.
 
-- **API routes**: `src/app/api/` - follows Next.js App Router patterns
-- **Shared utilities**: `src/lib/` - database, utilities, external integrations
-- **App-specific logic**: `src/app/libs/` - auth, API responses, rate limiting
-- **Generated code**: `src/generated/prisma` - Prisma client (custom output path)
-- **Components**: `src/components/` - reusable UI components with shadcn/ui
-- **Hooks**: `src/hooks/` - custom React hooks for shared logic
-- **Context**: `src/context/` - React context providers for global state
+Deployment & build-time secrets
+- Dockerfile requires several build-time envs (STRIPE_SECRET_KEY, NEXT_PUBLIC_APP_URL, RECAPTCHA keys, MERCADO_PAGO_ACCESS_TOKEN). When deploying (Dokploy/Hostinger), configure build args in the platform UI — runtime envs alone are insufficient for `npx next build`.
 
-## Security Considerations
+Developer gotchas (from repo)
+- Prisma client output path is non-standard (`src/generated/prisma`) — regenerate client after schema changes and restart the dev server.
+- Windows: Node file locks can block `prisma generate`; use `taskkill /IM node.exe /F` if needed.
+- Large landing page: `src/app/page.tsx` was recently refactored; previous version is preserved at `src/app/page-old.tsx`.
 
-- **reCAPTCHA protection** on public forms (leads, registration)
-- **Rate limiting** by IP with authenticated user bypass
-- **Input validation** with Zod schemas at API boundaries
-- **SQL injection prevention** via Prisma parameterized queries
-- **Authorization checks** on every resource access
+Where to look for integrations
+- WhatsApp: `src/lib/uazapi` (UAZAPI_* env vars)
+- Stripe integrations: `src/app/api/subscription/stripe-checkout/route.ts` and `src/app/api/subscriptions/checkout/route.ts` (watch build-time secret usage)
 
-## Common Gotchas
+Testing and debugging
+- Use `npx prisma studio` to inspect DB.
+- Logs: search for prefixes like `[uazapi]` or `[prisma]` in server logs for external integration traces.
 
-- **File locks on Windows**: Stop Node processes before `prisma generate`
-- **Time zones**: Always work in UTC server-side, handle display conversion client-side
-- **Prisma client path**: Generated to `src/generated/prisma`, not default location
-- **Multi-tenant data isolation**: Never forget `companyId` filters in queries
-- **Advisory locks**: Use for appointment creation to prevent double-bookings
-- **useState dependencies**: Include all state variables that affect useEffect/useCallback
+If you change code that affects DB schema or Prisma types:
+1. Update `prisma/schema.prisma`.
+2. Run `npx prisma migrate dev` (dev) or `npx prisma migrate deploy` (prod).
+3. Run `npx prisma generate` and restart the Next server.
 
-## Example Patterns
+If something seems broken, helpful places to check first
+- `src/app/libs/apiResponse.ts` for returned shapes
+- `src/app/libs/auth.ts` and `src/context/SessionProvider.tsx` for auth issues
+- `src/generated/prisma` for mismatched types
+- `docker-compose.yml` for local DB credentials
 
-### Typical API Route Structure
+Questions I will ask before making large changes
+- Does this change touch tenant data (companyId)? If yes, include authorization checks.
+- Are build-time secrets required? Confirm they are configured in CI/Docker build.
 
-```typescript
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const parsed = schema.parse(body);
+If anything here is incomplete or you want me to expand a section (e.g., deployment steps for Dokploy or the booking flow files), tell me which area and I'll iterate.
 
-    const user = await getUserFromCookie();
-    if (!user) return api.unauthorized();
-
-    // Authorization check
-    if (user.companyId !== parsed.companyId)
-      return api.forbidden("Access denied");
-
-    const result = await prisma.model.create({ data: parsed });
-    return api.created(result);
-  } catch (err) {
-    if (err instanceof ZodError) {
-      return api.badRequest("Validation error", err.issues);
-    }
-    return api.serverError(err.message);
-  }
-}
-```
-
-### Component with Session and Loading States
-
-```typescript
-export default function MyComponent() {
-  const { user, loading } = useSession();
-  const [data, setData] = useState([]);
-  const [loadingData, setLoadingData] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadData = useCallback(async () => {
-    if (!user?.companyId) return;
-
-    setLoadingData(true);
-    try {
-      const res = await fetch(`/api/data?companyId=${user.companyId}`);
-      if (res.ok) {
-        const result = await res.json();
-        setData(result.data || []);
-      }
-    } catch (err) {
-      console.error("Error loading data:", err);
-      setError("Failed to load data");
-    } finally {
-      setLoadingData(false);
-    }
-  }, [user?.companyId]);
-
-  useEffect(() => {
-    if (user?.companyId) {
-      loadData();
-    }
-  }, [loadData]);
-
-  if (loading || loadingData) {
-    return <Loader2 className="h-8 w-8 animate-spin" />;
-  }
-
-  // Component content...
-}
-```
-
-### Environment Variables
-
-- Development: Uses `.env` with PostgreSQL connection string (no quotes)
-- Required for Uazapi: `UAZAPI_URL`, `UAZAPI_TOKEN`, `UAZAPI_HEADER`
-- JWT: `JWT_SECRET` for token signing
-- Security: `RECAPTCHA_SECRET_KEY`, `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`
-
-Focus on maintaining these patterns when adding new features or modifying existing code.
+````

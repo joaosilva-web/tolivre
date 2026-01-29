@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  IconCirclePlusFilled,
-  IconMail,
-  IconChevronRight,
-  type Icon,
-} from "@tabler/icons-react";
-
-import { Button } from "@/components/ui/button";
+import { IconChevronRight, type Icon } from "@tabler/icons-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -48,25 +41,6 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
-              tooltip="Criar rápido"
-              className="bg-gradient-to-r from-primary to-blue-600 text-white hover:opacity-90 hover:scale-[1.02] active:opacity-90 min-w-8 duration-200 ease-linear"
-            >
-              <IconCirclePlusFilled />
-              <span>Criar rápido</span>
-            </SidebarMenuButton>
-            <Button
-              size="icon"
-              className="size-8 group-data-[collapsible=icon]:opacity-0"
-              variant="outline"
-            >
-              <IconMail />
-              <span className="sr-only">Inbox</span>
-            </Button>
-          </SidebarMenuItem>
-        </SidebarMenu>
         <SidebarMenu>
           {items.map((item) => {
             const sectionOpen = isInSection(item.url);

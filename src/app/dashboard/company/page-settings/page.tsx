@@ -41,7 +41,6 @@ interface PageConfig {
   coverImage: string;
   primaryColor: string;
   accentColor: string;
-  whatsapp: string;
   instagram: string;
   facebook: string;
   address: string;
@@ -72,7 +71,6 @@ export default function CompanyPageSettings() {
     coverImage: "",
     primaryColor: "#6366f1",
     accentColor: "#3b82f6",
-    whatsapp: "",
     instagram: "",
     facebook: "",
     address: "",
@@ -357,19 +355,10 @@ export default function CompanyPageSettings() {
                     className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    WhatsApp
-                  </label>
-                  <input
-                    type="text"
-                    value={config.whatsapp}
-                    onChange={(e) =>
-                      setConfig({ ...config, whatsapp: e.target.value })
-                    }
-                    placeholder="5511999999999"
-                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
+                <div className="md:col-span-2 text-sm text-muted-foreground">
+                  As confirmações e lembretes via WhatsApp são disparados pelo
+                  número oficial do TôLivre, então você não precisa fornecer o
+                  seu número pessoal.
                 </div>
               </div>
             </section>

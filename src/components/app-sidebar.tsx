@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  IconPlug,
+  IconGauge,
   IconBuilding,
   IconCalendar,
   IconDashboard,
@@ -89,9 +89,9 @@ const data = {
       ],
     },
     {
-      title: "Integrações",
-      url: "/dashboard/integrations",
-      icon: IconPlug,
+      title: "Gestão TôLivre",
+      url: "/dashboard/management",
+      icon: IconGauge,
     },
     {
       title: "Segurança",

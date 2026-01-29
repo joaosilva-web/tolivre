@@ -236,13 +236,14 @@ export default function SubscriptionPage() {
                   )}
                 </div>
                 {appointmentsLimit !== "unlimited" && (
-                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary">
-                    <div
-                      className="h-full bg-primary transition-all"
-                      style={{
-                        width: `${Math.min(appointmentsPercent, 100)}%`,
-                      }}
-                    />
+                  <div className="mt-2">
+                    <div className="dashboard-progress">
+                      <progress
+                        value={Math.min(appointmentsPercent, 100)}
+                        max={100}
+                        aria-label="Percentual de agendamentos utilizados"
+                      />
+                    </div>
                   </div>
                 )}
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -273,13 +274,14 @@ export default function SubscriptionPage() {
                   )}
                 </div>
                 {professionalsLimit !== "unlimited" && (
-                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary">
-                    <div
-                      className="h-full bg-primary transition-all"
-                      style={{
-                        width: `${Math.min(professionalsPercent, 100)}%`,
-                      }}
-                    />
+                  <div className="mt-2">
+                    <div className="dashboard-progress">
+                      <progress
+                        value={Math.min(professionalsPercent, 100)}
+                        max={100}
+                        aria-label="Percentual de profissionais utilizados"
+                      />
+                    </div>
                   </div>
                 )}
                 <p className="mt-2 text-xs text-muted-foreground">

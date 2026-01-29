@@ -67,8 +67,8 @@ const steps: OnboardingStep[] = [
   },
   {
     id: 4,
-    title: "Configuração WhatsApp",
-    description: "Configure notificações automáticas",
+    title: "WhatsApp Oficial",
+    description: "Confirmações automáticas já estão ativas",
     icon: MessageSquare,
   },
   {
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
         } catch (e) {
           console.error(
             "Erro ao carregar dias selecionados do localStorage",
-            e
+            e,
           );
         }
       }
@@ -176,15 +176,6 @@ export default function OnboardingPage() {
       }
     }
     return [{ name: "", price: "", duration: "30" }];
-  });
-
-  // Step 4: WhatsApp Configuration
-  const [skipWhatsapp, setSkipWhatsapp] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("onboarding_skip_whatsapp");
-      return saved === "true";
-    }
-    return false;
   });
 
   // Save to localStorage whenever data changes
@@ -210,7 +201,7 @@ export default function OnboardingPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem(
         "onboarding_selected_days",
-        JSON.stringify(selectedDays)
+        JSON.stringify(selectedDays),
       );
     }
   }, [selectedDays]);
@@ -220,12 +211,6 @@ export default function OnboardingPage() {
       localStorage.setItem("onboarding_services", JSON.stringify(services));
     }
   }, [services]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("onboarding_skip_whatsapp", skipWhatsapp.toString());
-    }
-  }, [skipWhatsapp]);
 
   // Check if onboarding is already completed
   useEffect(() => {
@@ -272,12 +257,12 @@ export default function OnboardingPage() {
   const updateWorkingHour = (
     day: number,
     field: "openTime" | "closeTime",
-    value: string
+    value: string,
   ) => {
     setWorkingHours(
       workingHours.map((wh) =>
-        wh.dayOfWeek === day ? { ...wh, [field]: value } : wh
-      )
+        wh.dayOfWeek === day ? { ...wh, [field]: value } : wh,
+      ),
     );
   };
 
@@ -292,10 +277,10 @@ export default function OnboardingPage() {
   const updateService = (
     index: number,
     field: keyof Service,
-    value: string
+    value: string,
   ) => {
     setServices(
-      services.map((s, i) => (i === index ? { ...s, [field]: value } : s))
+      services.map((s, i) => (i === index ? { ...s, [field]: value } : s)),
     );
   };
 
@@ -321,7 +306,7 @@ export default function OnboardingPage() {
 
   const handleStep3Next = () => {
     const validServices = services.filter(
-      (s) => s.name && s.price && s.duration
+      (s) => s.name && s.price && s.duration,
     );
 
     if (validServices.length === 0) {
@@ -334,8 +319,7 @@ export default function OnboardingPage() {
   };
 
   const handleStep4Next = () => {
-    // Step 4 just informs about WhatsApp, no validation needed
-    // User decides if they want to configure now or later
+    // Step 4 only informs that o WhatsApp oficial do TôLivre já está ativo
     setError("");
     setCurrentStep(5);
   };
@@ -376,7 +360,7 @@ export default function OnboardingPage() {
             companyId,
             ...wh,
           }),
-        })
+        }),
       );
 
       const whResults = await Promise.all(whPromises);
@@ -387,7 +371,7 @@ export default function OnboardingPage() {
 
       // 3. Salvar serviços
       const validServices = services.filter(
-        (s) => s.name && s.price && s.duration
+        (s) => s.name && s.price && s.duration,
       );
 
       const servicePromises = validServices.map((s) =>
@@ -400,7 +384,7 @@ export default function OnboardingPage() {
             price: parseFloat(s.price),
             duration: parseInt(s.duration),
           }),
-        })
+        }),
       );
 
       const serviceResults = await Promise.all(servicePromises);
@@ -417,14 +401,9 @@ export default function OnboardingPage() {
         localStorage.removeItem("onboarding_hours");
         localStorage.removeItem("onboarding_selected_days");
         localStorage.removeItem("onboarding_services");
-        localStorage.removeItem("onboarding_skip_whatsapp");
       }
 
-      // Se usuário escolheu configurar WhatsApp agora, redireciona para integrações
-      // Caso contrário, vai para dashboard
-      const destination = !skipWhatsapp
-        ? "/dashboard/integrations"
-        : "/dashboard";
+      const destination = "/dashboard";
 
       if (method === "POST") {
         window.location.href = destination;
@@ -477,7 +456,7 @@ export default function OnboardingPage() {
                     "flex flex-col items-center flex-1",
                     step.id < currentStep && "text-primary",
                     step.id === currentStep && "text-primary font-semibold",
-                    step.id > currentStep && "text-muted-foreground"
+                    step.id > currentStep && "text-muted-foreground",
                   )}
                 >
                   <div
@@ -487,7 +466,7 @@ export default function OnboardingPage() {
                         "bg-primary text-primary-foreground",
                       step.id === currentStep &&
                         "bg-primary text-primary-foreground ring-4 ring-primary/20",
-                      step.id > currentStep && "bg-muted"
+                      step.id > currentStep && "bg-muted",
                     )}
                   >
                     {step.id < currentStep ? (
@@ -730,7 +709,7 @@ export default function OnboardingPage() {
                                     updateWorkingHour(
                                       wh.dayOfWeek,
                                       "openTime",
-                                      e.target.value
+                                      e.target.value,
                                     )
                                   }
                                 />
@@ -744,7 +723,7 @@ export default function OnboardingPage() {
                                     updateWorkingHour(
                                       wh.dayOfWeek,
                                       "closeTime",
-                                      e.target.value
+                                      e.target.value,
                                     )
                                   }
                                 />
@@ -874,77 +853,42 @@ export default function OnboardingPage() {
                 </div>
               )}
 
-              {/* Step 4: WhatsApp Configuration */}
+              {/* Step 4: WhatsApp Oficial */}
               {currentStep === 4 && (
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-6">
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-lg p-6">
                     <div className="flex items-start gap-3">
                       <MessageSquare className="h-6 w-6 text-green-600 mt-1" />
                       <div>
                         <h3 className="font-semibold text-green-900 mb-2">
-                          Integração WhatsApp
+                          WhatsApp Oficial do TôLivre
                         </h3>
-                        <ul className="text-sm text-green-800 space-y-1">
-                          <li>
-                            ✅ Notificações automáticas de novos agendamentos
-                          </li>
-                          <li>✅ Lembretes de compromissos para clientes</li>
-                          <li>✅ Confirmações instantâneas via WhatsApp</li>
-                          <li>✅ Reduza faltas e melhore a comunicação</li>
-                        </ul>
+                        <p className="text-sm text-green-800">
+                          As confirmações e lembretes são enviados
+                          automaticamente pelo número oficial do TôLivre, sem
+                          precisar conectar o seu aparelho. Você já está pronto
+                          para receber notificações assim que concluir o
+                          onboarding.
+                        </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <Alert className="bg-blue-50 border-blue-200">
-                      <AlertDescription className="text-sm text-blue-800">
-                        <strong>📱 Configuração Simples</strong>
-                        <p className="mt-2">
-                          Após concluir o onboarding, você poderá configurar o
-                          WhatsApp em poucos cliques:
-                        </p>
-                        <ol className="list-decimal ml-4 mt-2 space-y-1">
-                          <li>
-                            Acesse <strong>Dashboard → Integrações</strong>
-                          </li>
-                          <li>Informe seu número do WhatsApp</li>
-                          <li>Escaneie o QR Code</li>
-                          <li>Pronto! Notificações ativadas ✅</li>
-                        </ol>
-                      </AlertDescription>
-                    </Alert>
-
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                      <p className="text-sm text-gray-700 mb-3">
-                        <strong>Vamos configurar o WhatsApp agora?</strong>
-                      </p>
-                      <div className="flex gap-3 justify-center">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setSkipWhatsapp(true);
-                            setCurrentStep(5);
-                          }}
-                        >
-                          Configurar Depois
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setSkipWhatsapp(false);
-                            setCurrentStep(5);
-                          }}
-                        >
-                          Sim, Configurar Agora
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-3">
-                        Você será direcionado para a tela de integrações após
-                        concluir o onboarding
-                      </p>
-                    </div>
+                  <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Ainda assim, se quiser acompanhar como as mensagens são
+                      entregues ou falar com nosso time, acesse o suporte ou o
+                      centro de ajuda.
+                    </p>
+                    <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
+                      <li>
+                        Confirmações instantâneas para agendamentos e lembretes
+                      </li>
+                      <li>Mensagens saem pelo número oficial do TôLivre</li>
+                      <li>
+                        Nossa equipe monitora entregas e garante a estabilidade
+                      </li>
+                    </ul>
                   </div>
                 </div>
               )}

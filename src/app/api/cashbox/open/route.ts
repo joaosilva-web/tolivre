@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function POST() {
-	return NextResponse.json(
-		{ success: false, error: "Abertura de caixa ainda não implementada" },
-		{ status: 501 },
-	);
+  return NextResponse.json(
+    { success: false, error: "Abertura de caixa ainda não implementada" },
+    { status: 501 },
+  );
 }

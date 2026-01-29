@@ -180,7 +180,9 @@ export async function POST(req: NextRequest) {
           collection_method: "charge_automatically",
         });
 
-        const paidInvoice = (await stripe.invoices.pay(invoice.id)) as Stripe.Invoice & {
+        const paidInvoice = (await stripe.invoices.pay(
+          invoice.id,
+        )) as Stripe.Invoice & {
           payment_intent?: string | Stripe.PaymentIntent | null;
           paymentIntent?: string | Stripe.PaymentIntent | null;
         };

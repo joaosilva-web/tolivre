@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -43,10 +43,22 @@ export default function WeeklyCalendarPage() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
-  const [selectedProfessional, setSelectedProfessional] = useState<string>("all");
+  const [selectedProfessional, setSelectedProfessional] =
+    useState<string>("all");
 
-  const currentWeekStart = startOfWeek(addWeeks(new Date(), currentWeekOffset), { weekStartsOn: 0 });
-  const currentWeekEnd = endOfWeek(addWeeks(new Date(), currentWeekOffset), { weekStartsOn: 0 });
+  const anchoredDate = useMemo(
+    () => addWeeks(new Date(), currentWeekOffset),
+    [currentWeekOffset],
+  );
+
+  const currentWeekStart = useMemo(
+    () => startOfWeek(anchoredDate, { weekStartsOn: 0 }),
+    [anchoredDate],
+  );
+  const currentWeekEnd = useMemo(
+    () => endOfWeek(anchoredDate, { weekStartsOn: 0 }),
+    [anchoredDate],
+  );
 
   // Load professionals
   useEffect(() => {
@@ -54,14 +66,16 @@ export default function WeeklyCalendarPage() {
       if (!user?.companyId) return;
 
       try {
-        const res = await fetch(`/api/professional-service?companyId=${user.companyId}`);
+        const res = await fetch(
+          `/api/professional-service?companyId=${user.companyId}`,
+        );
         if (res.ok) {
           const data = await res.json();
           // Extract unique professionals
           const uniqueProfessionals = Array.from(
             new Map(
-              data.data.map((ps: any) => [ps.professional.id, ps.professional])
-            ).values()
+              data.data.map((ps: any) => [ps.professional.id, ps.professional]),
+            ).values(),
           ) as Professional[];
           setProfessionals(uniqueProfessionals);
 
@@ -110,7 +124,10 @@ export default function WeeklyCalendarPage() {
     loadAppointments();
   }, [loadAppointments]);
 
-  const handleReschedule = async (appointmentId: string, newStartTime: Date) => {
+  const handleReschedule = async (
+    appointmentId: string,
+    newStartTime: Date,
+  ) => {
     try {
       const res = await fetch(`/api/appointments/${appointmentId}/reschedule`, {
         method: "PATCH",
@@ -162,7 +179,11 @@ export default function WeeklyCalendarPage() {
             <CardHeader>
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={handlePreviousWeek}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePreviousWeek}
+                  >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <Button variant="outline" size="sm" onClick={handleToday}>
@@ -178,8 +199,13 @@ export default function WeeklyCalendarPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Profissional:</span>
-                  <Select value={selectedProfessional} onValueChange={setSelectedProfessional}>
+                  <span className="text-sm text-muted-foreground">
+                    Profissional:
+                  </span>
+                  <Select
+                    value={selectedProfessional}
+                    onValueChange={setSelectedProfessional}
+                  >
                     <SelectTrigger className="w-[200px]">
                       <SelectValue />
                     </SelectTrigger>
@@ -212,8 +238,9 @@ export default function WeeklyCalendarPage() {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              <strong>💡 Dica:</strong> Arraste e solte os agendamentos para reagendá-los rapidamente.
-              Clique em um agendamento para ver mais detalhes.
+              <strong>💡 Dica:</strong> Arraste e solte os agendamentos para
+              reagendá-los rapidamente. Clique em um agendamento para ver mais
+              detalhes.
             </p>
           </div>
         </div>

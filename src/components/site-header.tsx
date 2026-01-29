@@ -10,7 +10,7 @@ import { TrialTimer } from "@/components/trial-timer";
 
 export function SiteHeader() {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-gradient-to-r from-primary/5 via-blue-500/5 to-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-gradient-to-r from-primary/5 via-secondary/5 to-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -83,7 +83,7 @@ function Breadcrumb() {
         return isLast ? (
           <span
             key={it.href}
-            className="text-base font-medium bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent"
+            className="text-base font-medium text-primary"
             aria-current="page"
           >
             {it.label}
