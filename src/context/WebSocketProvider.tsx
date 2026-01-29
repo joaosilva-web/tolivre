@@ -53,18 +53,18 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
 
     // Initialize socket connection
-    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || "3001";
-    const wsUrl =
-      typeof window !== "undefined"
-        ? `${window.location.protocol}//${window.location.hostname}:${wsPort}`
-        : `http://localhost:${wsPort}`;
-
+    // In production, use the same origin; in dev, use port 3001
+    const isDev = process.env.NODE_ENV === "development";
+    const wsUrl = isDev ? `http://localhost:3001` : window.location.origin;
+    
     const socketInstance = io(wsUrl, {
-      transports: ["websocket", "polling"],
+      path: isDev ? undefined : "/api/socketio",
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 10,
+      timeout: 20000,
     });
 
     socketInstance.on("connect", () => {
