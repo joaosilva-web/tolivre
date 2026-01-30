@@ -41,6 +41,7 @@ interface PageConfig {
   coverImage: string;
   primaryColor: string;
   accentColor: string;
+  whatsapp: string;
   instagram: string;
   facebook: string;
   address: string;
@@ -71,6 +72,7 @@ export default function CompanyPageSettings() {
     coverImage: "",
     primaryColor: "#6366f1",
     accentColor: "#3b82f6",
+    whatsapp: "",
     instagram: "",
     facebook: "",
     address: "",
@@ -352,6 +354,20 @@ export default function CompanyPageSettings() {
                       setConfig({ ...config, address: e.target.value })
                     }
                     placeholder="Rua, número, cidade"
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    WhatsApp (opcional)
+                  </label>
+                  <input
+                    type="tel"
+                    value={config.whatsapp}
+                    onChange={(e) =>
+                      setConfig({ ...config, whatsapp: e.target.value })
+                    }
+                    placeholder="(11) 99999-9999"
                     className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
