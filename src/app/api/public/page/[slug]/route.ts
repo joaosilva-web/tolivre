@@ -5,7 +5,7 @@ import * as api from "@/app/libs/apiResponse";
 // GET público - Obter página da empresa pelo slug
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
     const { slug } = await params;

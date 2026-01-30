@@ -15,6 +15,7 @@ const companyPageSchema = z.object({
       "Slug deve conter apenas letras minúsculas, números e hífens"
     ),
   title: z.string().min(1).max(100),
+  slogan: z.string().max(200).optional().or(z.literal("")),
   description: z.string().max(5000).optional(),
   logo: z.string().url().optional().or(z.literal("")),
   coverImage: z.string().url().optional().or(z.literal("")),

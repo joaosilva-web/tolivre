@@ -36,6 +36,7 @@ interface PageConfig {
   id?: string;
   slug: string;
   title: string;
+  slogan: string;
   description: string;
   logo: string;
   coverImage: string;
@@ -67,6 +68,7 @@ export default function CompanyPageSettings() {
   const [config, setConfig] = useState<PageConfig>({
     slug: "",
     title: "",
+    slogan: "",
     description: "",
     logo: "",
     coverImage: "",
@@ -302,6 +304,20 @@ export default function CompanyPageSettings() {
                       setConfig({ ...config, title: e.target.value })
                     }
                     placeholder="Nome da sua empresa"
+                    className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Slogan
+                  </label>
+                  <input
+                    type="text"
+                    value={config.slogan}
+                    onChange={(e) =>
+                      setConfig({ ...config, slogan: e.target.value })
+                    }
+                    placeholder="Sua frase de impacto"
                     className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>

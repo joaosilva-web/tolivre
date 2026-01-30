@@ -277,6 +277,7 @@ model CompanyPage {
   company          Company  @relation(fields: [companyId], references: [id])
   slug             String   @unique // URL amigável: /slug
   title            String // Nome da empresa na página
+  slogan           String? // Slogan/frase de impacto
   description      String?  @db.Text // Descrição/história
   logo             String? // URL do logo
   coverImage       String? // Imagem de capa

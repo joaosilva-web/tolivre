@@ -47,6 +47,7 @@ interface CompanyData {
   id: string;
   slug: string;
   title: string;
+  slogan: string | null;
   description: string | null;
   logo: string | null;
   coverImage: string | null;
@@ -198,9 +199,9 @@ export default function PublicCompanyPage() {
             />
           )}
           <h1 className="text-5xl md:text-7xl font-bold mb-6">{data.title}</h1>
-          {data.description && data.showAbout && (
-            <p className="text-xl text-white/90 max-w-2xl mb-10">
-              {data.description.split("\n")[0]}
+          {data.slogan && (
+            <p className="text-2xl text-white/90 max-w-2xl mb-10 font-light italic">
+              {data.slogan}
             </p>
           )}
           <button

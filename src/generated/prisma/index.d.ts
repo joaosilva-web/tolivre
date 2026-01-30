@@ -17225,6 +17225,7 @@ export namespace Prisma {
     companyId: string | null
     slug: string | null
     title: string | null
+    slogan: string | null
     description: string | null
     logo: string | null
     coverImage: string | null
@@ -17248,6 +17249,7 @@ export namespace Prisma {
     companyId: string | null
     slug: string | null
     title: string | null
+    slogan: string | null
     description: string | null
     logo: string | null
     coverImage: string | null
@@ -17271,6 +17273,7 @@ export namespace Prisma {
     companyId: number
     slug: number
     title: number
+    slogan: number
     description: number
     logo: number
     coverImage: number
@@ -17296,6 +17299,7 @@ export namespace Prisma {
     companyId?: true
     slug?: true
     title?: true
+    slogan?: true
     description?: true
     logo?: true
     coverImage?: true
@@ -17319,6 +17323,7 @@ export namespace Prisma {
     companyId?: true
     slug?: true
     title?: true
+    slogan?: true
     description?: true
     logo?: true
     coverImage?: true
@@ -17342,6 +17347,7 @@ export namespace Prisma {
     companyId?: true
     slug?: true
     title?: true
+    slogan?: true
     description?: true
     logo?: true
     coverImage?: true
@@ -17438,6 +17444,7 @@ export namespace Prisma {
     companyId: string
     slug: string
     title: string
+    slogan: string | null
     description: string | null
     logo: string | null
     coverImage: string | null
@@ -17478,6 +17485,7 @@ export namespace Prisma {
     companyId?: boolean
     slug?: boolean
     title?: boolean
+    slogan?: boolean
     description?: boolean
     logo?: boolean
     coverImage?: boolean
@@ -17504,6 +17512,7 @@ export namespace Prisma {
     companyId?: boolean
     slug?: boolean
     title?: boolean
+    slogan?: boolean
     description?: boolean
     logo?: boolean
     coverImage?: boolean
@@ -17528,6 +17537,7 @@ export namespace Prisma {
     companyId?: boolean
     slug?: boolean
     title?: boolean
+    slogan?: boolean
     description?: boolean
     logo?: boolean
     coverImage?: boolean
@@ -17552,6 +17562,7 @@ export namespace Prisma {
     companyId?: boolean
     slug?: boolean
     title?: boolean
+    slogan?: boolean
     description?: boolean
     logo?: boolean
     coverImage?: boolean
@@ -17570,7 +17581,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CompanyPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "slug" | "title" | "description" | "logo" | "coverImage" | "primaryColor" | "accentColor" | "whatsapp" | "instagram" | "facebook" | "address" | "showServices" | "showTestimonials" | "showAbout" | "metaTitle" | "metaDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["companyPage"]>
+  export type CompanyPageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "slug" | "title" | "slogan" | "description" | "logo" | "coverImage" | "primaryColor" | "accentColor" | "whatsapp" | "instagram" | "facebook" | "address" | "showServices" | "showTestimonials" | "showAbout" | "metaTitle" | "metaDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["companyPage"]>
   export type CompanyPageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     testimonials?: boolean | CompanyPage$testimonialsArgs<ExtArgs>
@@ -17594,6 +17605,7 @@ export namespace Prisma {
       companyId: string
       slug: string
       title: string
+      slogan: string | null
       description: string | null
       logo: string | null
       coverImage: string | null
@@ -18039,6 +18051,7 @@ export namespace Prisma {
     readonly companyId: FieldRef<"CompanyPage", 'String'>
     readonly slug: FieldRef<"CompanyPage", 'String'>
     readonly title: FieldRef<"CompanyPage", 'String'>
+    readonly slogan: FieldRef<"CompanyPage", 'String'>
     readonly description: FieldRef<"CompanyPage", 'String'>
     readonly logo: FieldRef<"CompanyPage", 'String'>
     readonly coverImage: FieldRef<"CompanyPage", 'String'>
@@ -27851,6 +27864,7 @@ export namespace Prisma {
     companyId: 'companyId',
     slug: 'slug',
     title: 'title',
+    slogan: 'slogan',
     description: 'description',
     logo: 'logo',
     coverImage: 'coverImage',
@@ -29268,6 +29282,7 @@ export namespace Prisma {
     companyId?: StringFilter<"CompanyPage"> | string
     slug?: StringFilter<"CompanyPage"> | string
     title?: StringFilter<"CompanyPage"> | string
+    slogan?: StringNullableFilter<"CompanyPage"> | string | null
     description?: StringNullableFilter<"CompanyPage"> | string | null
     logo?: StringNullableFilter<"CompanyPage"> | string | null
     coverImage?: StringNullableFilter<"CompanyPage"> | string | null
@@ -29293,6 +29308,7 @@ export namespace Prisma {
     companyId?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    slogan?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
@@ -29321,6 +29337,7 @@ export namespace Prisma {
     OR?: CompanyPageWhereInput[]
     NOT?: CompanyPageWhereInput | CompanyPageWhereInput[]
     title?: StringFilter<"CompanyPage"> | string
+    slogan?: StringNullableFilter<"CompanyPage"> | string | null
     description?: StringNullableFilter<"CompanyPage"> | string | null
     logo?: StringNullableFilter<"CompanyPage"> | string | null
     coverImage?: StringNullableFilter<"CompanyPage"> | string | null
@@ -29346,6 +29363,7 @@ export namespace Prisma {
     companyId?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    slogan?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
@@ -29375,6 +29393,7 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"CompanyPage"> | string
     slug?: StringWithAggregatesFilter<"CompanyPage"> | string
     title?: StringWithAggregatesFilter<"CompanyPage"> | string
+    slogan?: StringNullableWithAggregatesFilter<"CompanyPage"> | string | null
     description?: StringNullableWithAggregatesFilter<"CompanyPage"> | string | null
     logo?: StringNullableWithAggregatesFilter<"CompanyPage"> | string | null
     coverImage?: StringNullableWithAggregatesFilter<"CompanyPage"> | string | null
@@ -31174,6 +31193,7 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -31199,6 +31219,7 @@ export namespace Prisma {
     companyId: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -31222,6 +31243,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31247,6 +31269,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31271,6 +31294,7 @@ export namespace Prisma {
     companyId: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -31293,6 +31317,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31316,6 +31341,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33122,6 +33148,7 @@ export namespace Prisma {
     companyId?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    slogan?: SortOrder
     description?: SortOrder
     logo?: SortOrder
     coverImage?: SortOrder
@@ -33145,6 +33172,7 @@ export namespace Prisma {
     companyId?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    slogan?: SortOrder
     description?: SortOrder
     logo?: SortOrder
     coverImage?: SortOrder
@@ -33168,6 +33196,7 @@ export namespace Prisma {
     companyId?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    slogan?: SortOrder
     description?: SortOrder
     logo?: SortOrder
     coverImage?: SortOrder
@@ -35578,6 +35607,7 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -35601,6 +35631,7 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -35876,6 +35907,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35899,6 +35931,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38375,6 +38408,7 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -38399,6 +38433,7 @@ export namespace Prisma {
     companyId: string
     slug: string
     title: string
+    slogan?: string | null
     description?: string | null
     logo?: string | null
     coverImage?: string | null
@@ -38437,6 +38472,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38461,6 +38497,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null

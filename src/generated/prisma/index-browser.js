@@ -273,6 +273,7 @@ exports.Prisma.CompanyPageScalarFieldEnum = {
   companyId: 'companyId',
   slug: 'slug',
   title: 'title',
+  slogan: 'slogan',
   description: 'description',
   logo: 'logo',
   coverImage: 'coverImage',
