@@ -104,14 +104,73 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     socketInstance.on("appointmentCreated", (data) => {
       console.log("[WebSocket] Appointment created:", data);
+      
+      // Add to notifications list
+      const notification: NotificationPayload = {
+        id: `appointment-created-${data.id}`,
+        type: "appointment",
+        title: "Novo Agendamento",
+        message: `${data.clientName} agendou ${data.serviceName}`,
+        timestamp: new Date().toISOString(),
+      };
+      
+      setNotifications((prev) => [notification, ...prev]);
+
+      // Browser notification
+      if (typeof window !== "undefined" && "Notification" in window) {
+        if (window.Notification.permission === "granted") {
+          new window.Notification("Novo Agendamento", {
+            body: notification.message,
+            icon: "/favicon.ico",
+          });
+        }
+      }
     });
 
     socketInstance.on("appointmentUpdated", (data) => {
       console.log("[WebSocket] Appointment updated:", data);
+      
+      const notification: NotificationPayload = {
+        id: `appointment-updated-${data.id}`,
+        type: "appointment",
+        title: "Agendamento Atualizado",
+        message: `Agendamento de ${data.clientName} foi atualizado`,
+        timestamp: new Date().toISOString(),
+      };
+      
+      setNotifications((prev) => [notification, ...prev]);
+
+      if (typeof window !== "undefined" && "Notification" in window) {
+        if (window.Notification.permission === "granted") {
+          new window.Notification("Agendamento Atualizado", {
+            body: notification.message,
+            icon: "/favicon.ico",
+          });
+        }
+      }
     });
 
     socketInstance.on("appointmentCanceled", (data) => {
       console.log("[WebSocket] Appointment canceled:", data);
+      
+      const notification: NotificationPayload = {
+        id: `appointment-canceled-${data.id}`,
+        type: "appointment",
+        title: "Agendamento Cancelado",
+        message: `${data.clientName} cancelou o agendamento de ${data.serviceName}`,
+        timestamp: new Date().toISOString(),
+      };
+      
+      setNotifications((prev) => [notification, ...prev]);
+
+      if (typeof window !== "undefined" && "Notification" in window) {
+        if (window.Notification.permission === "granted") {
+          new window.Notification("Agendamento Cancelado", {
+            body: notification.message,
+            icon: "/favicon.ico",
+          });
+        }
+      }
     });
 
     socketInstance.on("newClient", (data) => {
