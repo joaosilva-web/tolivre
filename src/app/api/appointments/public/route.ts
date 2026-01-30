@@ -6,7 +6,10 @@ import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
-import { emitAppointmentCreated, ensureWebSocketInitialized } from "@/lib/websocket";
+import {
+  emitAppointmentCreated,
+  ensureWebSocketInitialized,
+} from "@/lib/websocket";
 
 // Force Node.js runtime to ensure WebSocket is available
 export const runtime = "nodejs";
@@ -26,7 +29,7 @@ export async function POST(req: NextRequest) {
   try {
     // Ensure WebSocket is initialized for notifications
     await ensureWebSocketInitialized();
-    
+
     const body = await req.json();
     const parsed = publicAppointmentSchema.parse(body);
 

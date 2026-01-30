@@ -45,31 +45,26 @@ let io: SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null =
   null;
 let httpServer: HTTPServer | null = null;
 
-// Lazy initialization for API routes that need WebSocket
+// Check if WebSocket is initialized (called from API routes)
 export async function ensureWebSocketInitialized() {
   if (io) {
+    console.log("[WebSocket] Already initialized, ready to emit");
     return io;
   }
 
-  console.log("[WebSocket] Lazy initialization triggered");
+  console.warn("[WebSocket] Not initialized yet - instrumentation.ts may not have run");
+  console.warn("[WebSocket] Waiting 100ms for initialization...");
   
-  // Only initialize in Node.js runtime
-  if (typeof window !== "undefined" || process.env.NEXT_RUNTIME === "edge") {
-    console.warn("[WebSocket] Cannot initialize in browser or edge runtime");
-    return null;
+  // Wait briefly for instrumentation to complete
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  if (io) {
+    console.log("[WebSocket] Initialization detected after wait");
+    return io;
   }
-
-  const { Server } = await import("http");
-  const newServer = new Server();
-  const initializedIO = initializeWebSocket(newServer);
   
-  const wsPort = parseInt(process.env.WS_PORT || "3001");
-  newServer.listen(wsPort, "0.0.0.0", () => {
-    console.log(`[WebSocket] Lazy init - Server listening on 0.0.0.0:${wsPort}`);
-  });
-
-  httpServer = newServer;
-  return initializedIO;
+  console.error("[WebSocket] Still not initialized - notifications will not work");
+  return null;
 }
 
 export function initializeWebSocket(server: HTTPServer) {
