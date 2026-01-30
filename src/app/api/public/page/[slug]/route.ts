@@ -78,6 +78,8 @@ export async function GET(
 
     return api.ok({
       ...companyPage,
+      // Converter null em string vazia para evitar erros de validação
+      whatsapp: companyPage.whatsapp || "",
       services,
       professionals,
     });

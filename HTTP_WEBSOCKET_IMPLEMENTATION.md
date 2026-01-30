@@ -37,6 +37,7 @@ Solução para comunicação entre workers do Next.js 16 usando HTTP.
 ## Componentes
 
 ### 1. **WebSocket Server** (`src/lib/websocket.ts`)
+
 ```typescript
 server.on("request", (req, res) => {
   if (req.method === "POST" && req.url === "/emit") {
@@ -49,6 +50,7 @@ server.on("request", (req, res) => {
 **Endpoint:** `POST http://localhost:3001/emit`
 
 **Payload:**
+
 ```json
 {
   "companyId": "cml...",
@@ -63,6 +65,7 @@ server.on("request", (req, res) => {
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -71,16 +74,18 @@ server.on("request", (req, res) => {
 ```
 
 ### 2. **HTTP Emitter** (`src/lib/websocketEmit.ts`)
+
 ```typescript
 // Funções helpers que fazem POST para o endpoint /emit
-export async function emitNotification(companyId, notification)
-export async function emitAppointmentCreated(companyId, appointment)
-export async function emitAppointmentUpdated(companyId, appointment)
-export async function emitAppointmentCanceled(companyId, appointment)
-export async function emitNewClient(companyId, client)
+export async function emitNotification(companyId, notification);
+export async function emitAppointmentCreated(companyId, appointment);
+export async function emitAppointmentUpdated(companyId, appointment);
+export async function emitAppointmentCanceled(companyId, appointment);
+export async function emitNewClient(companyId, client);
 ```
 
 **Uso nos API routes:**
+
 ```typescript
 import { emitNotification } from "@/lib/websocketEmit";
 
@@ -98,6 +103,7 @@ await emitNotification(companyId, {
 ```
 
 ### 3. **API Routes Atualizados**
+
 - ✅ `src/app/api/appointments/route.ts`
 - ✅ `src/app/api/appointments/public/route.ts`
 - ✅ `src/app/api/appointments/[id]/reschedule/route.ts`
@@ -126,9 +132,9 @@ Todos agora importam de `@/lib/websocketEmit` ao invés de `@/lib/websocket`.
 
 # Quando appointment é criado:
 [WebSocket Emit] Success: appointmentCreated to company:yyy { roomSockets: 2 }
-[WebSocket HTTP] Emitted appointmentCreated to company:yyy { 
-  connectedSockets: 3, 
-  roomSockets: 2 
+[WebSocket HTTP] Emitted appointmentCreated to company:yyy {
+  connectedSockets: 3,
+  roomSockets: 2
 }
 ```
 
@@ -153,30 +159,37 @@ Todos agora importam de `@/lib/websocketEmit` ao invés de `@/lib/websocket`.
 ## Troubleshooting
 
 ### Erro: `ECONNREFUSED localhost:3001`
+
 **Causa:** WebSocket server não inicializou ainda  
 **Solução:** Aguardar `instrumentation.ts` rodar (primeiros segundos do deploy)
 
 ### Notificações não aparecem
+
 **Causa:** Cliente não está na room correta  
 **Solução:** Verificar logs `[WebSocket] User xxx joined room company:yyy`
 
 ### roomSockets: 0
+
 **Causa:** Nenhum cliente conectado nessa company  
 **Solução:** Abrir dashboard no navegador para conectar cliente
 
 ## Migração Futura para Redis (opcional)
 
 Se precisar escalar horizontalmente:
+
 ```typescript
 // websocketEmit.ts
-import { publisher } from './redis';
+import { publisher } from "./redis";
 
 export async function emitNotification(companyId, data) {
-  await publisher.publish('notifications', JSON.stringify({
-    companyId,
-    event: 'notification',
-    data
-  }));
+  await publisher.publish(
+    "notifications",
+    JSON.stringify({
+      companyId,
+      event: "notification",
+      data,
+    }),
+  );
 }
 ```
 

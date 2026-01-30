@@ -104,7 +104,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     socketInstance.on("appointmentCreated", (data) => {
       console.log("[WebSocket] Appointment created:", data);
-      
+
       // Add to notifications list
       const notification: NotificationPayload = {
         id: `appointment-created-${data.id}`,
@@ -113,7 +113,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         message: `${data.clientName} agendou ${data.serviceName}`,
         timestamp: new Date().toISOString(),
       };
-      
+
       setNotifications((prev) => [notification, ...prev]);
 
       // Browser notification
@@ -129,7 +129,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     socketInstance.on("appointmentUpdated", (data) => {
       console.log("[WebSocket] Appointment updated:", data);
-      
+
       const notification: NotificationPayload = {
         id: `appointment-updated-${data.id}`,
         type: "appointment",
@@ -137,7 +137,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         message: `Agendamento de ${data.clientName} foi atualizado`,
         timestamp: new Date().toISOString(),
       };
-      
+
       setNotifications((prev) => [notification, ...prev]);
 
       if (typeof window !== "undefined" && "Notification" in window) {
@@ -152,7 +152,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     socketInstance.on("appointmentCanceled", (data) => {
       console.log("[WebSocket] Appointment canceled:", data);
-      
+
       const notification: NotificationPayload = {
         id: `appointment-canceled-${data.id}`,
         type: "appointment",
@@ -160,7 +160,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         message: `${data.clientName} cancelou o agendamento de ${data.serviceName}`,
         timestamp: new Date().toISOString(),
       };
-      
+
       setNotifications((prev) => [notification, ...prev]);
 
       if (typeof window !== "undefined" && "Notification" in window) {

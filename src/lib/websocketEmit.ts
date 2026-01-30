@@ -1,6 +1,6 @@
 /**
  * WebSocket HTTP Emitter
- * 
+ *
  * Since Next.js 16 uses isolated workers, API routes cannot directly access
  * the WebSocket server instance. This module provides HTTP-based communication
  * to emit events from any worker to the WebSocket server.

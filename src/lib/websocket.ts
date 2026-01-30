@@ -71,7 +71,7 @@ export function initializeWebSocket(server: HTTPServer) {
       req.on("end", () => {
         try {
           const { companyId, event, data } = JSON.parse(body);
-          
+
           if (!io) {
             console.error("[WebSocket HTTP] IO not initialized");
             res.writeHead(500, { "Content-Type": "application/json" });
@@ -81,7 +81,7 @@ export function initializeWebSocket(server: HTTPServer) {
 
           const roomName = `company:${companyId}`;
           io.to(roomName).emit(event as any, data);
-          
+
           const roomSize = io.sockets.adapter.rooms.get(roomName)?.size || 0;
           console.log(`[WebSocket HTTP] Emitted ${event} to ${roomName}`, {
             connectedSockets: io.sockets.sockets.size,
