@@ -140,7 +140,6 @@ export function emitToCompany(
     roomSockets: io.sockets.adapter.rooms.get(roomName)?.size || 0,
   });
 }
-}
 
 export function emitNotification(
   companyId: string,
