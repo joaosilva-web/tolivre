@@ -11,6 +11,7 @@ import {
   IconSearch,
   IconSettings,
   IconCreditCard,
+  IconLock,
 } from "@tabler/icons-react";
 
 // Removed NavDocuments import as it will no longer be used
@@ -109,7 +110,7 @@ const commonNavItems = [
   {
     title: "Segurança",
     url: "/dashboard/security",
-    icon: IconSettings,
+    icon: IconLock,
     items: [
       {
         title: "Visão Geral",
@@ -122,17 +123,6 @@ const commonNavItems = [
     ],
   },
   {
-    title: "Configurações",
-    url: "/dashboard/settings/exceptions",
-    icon: IconSettings,
-    items: [
-      {
-        title: "Exceções de Horário",
-        url: "/dashboard/settings/exceptions",
-      },
-    ],
-  },
-  {
     title: "Assinatura",
     url: "/dashboard/assinatura",
     icon: IconCreditCard,
@@ -141,19 +131,9 @@ const commonNavItems = [
 
 const navSecondary = [
   {
-    title: "Configurações",
-    url: "#",
-    icon: IconSettings,
-  },
-  {
     title: "Ajuda",
     url: "#",
     icon: IconHelp,
-  },
-  {
-    title: "Buscar",
-    url: "#",
-    icon: IconSearch,
   },
 ];
 
