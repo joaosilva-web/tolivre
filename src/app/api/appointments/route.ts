@@ -12,9 +12,8 @@ import {
   emitAppointmentCreated,
   emitAppointmentUpdated,
   emitAppointmentCanceled,
-} from "@/lib/websocket";
+} from "@/lib/websocketEmit";
 
-// Force Node.js runtime (WebSocket availability depends on instrumentation)
 export const runtime = "nodejs";
 
 // local helper error type for errors with codes (e.g. OVERLAP)

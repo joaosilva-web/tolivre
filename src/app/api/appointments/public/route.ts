@@ -6,9 +6,11 @@ import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
-import { emitAppointmentCreated } from "@/lib/websocket";
+import {
+  emitAppointmentCreated,
+  emitNotification,
+} from "@/lib/websocketEmit";
 
-// Force Node.js runtime (WebSocket availability depends on instrumentation)
 export const runtime = "nodejs";
 
 const publicAppointmentSchema = z.object({

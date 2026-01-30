@@ -23,12 +23,14 @@ Next.js 16 com Turbopack usa **processos isolados (workers)** para API routes. I
 ## Arquitetura Atual
 
 ### Servidor WebSocket (porta 3001)
+
 - Inicializado via `instrumentation.ts` no worker principal
 - Gerencia conexões de clientes
 - Clientes se conectam via `/ws/socket.io`
 - Autentica usuários e adiciona em rooms por `companyId`
 
 ### Emissão de Notificações (workers de API)
+
 - API routes tentam emitir eventos via `emitToCompany()`
 - **Problema**: `io` é `null` nos workers de API
 - **Resultado**: Notificações não funcionam
@@ -36,38 +38,47 @@ Next.js 16 com Turbopack usa **processos isolados (workers)** para API routes. I
 ## Soluções Possíveis
 
 ### 1. ✅ Solução Atual (Implementada)
+
 Aceitar que notificações podem não funcionar em todos os ambientes:
+
 - `getIO()` retorna `null` em workers sem WebSocket
 - Funções de emit checam se `io` existe antes de emitir
 - Aplicação continua funcionando normalmente
 - **Limitação**: Notificações em tempo real podem não funcionar em produção
 
 ### 2. Redis Pub/Sub (Recomendado para Produção)
+
 ```typescript
 // Publicar notificação via Redis
-redis.publish('notifications', JSON.stringify({
-  companyId,
-  event: 'appointmentCreated',
-  data
-}));
+redis.publish(
+  "notifications",
+  JSON.stringify({
+    companyId,
+    event: "appointmentCreated",
+    data,
+  }),
+);
 
 // WebSocket server subscreve ao canal
-redis.subscribe('notifications', (message) => {
+redis.subscribe("notifications", (message) => {
   const { companyId, event, data } = JSON.parse(message);
   io.to(`company:${companyId}`).emit(event, data);
 });
 ```
 
 **Vantagens:**
+
 - Funciona com múltiplos workers
 - Escalável horizontalmente
 - Workers podem se comunicar
 
 **Desvantagens:**
+
 - Requer Redis
 - Mais complexo
 
 ### 3. Database Polling
+
 ```typescript
 // API route insere notificação no banco
 await prisma.notification.create({ ... });
@@ -84,23 +95,26 @@ setInterval(async () => {
 ```
 
 **Vantagens:**
+
 - Não requer infraestrutura adicional
 - Notificações persistem no banco
 
 **Desvantagens:**
+
 - Latência maior (até 5s)
 - Mais carga no banco
 
 ### 4. HTTP Request ao WebSocket Server
+
 ```typescript
 // API route faz POST para localhost:3001/emit
-await fetch('http://localhost:3001/emit', {
-  method: 'POST',
-  body: JSON.stringify({ companyId, event, data })
+await fetch("http://localhost:3001/emit", {
+  method: "POST",
+  body: JSON.stringify({ companyId, event, data }),
 });
 
 // WebSocket server expõe endpoint /emit
-app.post('/emit', (req, res) => {
+app.post("/emit", (req, res) => {
   const { companyId, event, data } = req.body;
   io.to(`company:${companyId}`).emit(event, data);
   res.sendStatus(200);
@@ -108,10 +122,12 @@ app.post('/emit', (req, res) => {
 ```
 
 **Vantagens:**
+
 - Simples
 - Sem dependências externas
 
 **Desvantagens:**
+
 - Mais uma porta/endpoint
 - Latência de rede local
 
@@ -130,7 +146,7 @@ npm install ioredis
 
 ```typescript
 // src/lib/redis.ts
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
 export const publisher = new Redis(process.env.REDIS_URL);
 export const subscriber = new Redis(process.env.REDIS_URL);
@@ -138,15 +154,15 @@ export const subscriber = new Redis(process.env.REDIS_URL);
 
 ```typescript
 // src/lib/websocket.ts
-import { subscriber } from './redis';
+import { subscriber } from "./redis";
 
 export function initializeWebSocket(server: HTTPServer) {
   // ... código existente ...
-  
+
   // Subscrever ao canal de notificações
-  subscriber.subscribe('notifications');
-  subscriber.on('message', (channel, message) => {
-    if (channel === 'notifications') {
+  subscriber.subscribe("notifications");
+  subscriber.on("message", (channel, message) => {
+    if (channel === "notifications") {
       const { companyId, event, data } = JSON.parse(message);
       io.to(`company:${companyId}`).emit(event, data);
     }
@@ -156,18 +172,21 @@ export function initializeWebSocket(server: HTTPServer) {
 
 ```typescript
 // src/lib/notificationPublisher.ts
-import { publisher } from './redis';
+import { publisher } from "./redis";
 
 export async function publishNotification(
   companyId: string,
   event: string,
-  data: any
+  data: any,
 ) {
-  await publisher.publish('notifications', JSON.stringify({
-    companyId,
-    event,
-    data
-  }));
+  await publisher.publish(
+    "notifications",
+    JSON.stringify({
+      companyId,
+      event,
+      data,
+    }),
+  );
 }
 ```
 

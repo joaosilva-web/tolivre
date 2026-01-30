@@ -48,7 +48,10 @@ let httpServer: HTTPServer | null = null;
 // Get current WebSocket instance (may be null in API route workers)
 // Next.js 16 uses isolated workers - instrumentation runs in main worker
 // API routes run in separate workers and won't have access to the io instance
-export function getIO(): SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null {
+export function getIO(): SocketIOServer<
+  ClientToServerEvents,
+  ServerToClientEvents
+> | null {
   return io;
 }
 
@@ -57,6 +60,45 @@ export function initializeWebSocket(server: HTTPServer) {
     console.log("[WebSocket] Already initialized");
     return io;
   }
+
+  // Add HTTP endpoint for cross-worker communication
+  server.on("request", (req, res) => {
+    if (req.method === "POST" && req.url === "/emit") {
+      let body = "";
+      req.on("data", (chunk) => {
+        body += chunk.toString();
+      });
+      req.on("end", () => {
+        try {
+          const { companyId, event, data } = JSON.parse(body);
+          
+          if (!io) {
+            console.error("[WebSocket HTTP] IO not initialized");
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "WebSocket not initialized" }));
+            return;
+          }
+
+          const roomName = `company:${companyId}`;
+          io.to(roomName).emit(event as any, data);
+          
+          const roomSize = io.sockets.adapter.rooms.get(roomName)?.size || 0;
+          console.log(`[WebSocket HTTP] Emitted ${event} to ${roomName}`, {
+            connectedSockets: io.sockets.sockets.size,
+            roomSockets: roomSize,
+          });
+
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: true, roomSockets: roomSize }));
+        } catch (error) {
+          console.error("[WebSocket HTTP] Error:", error);
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Invalid request" }));
+        }
+      });
+      return;
+    }
+  });
 
   io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents>(server, {
     path: "/ws/socket.io",

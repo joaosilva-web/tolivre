@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { emitNotification } from "@/lib/websocket";
+import { emitNotification } from "@/lib/websocketEmit";
 
 const RescheduleSchema = z.object({
   startTime: z.string(), // ISO date string

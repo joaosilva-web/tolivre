@@ -3,7 +3,7 @@ import { z, ZodError } from "zod";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 import { getUserFromCookie } from "@/app/libs/auth";
-import { emitNewClient } from "@/lib/websocket";
+import { emitNewClient } from "@/lib/websocketEmit";
 
 const clientSchema = z.object({
   companyId: z.string(),
