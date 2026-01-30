@@ -12,7 +12,11 @@ import {
   emitAppointmentCreated,
   emitAppointmentUpdated,
   emitAppointmentCanceled,
+  ensureWebSocketInitialized,
 } from "@/lib/websocket";
+
+// Force Node.js runtime to ensure WebSocket is available
+export const runtime = "nodejs";
 
 // local helper error type for errors with codes (e.g. OVERLAP)
 type ErrorWithCode = Error & { code?: string };
@@ -60,6 +64,9 @@ function hashToTwoInts(key: string): [number, number] {
 // POST - criar appointment
 export async function POST(req: NextRequest) {
   try {
+    // Ensure WebSocket is initialized for notifications
+    await ensureWebSocketInitialized();
+    
     const ip =
       req.headers.get("x-forwarded-for") ||
       req.headers.get("x-real-ip") ||
