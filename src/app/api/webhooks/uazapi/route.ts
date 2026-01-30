@@ -4,7 +4,7 @@ import * as api from "@/app/libs/apiResponse";
 import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { emitNotification } from "@/lib/websocket";
+import { emitNotification, getIO, ensureWebSocketInitialized } from "@/lib/websocket";
 
 // Force Node.js runtime to ensure WebSocket is available
 export const runtime = "nodejs";
@@ -12,6 +12,13 @@ export const runtime = "nodejs";
 // POST - Webhook para receber eventos do UAZAPI
 export async function POST(req: NextRequest) {
   try {
+    // Ensure WebSocket is initialized (lazy init if needed)
+    await ensureWebSocketInitialized();
+    
+    // Debug: Check if WebSocket is initialized
+    const io = getIO();
+    console.log("[uazapi webhook] WebSocket IO status:", io ? "initialized" : "NOT initialized");
+    
     const body = await req.json();
     console.log("[uazapi webhook] Received:", JSON.stringify(body, null, 2));
 

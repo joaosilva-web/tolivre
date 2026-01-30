@@ -43,6 +43,34 @@ export interface ClientNotification {
 
 let io: SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null =
   null;
+let httpServer: HTTPServer | null = null;
+
+// Lazy initialization for API routes that need WebSocket
+export async function ensureWebSocketInitialized() {
+  if (io) {
+    return io;
+  }
+
+  console.log("[WebSocket] Lazy initialization triggered");
+  
+  // Only initialize in Node.js runtime
+  if (typeof window !== "undefined" || process.env.NEXT_RUNTIME === "edge") {
+    console.warn("[WebSocket] Cannot initialize in browser or edge runtime");
+    return null;
+  }
+
+  const { Server } = await import("http");
+  const newServer = new Server();
+  const initializedIO = initializeWebSocket(newServer);
+  
+  const wsPort = parseInt(process.env.WS_PORT || "3001");
+  newServer.listen(wsPort, "0.0.0.0", () => {
+    console.log(`[WebSocket] Lazy init - Server listening on 0.0.0.0:${wsPort}`);
+  });
+
+  httpServer = newServer;
+  return initializedIO;
+}
 
 export function initializeWebSocket(server: HTTPServer) {
   if (io) {
