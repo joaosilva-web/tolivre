@@ -6,12 +6,9 @@ import sendWhatsAppMessage from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
-import {
-  emitAppointmentCreated,
-  ensureWebSocketInitialized,
-} from "@/lib/websocket";
+import { emitAppointmentCreated } from "@/lib/websocket";
 
-// Force Node.js runtime to ensure WebSocket is available
+// Force Node.js runtime (WebSocket availability depends on instrumentation)
 export const runtime = "nodejs";
 
 const publicAppointmentSchema = z.object({
@@ -27,9 +24,6 @@ const publicAppointmentSchema = z.object({
 // POST - Criar agendamento público (sem autenticação)
 export async function POST(req: NextRequest) {
   try {
-    // Ensure WebSocket is initialized for notifications
-    await ensureWebSocketInitialized();
-
     const body = await req.json();
     const parsed = publicAppointmentSchema.parse(body);
 
