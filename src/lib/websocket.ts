@@ -9,6 +9,8 @@ export interface ServerToClientEvents {
   appointmentUpdated: (data: AppointmentNotification) => void;
   appointmentCanceled: (data: AppointmentNotification) => void;
   newClient: (data: ClientNotification) => void;
+  supportMessage: (data: SupportMessageNotification) => void;
+  supportConversationUpdated: (data: SupportConversationUpdate) => void;
 }
 
 export interface ClientToServerEvents {
@@ -41,9 +43,29 @@ export interface ClientNotification {
   phone?: string;
 }
 
+export interface SupportMessageNotification {
+  conversationId: string;
+  message: {
+    id: string;
+    content: string;
+    senderId: string;
+    senderName: string;
+    isStaff: boolean;
+    createdAt: string;
+  };
+}
+
+export interface SupportConversationUpdate {
+  conversationId: string;
+  status?: "OPEN" | "IN_PROGRESS" | "CLOSED";
+  assignedToId?: string;
+  assignedToName?: string;
+  closedAt?: string;
+}
+
 let io: SocketIOServer<ClientToServerEvents, ServerToClientEvents> | null =
   null;
-let httpServer: HTTPServer | null = null;
+const httpServer: HTTPServer | null = null;
 
 // Get current WebSocket instance (may be null in API route workers)
 // Next.js 16 uses isolated workers - instrumentation runs in main worker

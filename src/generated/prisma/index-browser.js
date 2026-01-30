@@ -403,6 +403,28 @@ exports.Prisma.UserSecuritySettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SupportConversationScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  userId: 'userId',
+  subject: 'subject',
+  status: 'status',
+  assignedToId: 'assignedToId',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SupportMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  content: 'content',
+  isStaff: 'isStaff',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -493,6 +515,12 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   CHARGED_BACK: 'CHARGED_BACK'
 };
 
+exports.SupportStatus = exports.$Enums.SupportStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   Lead: 'Lead',
   RateLimit: 'RateLimit',
@@ -514,7 +542,9 @@ exports.Prisma.ModelName = {
   LoginAttempt: 'LoginAttempt',
   UserSession: 'UserSession',
   AuditLog: 'AuditLog',
-  UserSecuritySettings: 'UserSecuritySettings'
+  UserSecuritySettings: 'UserSecuritySettings',
+  SupportConversation: 'SupportConversation',
+  SupportMessage: 'SupportMessage'
 };
 
 /**

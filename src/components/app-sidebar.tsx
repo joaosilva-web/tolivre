@@ -12,6 +12,7 @@ import {
   IconSettings,
   IconCreditCard,
   IconLock,
+  IconMessageCircle,
 } from "@tabler/icons-react";
 
 // Removed NavDocuments import as it will no longer be used
@@ -99,6 +100,11 @@ const baseNavMain = [
 
 // Menu exclusivo da equipe interna TôLivre
 const internalNavItems = [
+  {
+    title: "Suporte",
+    url: "/dashboard/support",
+    icon: IconMessageCircle,
+  },
   {
     title: "Gestão TôLivre",
     url: "/dashboard/management",

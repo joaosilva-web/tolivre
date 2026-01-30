@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { NotificationBell } from "@/components/notification-bell";
 import { TrialTimer } from "@/components/trial-timer";
+import { SupportButton } from "@/components/support/SupportButton";
 
 export function SiteHeader() {
   return (
@@ -24,6 +25,7 @@ export function SiteHeader() {
         <TrialTimer />
         <div className="ml-auto flex items-center gap-2">
           <NotificationBell />
+          <SupportButton />
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <a
               href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"

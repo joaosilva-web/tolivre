@@ -10,6 +10,8 @@ import type {
   NotificationPayload,
   AppointmentNotification,
   ClientNotification,
+  SupportMessageNotification,
+  SupportConversationUpdate,
 } from "./websocket";
 
 const WS_PORT = process.env.WS_PORT || "3001";
@@ -88,4 +90,19 @@ export async function emitNewClient(
   client: ClientNotification,
 ): Promise<boolean> {
   return emitViaHTTP(companyId, "newClient", client);
+}
+
+// Support chat helpers
+export async function emitSupportMessage(
+  companyId: string,
+  message: SupportMessageNotification,
+): Promise<boolean> {
+  return emitViaHTTP(companyId, "supportMessage", message);
+}
+
+export async function emitSupportConversationUpdated(
+  companyId: string,
+  update: SupportConversationUpdate,
+): Promise<boolean> {
+  return emitViaHTTP(companyId, "supportConversationUpdated", update);
 }

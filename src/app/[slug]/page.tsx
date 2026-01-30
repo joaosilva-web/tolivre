@@ -152,7 +152,7 @@ export default function PublicCompanyPage() {
   const formatPhone = (phone: string) => {
     // Remove tudo que não é número
     const numbers = phone.replace(/\D/g, "");
-    
+
     // Formata para (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
     if (numbers.length === 11) {
       return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;

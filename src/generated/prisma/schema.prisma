@@ -61,14 +61,15 @@ model Company {
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
 
-  users        User[]
-  appointments Appointment[]
-  clients      Client[]
-  workingHours WorkingHours[]
-  services     Service[]
-  companyPage  CompanyPage?
-  subscription Subscription?
-  tags         Tag[]
+  users                User[]
+  appointments         Appointment[]
+  clients              Client[]
+  workingHours         WorkingHours[]
+  services             Service[]
+  companyPage          CompanyPage?
+  subscription         Subscription?
+  tags                 Tag[]
+  supportConversations SupportConversation[]
 }
 
 enum ContractType {
@@ -159,12 +160,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  appointments     Appointment[]         @relation("UserAppointments")
-  services         ProfessionalService[]
-  loginHistory     LoginHistory[]
-  sessions         UserSession[]
-  auditLogs        AuditLog[]
-  securitySettings UserSecuritySettings?
+  appointments                 Appointment[]         @relation("UserAppointments")
+  services                     ProfessionalService[]
+  loginHistory                 LoginHistory[]
+  sessions                     UserSession[]
+  auditLogs                    AuditLog[]
+  securitySettings             UserSecuritySettings?
+  supportConversations         SupportConversation[]
+  assignedSupportConversations SupportConversation[] @relation("AssignedSupport")
+  supportMessages              SupportMessage[]
 }
 
 enum Role {
@@ -467,4 +471,49 @@ model UserSecuritySettings {
   updatedAt               DateTime @updatedAt
 
   @@index([userId])
+}
+
+// Sistema de Suporte - Conversas
+model SupportConversation {
+  id           String           @id @default(cuid())
+  companyId    String
+  company      Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject      String // Assunto da conversa
+  status       SupportStatus    @default(OPEN)
+  assignedToId String? // Staff que atendeu
+  assignedTo   User?            @relation("AssignedSupport", fields: [assignedToId], references: [id], onDelete: SetNull)
+  closedAt     DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  messages     SupportMessage[]
+
+  @@index([companyId, status])
+  @@index([userId])
+  @@index([assignedToId])
+  @@index([status, updatedAt])
+}
+
+// Sistema de Suporte - Mensagens
+model SupportMessage {
+  id             String              @id @default(cuid())
+  conversationId String
+  conversation   SupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User                @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String              @db.Text
+  isStaff        Boolean             @default(false) // true se enviado por @tolivre.app
+  readAt         DateTime? // Timestamp de leitura
+  createdAt      DateTime            @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+// Enum para status das conversas de suporte
+enum SupportStatus {
+  OPEN // Aberta, aguardando atendimento
+  IN_PROGRESS // Em atendimento
+  CLOSED // Fechada/Resolvida
 }

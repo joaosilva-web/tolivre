@@ -13,7 +13,7 @@ import useSession from "@/hooks/useSession";
 
 interface NotificationPayload {
   id: string;
-  type: "appointment" | "client" | "payment" | "system";
+  type: "appointment" | "client" | "payment" | "system" | "support";
   title: string;
   message: string;
   timestamp: string;
@@ -175,6 +175,45 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
     socketInstance.on("newClient", (data) => {
       console.log("[WebSocket] New client:", data);
+    });
+
+    // Support chat listeners
+    socketInstance.on("supportMessage", (data: any) => {
+      console.log("[WebSocket] Support message received:", data);
+
+      // Criar notificação se for mensagem do staff para usuário ou vice-versa
+      const isStaffUser = user?.email?.endsWith("@tolivre.app");
+      const shouldNotify = isStaffUser
+        ? !data.message.isStaff
+        : data.message.isStaff;
+
+      if (shouldNotify) {
+        const notification: NotificationPayload = {
+          id: `support-message-${data.message.id}`,
+          type: "support",
+          title: isStaffUser
+            ? "Nova mensagem de suporte"
+            : "Resposta do suporte",
+          message: data.message.content.substring(0, 100),
+          timestamp: new Date().toISOString(),
+          data: { conversationId: data.conversationId },
+        };
+
+        setNotifications((prev) => [notification, ...prev]);
+
+        if (typeof window !== "undefined" && "Notification" in window) {
+          if (window.Notification.permission === "granted") {
+            new window.Notification(notification.title, {
+              body: notification.message,
+              icon: "/favicon.ico",
+            });
+          }
+        }
+      }
+    });
+
+    socketInstance.on("supportConversationUpdated", (data: any) => {
+      console.log("[WebSocket] Support conversation updated:", data);
     });
 
     setSocket(socketInstance);
