@@ -149,6 +149,28 @@ export default function PublicCompanyPage() {
     return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
   };
 
+  const formatPhone = (phone: string) => {
+    // Remove tudo que não é número
+    const numbers = phone.replace(/\D/g, "");
+    
+    // Formata para (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
+    if (numbers.length === 11) {
+      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+    } else if (numbers.length === 10) {
+      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
+    }
+    return phone;
+  };
+
+  const getWhatsAppLink = (phone: string) => {
+    const numbers = phone.replace(/\D/g, "");
+    return `https://wa.me/55${numbers}`;
+  };
+
+  const getGoogleMapsLink = (address: string) => {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  };
+
   const handleBooking = () => {
     router.push(`/${slug}/agendar`);
   };
@@ -223,22 +245,32 @@ export default function PublicCompanyPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             {data.address && (
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <a
+                href={getGoogleMapsLink(data.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <MapPin
                   className="w-4 h-4"
                   style={{ color: data.primaryColor }}
                 />
                 <span>{data.address}</span>
-              </div>
+              </a>
             )}
             {data.company.telefone && (
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <a
+                href={getWhatsAppLink(data.company.telefone)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <Phone
                   className="w-4 h-4"
                   style={{ color: data.primaryColor }}
                 />
-                <span>{data.company.telefone}</span>
-              </div>
+                <span>{formatPhone(data.company.telefone)}</span>
+              </a>
             )}
             {data.company.email && (
               <div className="flex items-center gap-2 text-muted-foreground">

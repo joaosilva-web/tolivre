@@ -12,7 +12,7 @@ const companyPageSchema = z.object({
     .max(50)
     .regex(
       /^[a-z0-9-]+$/,
-      "Slug deve conter apenas letras minúsculas, números e hífens"
+      "Slug deve conter apenas letras minúsculas, números e hífens",
     ),
   title: z.string().min(1).max(100),
   slogan: z.string().max(200).optional().or(z.literal("")),
@@ -151,7 +151,7 @@ export async function PUT(req: NextRequest) {
 
     if (!existing) {
       return api.notFound(
-        "Página não encontrada. Use POST para criar uma nova"
+        "Página não encontrada. Use POST para criar uma nova",
       );
     }
 
