@@ -23,9 +23,11 @@ if (/^https?:\/\//i.test(raw)) {
 }
 const url = `${base}/api/cron/appointment-reminders`;
 const token = process.env.REMINDER_CRON_TOKEN;
+const debug = process.env.APPOINTMENT_REMINDER_DEBUG === '1' || process.env.DEBUG === '1';
+const finalUrl = debug ? `${url}${url.includes('?') ? '&' : '?'}debug=1` : url;
 (async ()=>{
   try {
-    const res = await fetch(url, {
+    const res = await fetch(finalUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({})

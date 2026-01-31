@@ -82,6 +82,25 @@ async function handle(req: NextRequest) {
     take: batchSize,
   });
 
+  // If debug mode is requested (query param ?debug=1), return the matching appointments
+  try {
+    const urlObj = new URL(req.url);
+    const debugMode = urlObj.searchParams.get("debug") === "1";
+    if (debugMode) {
+      const debugList = appointments.map((a) => ({
+        id: a.id,
+        startTime: a.startTime,
+        status: a.status,
+        reminderSentAt: a.reminderSentAt,
+        companyId: a.companyId,
+        clientPhone: a.client?.phone || null,
+      }));
+      return api.ok({ windowStart, windowEnd, total: appointments.length, appointments: debugList });
+    }
+  } catch (e) {
+    // ignore debug failures
+  }
+
   let sent = 0;
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
