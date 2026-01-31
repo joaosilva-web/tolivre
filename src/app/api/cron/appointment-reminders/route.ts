@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
 
 async function handle(req: NextRequest) {
   if (!isAuthorized(req)) {
+    console.log('[cron-reminder] unauthorized request');
     return api.unauthorized("Token inválido para cron de lembretes");
   }
 
@@ -49,20 +50,20 @@ async function handle(req: NextRequest) {
   const windowStart = new Date(now.getTime() + hoursBefore * 60 * 60 * 1000);
   const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
 
+  console.log('[cron-reminder] params', { hoursBefore, windowMinutes, batchSize });
+  console.log('[cron-reminder] now/windowStart/windowEnd', {
+    now: now.toISOString(),
+    windowStart: windowStart.toISOString(),
+    windowEnd: windowEnd.toISOString(),
+  });
+  // Use Prisma to fetch candidate appointments within the UTC window.
+  // Timezone normalization (if needed) will be handled in JS after fetching.
   const appointments = await prisma.appointment.findMany({
     where: {
-      startTime: {
-        gte: windowStart,
-        lt: windowEnd,
-      },
+      startTime: { gte: windowStart, lt: windowEnd },
       status: { in: ["PENDING", "CONFIRMED"] },
       reminderSentAt: { equals: null },
-      client: {
-        phone: { not: null },
-      },
-      // Note: we intentionally do not filter by company.subscription.status here because
-      // Prisma's enum typing can reject lowercase literals at build-time. Instead we fetch
-      // candidate appointments and filter by subscription status in JS below (case-insensitive).
+      client: { phone: { not: null } },
     },
     include: {
       client: true,
@@ -79,6 +80,11 @@ async function handle(req: NextRequest) {
     take: batchSize,
   });
 
+  console.log('[cron-reminder] fetched appointments', appointments.length);
+  if (appointments.length > 0) {
+    console.log('[cron-reminder] sample fetched ids', appointments.slice(0, 10).map(a => ({ id: a.id, startTime: a.startTime?.toISOString() })));
+  }
+
   // Filter appointments by subscription status (case-insensitive) in JS to avoid
   // TypeScript/Prisma enum literal mismatches during build.
   const allowedStatuses = new Set(["ACTIVE", "TRIALING"]);
@@ -88,6 +94,11 @@ async function handle(req: NextRequest) {
     const st = String(s).toUpperCase();
     return allowedStatuses.has(st);
   });
+
+  console.log('[cron-reminder] after subscription filter', filteredAppointments.length, 'appointments');
+  if (filteredAppointments.length > 0) {
+    console.log('[cron-reminder] sample filtered ids', filteredAppointments.slice(0, 10).map(a => ({ id: a.id, startTime: a.startTime?.toISOString(), subscription: a.company?.subscription?.status })));
+  }
 
   // If debug mode is requested (query param ?debug=1), return the matching appointments
   try {
@@ -102,6 +113,7 @@ async function handle(req: NextRequest) {
         companyId: a.companyId,
         clientPhone: a.client?.phone || null,
       }));
+      console.log('[cron-reminder] debug response prepared', debugList.length);
       return api.ok({
         now: now.toISOString(),
         windowStart: windowStart.toISOString(),
@@ -119,6 +131,7 @@ async function handle(req: NextRequest) {
   const failed: Array<{ id: string; error: string }> = [];
 
   for (const appt of filteredAppointments) {
+    console.log('[cron-reminder] processing appointment', { id: appt.id, startTime: appt.startTime?.toISOString(), companyId: appt.companyId });
     const planFromSub = appt.company.subscription?.plan as PlanName | undefined;
     const planName: PlanName | undefined =
       planFromSub || (appt.company.contrato as PlanName | undefined);
@@ -167,6 +180,7 @@ async function handle(req: NextRequest) {
       } else {
         failed.push({
           id: appt.id,
+            console.log('[cron-reminder] sending whatsapp', { id: appt.id, to: appt.client?.phone });
           error: res.error || `HTTP ${res.status ?? "unknown"}`,
         });
       }
@@ -177,21 +191,27 @@ async function handle(req: NextRequest) {
 
   return api.ok({
     now: now.toISOString(),
-    windowStart: windowStart.toISOString(),
+              sent += 1;
+              console.log('[cron-reminder] sent', { id: appt.id });
     windowEnd: windowEnd.toISOString(),
-    total: filteredAppointments.length,
-    sent,
-    skipped,
+              const errMsg = res.error || `HTTP ${res.status ?? "unknown"}`;
+              failed.push({ id: appt.id, error: errMsg });
+              console.log('[cron-reminder] send-failed', { id: appt.id, error: errMsg });
     failed,
   });
-}
-
-function normalizePhone(phone?: string) {
+            const errStr = String(err);
+            failed.push({ id: appt.id, error: errStr });
+            console.log('[cron-reminder] send-exception', { id: appt.id, error: errStr });
   if (!phone) return null;
   let d = String(phone).replace(/\D/g, "");
-  if (!d) return null;
-  if (!d.startsWith("55") && d.length <= 11) {
-    d = `55${d}`;
-  }
-  return d;
-}
+        console.log('[cron-reminder] summary', { total: filteredAppointments.length, sent, skipped: skipped.length, failed: failed.length });
+
+        return api.ok({
+          now: now.toISOString(),
+          windowStart: windowStart.toISOString(),
+          windowEnd: windowEnd.toISOString(),
+          total: filteredAppointments.length,
+          sent,
+          skipped,
+          failed,
+        });
