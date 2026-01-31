@@ -12,12 +12,6 @@ function isToLivreStaff(email?: string): boolean {
 export async function GET(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
-    console.log(
-      "[trial-status API] User:",
-      user?.id,
-      "CompanyId:",
-      user?.companyId,
-    );
 
     if (!user) {
       return api.unauthorized();
@@ -45,21 +39,12 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    console.log("[trial-status API] Company data:", {
-      trialEndsAt: company?.trialEndsAt,
-      subscriptionStatus: company?.subscriptionStatus,
-    });
-
     if (!company) {
       return api.notFound("Empresa não encontrada");
     }
 
     const now = new Date();
     const isInTrial = company.trialEndsAt ? company.trialEndsAt > now : false;
-
-    console.log("[trial-status API] Is in trial:", isInTrial);
-    console.log("[trial-status API] Now:", now);
-    console.log("[trial-status API] Trial ends at:", company.trialEndsAt);
 
     return api.ok({
       isInTrial,
