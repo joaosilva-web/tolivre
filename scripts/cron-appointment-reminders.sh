@@ -10,11 +10,12 @@ if [ -z "$REMINDER_CRON_TOKEN" ]; then
   exit 1
 fi
 
-(function(){
 /*
  Accept NEXT_PUBLIC_APP_URL either as 'tolivre.app' or 'https://tolivre.app'.
  Normalize to a base URL without trailing slash, then append the route.
 */
+node - <<'NODEJS'
+
 const raw = process.env.NEXT_PUBLIC_APP_URL || '';
 let base;
 if (/^https?:\/\//i.test(raw)) {
