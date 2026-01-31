@@ -111,7 +111,7 @@ async function handle(req: NextRequest) {
         status: a.status,
         reminderSentAt: a.reminderSentAt,
         companyId: a.companyId,
-        clientPhone: a.client?.phone || null,
+        clientPhone: a.client?.phone ? a.client.phone.replace(/[\x00-\x1F\x7F]/g, '') : null,
       }));
       console.log('[cron-reminder] debug response prepared', debugList.length);
       return api.ok({
