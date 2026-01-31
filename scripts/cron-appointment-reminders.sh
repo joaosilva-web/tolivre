@@ -10,8 +10,19 @@ if [ -z "$REMINDER_CRON_TOKEN" ]; then
   exit 1
 fi
 
-node - <<'NODEJS'
-const url = `https://${process.env.NEXT_PUBLIC_APP_URL}/api/cron/appointment-reminders`;
+(function(){
+/*
+ Accept NEXT_PUBLIC_APP_URL either as 'tolivre.app' or 'https://tolivre.app'.
+ Normalize to a base URL without trailing slash, then append the route.
+*/
+const raw = process.env.NEXT_PUBLIC_APP_URL || '';
+let base;
+if (/^https?:\/\//i.test(raw)) {
+  base = raw.replace(/\/+$/,'');
+} else {
+  base = `https://${raw.replace(/\/+$/,'')}`;
+}
+const url = `${base}/api/cron/appointment-reminders`;
 const token = process.env.REMINDER_CRON_TOKEN;
 (async ()=>{
   try {
