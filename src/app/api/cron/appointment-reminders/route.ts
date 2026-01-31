@@ -60,12 +60,9 @@ async function handle(req: NextRequest) {
       client: {
         phone: { not: null },
       },
-      company: {
-        subscription: {
-          // allow ACTIVE or TRIALING (accept common lowercase variants too)
-          is: { status: { in: ["ACTIVE", "TRIALING", "active", "trial"] } },
-        },
-      },
+      // Note: we intentionally do not filter by company.subscription.status here because
+      // Prisma's enum typing can reject lowercase literals at build-time. Instead we fetch
+      // candidate appointments and filter by subscription status in JS below (case-insensitive).
     },
     include: {
       client: true,
@@ -82,12 +79,22 @@ async function handle(req: NextRequest) {
     take: batchSize,
   });
 
+  // Filter appointments by subscription status (case-insensitive) in JS to avoid
+  // TypeScript/Prisma enum literal mismatches during build.
+  const allowedStatuses = new Set(["ACTIVE", "TRIALING"]);
+  const filteredAppointments = appointments.filter((a) => {
+    const s = a.company?.subscription?.status;
+    if (!s) return false;
+    const st = String(s).toUpperCase();
+    return allowedStatuses.has(st);
+  });
+
   // If debug mode is requested (query param ?debug=1), return the matching appointments
   try {
     const urlObj = new URL(req.url);
     const debugMode = urlObj.searchParams.get("debug") === "1";
     if (debugMode) {
-      const debugList = appointments.map((a) => ({
+      const debugList = filteredAppointments.map((a) => ({
         id: a.id,
         startTime: a.startTime,
         status: a.status,
@@ -96,9 +103,10 @@ async function handle(req: NextRequest) {
         clientPhone: a.client?.phone || null,
       }));
       return api.ok({
-        windowStart,
-        windowEnd,
-        total: appointments.length,
+        now: now.toISOString(),
+        windowStart: windowStart.toISOString(),
+        windowEnd: windowEnd.toISOString(),
+        total: filteredAppointments.length,
         appointments: debugList,
       });
     }
@@ -110,7 +118,7 @@ async function handle(req: NextRequest) {
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
 
-  for (const appt of appointments) {
+  for (const appt of filteredAppointments) {
     const planFromSub = appt.company.subscription?.plan as PlanName | undefined;
     const planName: PlanName | undefined =
       planFromSub || (appt.company.contrato as PlanName | undefined);
@@ -168,9 +176,10 @@ async function handle(req: NextRequest) {
   }
 
   return api.ok({
-    windowStart,
-    windowEnd,
-    total: appointments.length,
+    now: now.toISOString(),
+    windowStart: windowStart.toISOString(),
+    windowEnd: windowEnd.toISOString(),
+    total: filteredAppointments.length,
     sent,
     skipped,
     failed,
