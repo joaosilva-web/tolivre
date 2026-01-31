@@ -24,12 +24,15 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuAction,
 } from "@/components/ui/sidebar";
 import IconLogo from "./ui/icon-logo";
 import { useSessionContext } from "@/context/SessionProvider";
+import { SupportMenuItem } from "@/components/support/SupportMenuItem";
 
 // Helper para verificar se é usuário interno do ToLivre
 function isToLivreStaff(email?: string): boolean {
@@ -135,13 +138,7 @@ const commonNavItems = [
   },
 ];
 
-const navSecondary = [
-  {
-    title: "Ajuda",
-    url: "#",
-    icon: IconHelp,
-  },
-];
+// navSecondary removed; we'll render a Support item directly in the sidebar footer
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useSessionContext();
@@ -181,7 +178,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navMain} />
         {/* NavDocuments has been removed */}
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        <SidebarGroup className="mt-auto">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <div>
+                  <SupportMenuItem />
+                </div>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
