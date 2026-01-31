@@ -95,7 +95,12 @@ async function handle(req: NextRequest) {
         companyId: a.companyId,
         clientPhone: a.client?.phone || null,
       }));
-      return api.ok({ windowStart, windowEnd, total: appointments.length, appointments: debugList });
+      return api.ok({
+        windowStart,
+        windowEnd,
+        total: appointments.length,
+        appointments: debugList,
+      });
     }
   } catch (e) {
     // ignore debug failures
