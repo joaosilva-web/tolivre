@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage from "@/lib/uazapi";
+import sendWhatsAppMessage, { normalizePhone } from "@/lib/uazapi";
 import { PLANS, type PlanName } from "@/lib/subscriptionLimits";
 
 const DEFAULT_HOURS_BEFORE = Number(
@@ -129,12 +129,10 @@ async function handle(req: NextRequest) {
   let sent = 0;
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
-
   for (const appt of filteredAppointments) {
     console.log('[cron-reminder] processing appointment', { id: appt.id, startTime: appt.startTime?.toISOString(), companyId: appt.companyId });
-    const planFromSub = appt.company.subscription?.plan as PlanName | undefined;
-    const planName: PlanName | undefined =
-      planFromSub || (appt.company.contrato as PlanName | undefined);
+    const planFromSub = appt.company?.subscription?.plan as PlanName | undefined;
+    const planName: PlanName | undefined = planFromSub || (appt.company?.contrato as PlanName | undefined);
     const plan = planName ? PLANS[planName] : undefined;
 
     if (plan && !plan.features.whatsapp) {
@@ -177,41 +175,28 @@ async function handle(req: NextRequest) {
           data: { reminderSentAt: new Date() },
         });
         sent += 1;
+        console.log('[cron-reminder] sent', { id: appt.id });
       } else {
-        failed.push({
-          id: appt.id,
-            console.log('[cron-reminder] sending whatsapp', { id: appt.id, to: appt.client?.phone });
-          error: res.error || `HTTP ${res.status ?? "unknown"}`,
-        });
+        const errMsg = (res as any).error || `HTTP ${(res as any).status ?? "unknown"}`;
+        failed.push({ id: appt.id, error: errMsg });
+        console.log('[cron-reminder] send-failed', { id: appt.id, error: errMsg });
       }
     } catch (err) {
-      failed.push({ id: appt.id, error: String(err) });
+      const errStr = String(err);
+      failed.push({ id: appt.id, error: errStr });
+      console.log('[cron-reminder] send-exception', { id: appt.id, error: errStr });
     }
   }
 
+  console.log('[cron-reminder] summary', { total: filteredAppointments.length, sent, skipped: skipped.length, failed: failed.length });
+
   return api.ok({
     now: now.toISOString(),
-              sent += 1;
-              console.log('[cron-reminder] sent', { id: appt.id });
+    windowStart: windowStart.toISOString(),
     windowEnd: windowEnd.toISOString(),
-              const errMsg = res.error || `HTTP ${res.status ?? "unknown"}`;
-              failed.push({ id: appt.id, error: errMsg });
-              console.log('[cron-reminder] send-failed', { id: appt.id, error: errMsg });
+    total: filteredAppointments.length,
+    sent,
+    skipped,
     failed,
   });
-            const errStr = String(err);
-            failed.push({ id: appt.id, error: errStr });
-            console.log('[cron-reminder] send-exception', { id: appt.id, error: errStr });
-  if (!phone) return null;
-  let d = String(phone).replace(/\D/g, "");
-        console.log('[cron-reminder] summary', { total: filteredAppointments.length, sent, skipped: skipped.length, failed: failed.length });
-
-        return api.ok({
-          now: now.toISOString(),
-          windowStart: windowStart.toISOString(),
-          windowEnd: windowEnd.toISOString(),
-          total: filteredAppointments.length,
-          sent,
-          skipped,
-          failed,
-        });
+}

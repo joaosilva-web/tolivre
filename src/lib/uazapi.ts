@@ -13,7 +13,7 @@ const UAZAPI_DEFAULT_COUNTRY = (
   process.env.UAZAPI_DEFAULT_COUNTRY || "55"
 ).replace(/\D/g, "");
 
-function normalizePhone(p?: string) {
+export function normalizePhone(p?: string) {
   if (!p) return undefined;
   let d = String(p).replace(/\D/g, "");
   if (!d) return undefined;
