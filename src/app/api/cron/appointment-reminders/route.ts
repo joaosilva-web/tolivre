@@ -62,8 +62,8 @@ async function handle(req: NextRequest) {
       },
       company: {
         subscription: {
-          // allow ACTIVE or TRIALING
-          is: { status: { in: ["ACTIVE", "TRIALING"] } },
+          // allow ACTIVE or TRIALING (accept common lowercase variants too)
+          is: { status: { in: ["ACTIVE", "TRIALING", "active", "trial"] } },
         },
       },
     },
