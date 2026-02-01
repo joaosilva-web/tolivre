@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
 async function handle(req: NextRequest) {
   if (!isAuthorized(req)) {
-    console.log('[cron-reminder] unauthorized request');
+    console.log("[cron-reminder] unauthorized request");
     return api.unauthorized("Token inválido para cron de lembretes");
   }
 
@@ -46,13 +46,27 @@ async function handle(req: NextRequest) {
   const windowMinutes = DEFAULT_WINDOW_MINUTES;
   const batchSize = DEFAULT_BATCH_SIZE;
 
+  // Brasil timezone offset: UTC-3 (3 horas a menos que UTC)
+  const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
+  
   const now = new Date();
-  const windowStart = new Date(now.getTime() + hoursBefore * 60 * 60 * 1000);
+  // Ajustar a janela de busca para timezone do Brasil
+  // Se agora é 11:00 UTC (8:00 BRT), queremos buscar appointments entre 11:00 BRT e 11:30 BRT
+  // que no banco estão armazenados como 14:00 UTC a 14:30 UTC (se foram salvos como horário local sem conversão)
+  // Mas se foram salvos corretamente em UTC, então 11:00 BRT seria 14:00 UTC
+  // Portanto, precisamos buscar appointments que estão armazenados no horário local do Brasil
+  const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
+  const windowStart = new Date(nowBrazil.getTime() + hoursBefore * 60 * 60 * 1000);
   const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
 
-  console.log('[cron-reminder] params', { hoursBefore, windowMinutes, batchSize });
-  console.log('[cron-reminder] now/windowStart/windowEnd', {
-    now: now.toISOString(),
+  console.log("[cron-reminder] params", {
+    hoursBefore,
+    windowMinutes,
+    batchSize,
+  });
+  console.log("[cron-reminder] now/windowStart/windowEnd", {
+    nowUTC: now.toISOString(),
+    nowBrazil: nowBrazil.toISOString(),
     windowStart: windowStart.toISOString(),
     windowEnd: windowEnd.toISOString(),
   });
@@ -80,9 +94,14 @@ async function handle(req: NextRequest) {
     take: batchSize,
   });
 
-  console.log('[cron-reminder] fetched appointments', appointments.length);
+  console.log("[cron-reminder] fetched appointments", appointments.length);
   if (appointments.length > 0) {
-    console.log('[cron-reminder] sample fetched ids', appointments.slice(0, 10).map(a => ({ id: a.id, startTime: a.startTime?.toISOString() })));
+    console.log(
+      "[cron-reminder] sample fetched ids",
+      appointments
+        .slice(0, 10)
+        .map((a) => ({ id: a.id, startTime: a.startTime?.toISOString() })),
+    );
   }
 
   // Filter appointments by subscription status (case-insensitive) in JS to avoid
@@ -95,9 +114,22 @@ async function handle(req: NextRequest) {
     return allowedStatuses.has(st);
   });
 
-  console.log('[cron-reminder] after subscription filter', filteredAppointments.length, 'appointments');
+  console.log(
+    "[cron-reminder] after subscription filter",
+    filteredAppointments.length,
+    "appointments",
+  );
   if (filteredAppointments.length > 0) {
-    console.log('[cron-reminder] sample filtered ids', filteredAppointments.slice(0, 10).map(a => ({ id: a.id, startTime: a.startTime?.toISOString(), subscription: a.company?.subscription?.status })));
+    console.log(
+      "[cron-reminder] sample filtered ids",
+      filteredAppointments
+        .slice(0, 10)
+        .map((a) => ({
+          id: a.id,
+          startTime: a.startTime?.toISOString(),
+          subscription: a.company?.subscription?.status,
+        })),
+    );
   }
 
   // If debug mode is requested (query param ?debug=1), return the matching appointments
@@ -111,9 +143,11 @@ async function handle(req: NextRequest) {
         status: a.status,
         reminderSentAt: a.reminderSentAt,
         companyId: a.companyId,
-        clientPhone: a.client?.phone ? a.client.phone.replace(/[\x00-\x1F\x7F]/g, '') : null,
+        clientPhone: a.client?.phone
+          ? a.client.phone.replace(/[\x00-\x1F\x7F]/g, "")
+          : null,
       }));
-      console.log('[cron-reminder] debug response prepared', debugList.length);
+      console.log("[cron-reminder] debug response prepared", debugList.length);
       return api.ok({
         now: now.toISOString(),
         windowStart: windowStart.toISOString(),
@@ -130,9 +164,16 @@ async function handle(req: NextRequest) {
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
   for (const appt of filteredAppointments) {
-    console.log('[cron-reminder] processing appointment', { id: appt.id, startTime: appt.startTime?.toISOString(), companyId: appt.companyId });
-    const planFromSub = appt.company?.subscription?.plan as PlanName | undefined;
-    const planName: PlanName | undefined = planFromSub || (appt.company?.contrato as PlanName | undefined);
+    console.log("[cron-reminder] processing appointment", {
+      id: appt.id,
+      startTime: appt.startTime?.toISOString(),
+      companyId: appt.companyId,
+    });
+    const planFromSub = appt.company?.subscription?.plan as
+      | PlanName
+      | undefined;
+    const planName: PlanName | undefined =
+      planFromSub || (appt.company?.contrato as PlanName | undefined);
     const plan = planName ? PLANS[planName] : undefined;
 
     if (plan && !plan.features.whatsapp) {
@@ -175,20 +216,32 @@ async function handle(req: NextRequest) {
           data: { reminderSentAt: new Date() },
         });
         sent += 1;
-        console.log('[cron-reminder] sent', { id: appt.id });
+        console.log("[cron-reminder] sent", { id: appt.id });
       } else {
-        const errMsg = (res as any).error || `HTTP ${(res as any).status ?? "unknown"}`;
+        const errMsg =
+          (res as any).error || `HTTP ${(res as any).status ?? "unknown"}`;
         failed.push({ id: appt.id, error: errMsg });
-        console.log('[cron-reminder] send-failed', { id: appt.id, error: errMsg });
+        console.log("[cron-reminder] send-failed", {
+          id: appt.id,
+          error: errMsg,
+        });
       }
     } catch (err) {
       const errStr = String(err);
       failed.push({ id: appt.id, error: errStr });
-      console.log('[cron-reminder] send-exception', { id: appt.id, error: errStr });
+      console.log("[cron-reminder] send-exception", {
+        id: appt.id,
+        error: errStr,
+      });
     }
   }
 
-  console.log('[cron-reminder] summary', { total: filteredAppointments.length, sent, skipped: skipped.length, failed: failed.length });
+  console.log("[cron-reminder] summary", {
+    total: filteredAppointments.length,
+    sent,
+    skipped: skipped.length,
+    failed: failed.length,
+  });
 
   return api.ok({
     now: now.toISOString(),
