@@ -2,13 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar as CalendarIcon, Clock, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  ArrowLeft,
+  CheckCircle,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { generateSlots, WorkingHour, AvailableSlot } from "@/lib/slotGeneration";
+import {
+  generateSlots,
+  WorkingHour,
+  AvailableSlot,
+} from "@/lib/slotGeneration";
 import { UIAppointment } from "@/lib/appointments";
 
 interface AppointmentData {
@@ -50,7 +60,9 @@ export default function ReschedulePage() {
   const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
 
   const [workingHours, setWorkingHours] = useState<WorkingHour[]>([]);
-  const [existingAppointments, setExistingAppointments] = useState<UIAppointment[]>([]);
+  const [existingAppointments, setExistingAppointments] = useState<
+    UIAppointment[]
+  >([]);
   const [availableSlots, setAvailableSlots] = useState<AvailableSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [datesWithSlots, setDatesWithSlots] = useState<Set<string>>(new Set());
@@ -73,7 +85,9 @@ export default function ReschedulePage() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`/api/appointments/${appointmentId}/reschedule-data`);
+      const res = await fetch(
+        `/api/appointments/${appointmentId}/reschedule-data`,
+      );
       const json = await res.json();
 
       if (!res.ok || !json.success) {
@@ -97,7 +111,7 @@ export default function ReschedulePage() {
           checkDate,
           json.data.workingHours,
           json.data.appointment.service.duration,
-          json.data.existingAppointments
+          json.data.existingAppointments,
         );
 
         if (slots.some((slot) => slot.available)) {
@@ -126,8 +140,8 @@ export default function ReschedulePage() {
         appointment.service.duration,
         existingAppointments.filter(
           // Excluir o agendamento atual da lista de conflitos
-          (apt) => apt.id !== appointment.id
-        )
+          (apt) => apt.id !== appointment.id,
+        ),
       );
 
       setAvailableSlots(slots);
@@ -149,7 +163,7 @@ export default function ReschedulePage() {
       const [hours, minutes] = selectedSlot.time.split(":").map(Number);
       const startTime = new Date(selectedDate);
       startTime.setHours(hours, minutes, 0, 0);
-      
+
       const endTime = new Date(startTime);
       endTime.setMinutes(endTime.getMinutes() + appointment.service.duration);
 
@@ -197,7 +211,9 @@ export default function ReschedulePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold mb-4">Agendamento não encontrado</h1>
+          <h1 className="text-2xl font-bold mb-4">
+            Agendamento não encontrado
+          </h1>
           <p className="text-muted-foreground mb-6">{error}</p>
           <Button onClick={() => router.push("/")}>Voltar ao início</Button>
         </div>
@@ -219,13 +235,15 @@ export default function ReschedulePage() {
               {selectedDate && selectedSlot
                 ? format(
                     (() => {
-                      const [hours, minutes] = selectedSlot.time.split(":").map(Number);
+                      const [hours, minutes] = selectedSlot.time
+                        .split(":")
+                        .map(Number);
                       const date = new Date(selectedDate);
                       date.setHours(hours, minutes, 0, 0);
                       return date;
                     })(),
                     "dd/MM/yyyy 'às' HH:mm",
-                    { locale: ptBR }
+                    { locale: ptBR },
                   )
                 : ""}
             </p>
@@ -273,7 +291,12 @@ export default function ReschedulePage() {
           <div className="bg-muted p-4 rounded-lg mb-6">
             <p className="text-sm font-semibold mb-2">Agendamento Atual:</p>
             <p className="text-sm">
-              📅 {format(new Date(appointment.startTime), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+              📅{" "}
+              {format(
+                new Date(appointment.startTime),
+                "dd/MM/yyyy 'às' HH:mm",
+                { locale: ptBR },
+              )}
             </p>
             <p className="text-sm">💼 {appointment.service.name}</p>
             <p className="text-sm">👤 {appointment.professional.name}</p>
@@ -316,7 +339,9 @@ export default function ReschedulePage() {
                 {loadingSlots ? (
                   <div className="text-center py-8">
                     <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-primary" />
-                    <p className="text-sm text-muted-foreground">Carregando horários...</p>
+                    <p className="text-sm text-muted-foreground">
+                      Carregando horários...
+                    </p>
                   </div>
                 ) : !hasAvailableSlots ? (
                   <div className="text-center py-8 bg-muted rounded-lg">
@@ -331,7 +356,9 @@ export default function ReschedulePage() {
                       .map((slot, idx) => (
                         <Button
                           key={idx}
-                          variant={selectedSlot === slot ? "default" : "outline"}
+                          variant={
+                            selectedSlot === slot ? "default" : "outline"
+                          }
                           onClick={() => setSelectedSlot(slot)}
                           className="w-full"
                         >
@@ -351,13 +378,15 @@ export default function ReschedulePage() {
                   <p className="text-lg font-bold">
                     {format(
                       (() => {
-                        const [hours, minutes] = selectedSlot.time.split(":").map(Number);
+                        const [hours, minutes] = selectedSlot.time
+                          .split(":")
+                          .map(Number);
                         const date = new Date(selectedDate);
                         date.setHours(hours, minutes, 0, 0);
                         return date;
                       })(),
                       "dd/MM/yyyy 'às' HH:mm",
-                      { locale: ptBR }
+                      { locale: ptBR },
                     )}
                   </p>
                 </div>

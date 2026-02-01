@@ -51,6 +51,12 @@ function getDayOfWeekUTC(date: Date) {
   return date.getUTCDay();
 }
 
+// Converter UTC para horário do Brasil (UTC-3)
+function getBrazilTime(utcDate: Date) {
+  const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
+  return new Date(utcDate.getTime() + BRAZIL_OFFSET_MS);
+}
+
 function hashToTwoInts(key: string): [number, number] {
   let h = 5381;
   for (let i = 0; i < key.length; i++) h = (h * 33) ^ key.charCodeAt(i);
@@ -110,8 +116,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Working hours
-    const day = getDayOfWeekUTC(start);
+    // Working hours - converter para horário do Brasil antes de validar
+    const startBrazil = getBrazilTime(start);
+    const endBrazil = getBrazilTime(end);
+    const day = startBrazil.getDay(); // Usar dia do Brasil, não UTC
+    
     const wh = await prisma.workingHours.findFirst({
       where: { companyId: parsed.companyId, dayOfWeek: day },
     });
@@ -120,8 +129,8 @@ export async function POST(req: NextRequest) {
         "Horário de funcionamento não configurado para esse dia",
       );
 
-    const startMinutes = start.getUTCHours() * 60 + start.getUTCMinutes();
-    const endMinutes = end.getUTCHours() * 60 + end.getUTCMinutes();
+    const startMinutes = startBrazil.getHours() * 60 + startBrazil.getMinutes();
+    const endMinutes = endBrazil.getHours() * 60 + endBrazil.getMinutes();
     if (
       startMinutes < timeToMinutes(wh.openTime) ||
       endMinutes > timeToMinutes(wh.closeTime)

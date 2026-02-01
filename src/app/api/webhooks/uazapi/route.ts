@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
     // Extrair ação e ID do agendamento do formato "confirm_123", "cancel_123" ou "reschedule_123"
     const [action, appointmentId] = buttonId.split("_");
 
-    if (!appointmentId || !["confirm", "cancel", "reschedule"].includes(action)) {
+    if (
+      !appointmentId ||
+      !["confirm", "cancel", "reschedule"].includes(action)
+    ) {
       console.warn("[uazapi webhook] Invalid button ID format:", buttonId);
       return api.ok({ received: true });
     }
@@ -165,7 +168,8 @@ export async function POST(req: NextRequest) {
       });
     } else if (action === "reschedule") {
       // Gerar link de reagendamento
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://tolivre.com.br";
+      const baseUrl =
+        process.env.NEXT_PUBLIC_APP_URL || "https://tolivre.com.br";
       const rescheduleUrl = `${baseUrl}/reagendar/${appointmentId}`;
 
       const rescheduleMessage =
@@ -177,12 +181,15 @@ export async function POST(req: NextRequest) {
       // Enviar link de reagendamento
       if (appointment.client?.phone) {
         const phone = normalizePhone(appointment.client.phone);
-        
+
         if (phone) {
           sendWhatsAppMessage
             .sendText({ to: phone, message: rescheduleMessage })
             .catch((err) => {
-              console.error("[uazapi webhook] Failed to send reschedule link:", err);
+              console.error(
+                "[uazapi webhook] Failed to send reschedule link:",
+                err,
+              );
             });
         }
       }

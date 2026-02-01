@@ -211,7 +211,7 @@ export async function PATCH(
 // Rota pública para reagendamento via link (sem auth)
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -246,7 +246,9 @@ export async function POST(
     }
 
     if (appointment.status === "CANCELED") {
-      return api.badRequest("Não é possível reagendar um agendamento cancelado");
+      return api.badRequest(
+        "Não é possível reagendar um agendamento cancelado",
+      );
     }
 
     // Verificar conflitos
@@ -273,7 +275,9 @@ export async function POST(
     });
 
     if (conflicts) {
-      return api.badRequest("Horário não disponível - conflito com outro agendamento");
+      return api.badRequest(
+        "Horário não disponível - conflito com outro agendamento",
+      );
     }
 
     // Atualizar agendamento
@@ -294,11 +298,11 @@ export async function POST(
     // Enviar confirmação ao cliente
     if (appointment.client?.phone) {
       const phone = normalizePhone(appointment.client.phone);
-      
+
       if (phone) {
         const dateText = format(newStart, "dd/MM/yyyy", { locale: ptBR });
         const timeText = format(newStart, "HH:mm", { locale: ptBR });
-        
+
         const clientMessage =
           `✅ *Reagendamento Confirmado!*\n\n` +
           `Olá ${appointment.clientName}!\n\n` +
@@ -312,7 +316,10 @@ export async function POST(
         sendWhatsAppMessage
           .sendText({ to: phone, message: clientMessage })
           .catch((err) => {
-            console.error("[reschedule POST] Failed to send client confirmation:", err);
+            console.error(
+              "[reschedule POST] Failed to send client confirmation:",
+              err,
+            );
           });
       }
     }
@@ -324,8 +331,8 @@ export async function POST(
       title: "Agendamento Reagendado",
       message: `${appointment.clientName} reagendou ${appointment.service.name} para ${format(newStart, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`,
       timestamp: new Date().toISOString(),
-      data: { 
-        appointmentId: id, 
+      data: {
+        appointmentId: id,
         action: "rescheduled",
         newStartTime: newStart.toISOString(),
         newEndTime: newEnd.toISOString(),

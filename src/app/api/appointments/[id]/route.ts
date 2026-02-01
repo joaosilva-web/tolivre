@@ -25,6 +25,12 @@ function getDayOfWeekUTC(date: Date) {
   return date.getUTCDay(); // 0..6
 }
 
+// Converter UTC para horário do Brasil (UTC-3)
+function getBrazilTime(utcDate: Date) {
+  const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
+  return new Date(utcDate.getTime() + BRAZIL_OFFSET_MS);
+}
+
 // Simple hash to two 32-bit ints for advisory lock
 function hashToTwoInts(key: string): [number, number] {
   let h = 5381;
@@ -56,8 +62,11 @@ export async function POST(req: NextRequest) {
     // compute endTime
     const end = new Date(start.getTime() + service.duration * 60_000);
 
-    // working hours for that company and day
-    const day = getDayOfWeekUTC(start);
+    // working hours for that company and day - usar horário do Brasil
+    const startBrazil = getBrazilTime(start);
+    const endBrazil = getBrazilTime(end);
+    const day = startBrazil.getDay(); // Usar dia do Brasil, não UTC
+    
     const wh = await prisma.workingHours.findFirst({
       where: { companyId, dayOfWeek: day },
     });
@@ -66,9 +75,9 @@ export async function POST(req: NextRequest) {
         "Horário de funcionamento não configurado para esse dia",
       );
 
-    // convert start/end to minutes (UTC time-of-day)
-    const startMinutes = start.getUTCHours() * 60 + start.getUTCMinutes();
-    const endMinutes = end.getUTCHours() * 60 + end.getUTCMinutes();
+    // convert start/end to minutes (Brazil time-of-day)
+    const startMinutes = startBrazil.getHours() * 60 + startBrazil.getMinutes();
+    const endMinutes = endBrazil.getHours() * 60 + endBrazil.getMinutes();
     const openMinutes = timeToMinutes(wh.openTime);
     const closeMinutes = timeToMinutes(wh.closeTime);
 

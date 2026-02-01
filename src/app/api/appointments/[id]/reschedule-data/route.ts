@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -38,7 +38,9 @@ export async function GET(
 
     // Não permitir reagendamento de agendamentos cancelados
     if (appointment.status === "CANCELED") {
-      return api.badRequest("Não é possível reagendar um agendamento cancelado");
+      return api.badRequest(
+        "Não é possível reagendar um agendamento cancelado",
+      );
     }
 
     // Buscar horários de trabalho da empresa
@@ -86,8 +88,10 @@ export async function GET(
           id: appointment.company.id,
           slug: appointment.company.companyPage?.slug || "",
           nomeFantasia: appointment.company.nomeFantasia,
-          primaryColor: appointment.company.companyPage?.primaryColor || "#000000",
-          accentColor: appointment.company.companyPage?.accentColor || "#000000",
+          primaryColor:
+            appointment.company.companyPage?.primaryColor || "#000000",
+          accentColor:
+            appointment.company.companyPage?.accentColor || "#000000",
         },
       },
       workingHours,
