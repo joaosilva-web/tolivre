@@ -50,16 +50,15 @@ async function handle(req: NextRequest) {
   const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
 
   const now = new Date();
-  // Ajustar a janela de busca para timezone do Brasil
-  // Se agora é 11:00 UTC (8:00 BRT), queremos buscar appointments entre 11:00 BRT e 11:30 BRT
-  // que no banco estão armazenados como 14:00 UTC a 14:30 UTC (se foram salvos como horário local sem conversão)
-  // Mas se foram salvos corretamente em UTC, então 11:00 BRT seria 14:00 UTC
-  // Portanto, precisamos buscar appointments que estão armazenados no horário local do Brasil
-  const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
-  const windowStart = new Date(
-    nowBrazil.getTime() + hoursBefore * 60 * 60 * 1000,
-  );
+  // Calcular janela de busca: agora + hoursBefore (em UTC)
+  // Appointments são salvos em UTC (convertidos do horário local do browser pelo .toISOString())
+  // Se agora é 20:31 Brasil (23:31 UTC), queremos appointments que começam em 23:31 Brasil (02:31 UTC)
+  // Ou seja: windowStart = now + hoursBefore
+  const windowStart = new Date(now.getTime() + hoursBefore * 60 * 60 * 1000);
   const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
+  
+  // Calcular nowBrazil apenas para exibir nos logs
+  const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
 
   console.log("[cron-reminder] params", {
     hoursBefore,
