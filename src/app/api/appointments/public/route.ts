@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage from "@/lib/uazapi";
+import sendWhatsAppMessage, { toBrazilTime } from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { checkAppointmentLimit } from "@/lib/subscriptionLimits";
@@ -195,8 +195,8 @@ export async function POST(req: NextRequest) {
 
     // Enviar notificação via WhatsApp com menu interativo (background, não bloqueia resposta)
     if (parsed.clientPhone) {
-      const formattedDate = format(startTime, "dd/MM/yyyy", { locale: ptBR });
-      const formattedTime = format(startTime, "HH:mm", { locale: ptBR });
+      const formattedDate = format(toBrazilTime(startTime), "dd/MM/yyyy", { locale: ptBR });
+      const formattedTime = format(toBrazilTime(startTime), "HH:mm", { locale: ptBR });
 
       const messageText =
         `Olá *${parsed.clientName}*!\n\n` +

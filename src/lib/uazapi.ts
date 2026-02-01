@@ -27,6 +27,12 @@ export function normalizePhone(p?: string) {
   return d;
 }
 
+// Converter UTC para horário do Brasil (UTC-3)
+export function toBrazilTime(utcDate: Date): Date {
+  const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
+  return new Date(utcDate.getTime() + BRAZIL_OFFSET_MS);
+}
+
 export async function sendText(opts: {
   to: string;
   message: string;

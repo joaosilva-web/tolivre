@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage, { normalizePhone } from "@/lib/uazapi";
+import sendWhatsAppMessage, { normalizePhone, toBrazilTime } from "@/lib/uazapi";
 import { PLANS, type PlanName } from "@/lib/subscriptionLimits";
 
 const DEFAULT_HOURS_BEFORE = Number(
@@ -178,8 +178,8 @@ async function handle(req: NextRequest) {
       continue;
     }
 
-    const dateText = format(appt.startTime, "dd/MM/yyyy", { locale: ptBR });
-    const timeText = format(appt.startTime, "HH:mm", { locale: ptBR });
+    const dateText = format(toBrazilTime(appt.startTime), "dd/MM/yyyy", { locale: ptBR });
+    const timeText = format(toBrazilTime(appt.startTime), "HH:mm", { locale: ptBR });
     const serviceName = appt.service?.name || "seu atendimento";
     const professionalName = appt.professional?.name || "nossa equipe";
     const companyName = appt.company?.nomeFantasia || "TôLivre";

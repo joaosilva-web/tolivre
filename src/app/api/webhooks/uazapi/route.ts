@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage, { normalizePhone } from "@/lib/uazapi";
+import sendWhatsAppMessage, { normalizePhone, toBrazilTime } from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { emitNotification } from "@/lib/websocketEmit";
@@ -86,10 +86,10 @@ export async function POST(req: NextRequest) {
         data: { status: "CONFIRMED" },
       });
 
-      const formattedDate = format(appointment.startTime, "dd/MM/yyyy", {
+      const formattedDate = format(toBrazilTime(appointment.startTime), "dd/MM/yyyy", {
         locale: ptBR,
       });
-      const formattedTime = format(appointment.startTime, "HH:mm", {
+      const formattedTime = format(toBrazilTime(appointment.startTime), "HH:mm", {
         locale: ptBR,
       });
 
