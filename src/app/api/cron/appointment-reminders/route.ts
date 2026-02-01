@@ -48,7 +48,7 @@ async function handle(req: NextRequest) {
 
   // Brasil timezone offset: UTC-3 (3 horas a menos que UTC)
   const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
-  
+
   const now = new Date();
   // Ajustar a janela de busca para timezone do Brasil
   // Se agora é 11:00 UTC (8:00 BRT), queremos buscar appointments entre 11:00 BRT e 11:30 BRT
@@ -56,7 +56,9 @@ async function handle(req: NextRequest) {
   // Mas se foram salvos corretamente em UTC, então 11:00 BRT seria 14:00 UTC
   // Portanto, precisamos buscar appointments que estão armazenados no horário local do Brasil
   const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
-  const windowStart = new Date(nowBrazil.getTime() + hoursBefore * 60 * 60 * 1000);
+  const windowStart = new Date(
+    nowBrazil.getTime() + hoursBefore * 60 * 60 * 1000,
+  );
   const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
 
   console.log("[cron-reminder] params", {
@@ -115,19 +117,20 @@ async function handle(req: NextRequest) {
     const s = a.company?.subscription?.status;
     const trialEndsAt = a.company?.trialEndsAt;
     const isInTrial = trialEndsAt && new Date(trialEndsAt) > nowForTrial;
-    const hasActiveSubscription = s && allowedStatuses.has(String(s).toUpperCase());
-    
-    console.log('[cron-reminder] filtering appointment', { 
-      id: a.id, 
-      hasCompany: !!a.company, 
-      hasSubscription: !!a.company?.subscription, 
+    const hasActiveSubscription =
+      s && allowedStatuses.has(String(s).toUpperCase());
+
+    console.log("[cron-reminder] filtering appointment", {
+      id: a.id,
+      hasCompany: !!a.company,
+      hasSubscription: !!a.company?.subscription,
       status: s,
       trialEndsAt: trialEndsAt?.toISOString(),
       isInTrial,
       hasActiveSubscription,
-      allowed: hasActiveSubscription || isInTrial
+      allowed: hasActiveSubscription || isInTrial,
     });
-    
+
     return hasActiveSubscription || isInTrial;
   });
 
@@ -139,13 +142,11 @@ async function handle(req: NextRequest) {
   if (filteredAppointments.length > 0) {
     console.log(
       "[cron-reminder] sample filtered ids",
-      filteredAppointments
-        .slice(0, 10)
-        .map((a) => ({
-          id: a.id,
-          startTime: a.startTime?.toISOString(),
-          subscription: a.company?.subscription?.status,
-        })),
+      filteredAppointments.slice(0, 10).map((a) => ({
+        id: a.id,
+        startTime: a.startTime?.toISOString(),
+        subscription: a.company?.subscription?.status,
+      })),
     );
   }
 
@@ -184,19 +185,34 @@ async function handle(req: NextRequest) {
     const companyName = appt.company?.nomeFantasia || "TôLivre";
     const clientName = appt.clientName || appt.client?.name || "cliente";
 
-    const message =
-      `⏰ *Lembrete de compromisso*\n\n` +
-      `Olá ${clientName}! Este é um lembrete do seu agendamento em ${companyName}.\n\n` +
-      `📅 Data: ${dateText}\n` +
-      `⏰ Horário: ${timeText}\n` +
-      `💼 Serviço: ${serviceName}\n` +
-      `👤 Profissional: ${professionalName}\n\n` +
-      `Se precisar reagendar ou cancelar, responda esta mensagem.`;
+    const messageText =
+      `Olá *${clientName}*!\n\n` +
+      `Este é um lembrete do seu agendamento:\n\n` +
+      `📅 *Data/Hora:* ${dateText}, ${timeText}\n` +
+      `💼 *Serviço:* ${serviceName}\n` +
+      `👤 *Profissional:* ${professionalName}\n` +
+      `🏢 *Local:* ${companyName}\n\n` +
+      `O que deseja fazer?`;
+
+    // Botões dinâmicos baseados no status
+    const choices: string[] = [];
+    if (appt.status === "CONFIRMED") {
+      // Já confirmado: apenas reagendar ou cancelar
+      choices.push(`📅 Reagendar|reschedule_${appt.id}`);
+      choices.push(`❌ Cancelar|cancel_${appt.id}`);
+    } else {
+      // Não confirmado: confirmar, reagendar ou cancelar
+      choices.push(`✅ Confirmar|confirm_${appt.id}`);
+      choices.push(`📅 Reagendar|reschedule_${appt.id}`);
+      choices.push(`❌ Cancelar|cancel_${appt.id}`);
+    }
 
     try {
-      const res = await sendWhatsAppMessage.sendText({
+      const res = await sendWhatsAppMessage.sendMenu({
         to: normalizedPhone,
-        message,
+        text: messageText,
+        choices,
+        footerText: "ToLivre - Sistema de Agendamentos",
       });
 
       if (res.ok) {

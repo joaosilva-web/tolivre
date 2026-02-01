@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage from "@/lib/uazapi";
+import sendWhatsAppMessage, { normalizePhone } from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { emitNotification } from "@/lib/websocketEmit";
@@ -48,10 +48,10 @@ export async function POST(req: NextRequest) {
 
     console.log("[uazapi webhook] Button ID found:", buttonId);
 
-    // Extrair ação e ID do agendamento do formato "confirm_123" ou "cancel_123"
+    // Extrair ação e ID do agendamento do formato "confirm_123", "cancel_123" ou "reschedule_123"
     const [action, appointmentId] = buttonId.split("_");
 
-    if (!appointmentId || !["confirm", "cancel"].includes(action)) {
+    if (!appointmentId || !["confirm", "cancel", "reschedule"].includes(action)) {
       console.warn("[uazapi webhook] Invalid button ID format:", buttonId);
       return api.ok({ received: true });
     }
@@ -162,6 +162,41 @@ export async function POST(req: NextRequest) {
         message: `${appointment.clientName} cancelou o agendamento de ${appointment.service.name}`,
         timestamp: new Date().toISOString(),
         data: { appointmentId, action: "canceled" },
+      });
+    } else if (action === "reschedule") {
+      // Gerar link de reagendamento
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://tolivre.com.br";
+      const rescheduleUrl = `${baseUrl}/reagendar/${appointmentId}`;
+
+      const rescheduleMessage =
+        `📅 *Reagendamento*\n\n` +
+        `Entendido! Clique no link abaixo para escolher um novo horário:\n\n` +
+        `🔗 ${rescheduleUrl}\n\n` +
+        `Ou entre em contato: ${appointment.professional.company?.telefone || "Não informado"}`;
+
+      // Enviar link de reagendamento
+      if (appointment.client?.phone) {
+        const phone = normalizePhone(appointment.client.phone);
+        
+        if (phone) {
+          sendWhatsAppMessage
+            .sendText({ to: phone, message: rescheduleMessage })
+            .catch((err) => {
+              console.error("[uazapi webhook] Failed to send reschedule link:", err);
+            });
+        }
+      }
+
+      console.log("[uazapi webhook] Reschedule link sent:", appointmentId);
+
+      // Enviar notificação em tempo real
+      emitNotification(appointment.companyId, {
+        id: `reschedule-${appointmentId}`,
+        type: "appointment",
+        title: "Reagendamento Solicitado",
+        message: `${appointment.clientName} solicitou reagendamento de ${appointment.service.name}`,
+        timestamp: new Date().toISOString(),
+        data: { appointmentId, action: "reschedule_requested" },
       });
     }
 

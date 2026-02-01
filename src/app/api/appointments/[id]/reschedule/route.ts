@@ -3,13 +3,18 @@ import { z } from "zod";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
-import sendWhatsAppMessage from "@/lib/uazapi";
+import sendWhatsAppMessage, { normalizePhone } from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { emitNotification } from "@/lib/websocketEmit";
 
 const RescheduleSchema = z.object({
   startTime: z.string(), // ISO date string
+});
+
+const PublicRescheduleSchema = z.object({
+  newStartTime: z.string(), // ISO date string
+  newEndTime: z.string(), // ISO date string
 });
 
 export async function PATCH(
@@ -199,6 +204,143 @@ export async function PATCH(
       return api.badRequest("Dados inválidos", err.issues);
     }
     console.error("Error rescheduling appointment:", err);
+    return api.serverError("Erro ao reagendar");
+  }
+}
+
+// Rota pública para reagendamento via link (sem auth)
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await req.json();
+    const { newStartTime, newEndTime } = PublicRescheduleSchema.parse(body);
+
+    const newStart = new Date(newStartTime);
+    const newEnd = new Date(newEndTime);
+
+    // Validar datas
+    if (newStart < new Date()) {
+      return api.badRequest("Não é possível reagendar para uma data passada");
+    }
+
+    // Buscar agendamento
+    const appointment = await prisma.appointment.findUnique({
+      where: { id },
+      include: {
+        service: true,
+        professional: {
+          include: {
+            company: true,
+          },
+        },
+        company: true,
+        client: true,
+      },
+    });
+
+    if (!appointment) {
+      return api.notFound("Agendamento não encontrado");
+    }
+
+    if (appointment.status === "CANCELED") {
+      return api.badRequest("Não é possível reagendar um agendamento cancelado");
+    }
+
+    // Verificar conflitos
+    const conflicts = await prisma.appointment.findFirst({
+      where: {
+        professionalId: appointment.professionalId,
+        status: {
+          in: ["PENDING", "CONFIRMED"],
+        },
+        id: {
+          not: id,
+        },
+        OR: [
+          {
+            startTime: {
+              lt: newEnd,
+            },
+            endTime: {
+              gt: newStart,
+            },
+          },
+        ],
+      },
+    });
+
+    if (conflicts) {
+      return api.badRequest("Horário não disponível - conflito com outro agendamento");
+    }
+
+    // Atualizar agendamento
+    const updated = await prisma.appointment.update({
+      where: { id },
+      data: {
+        startTime: newStart,
+        endTime: newEnd,
+        status: "CONFIRMED",
+      },
+      include: {
+        service: true,
+        professional: true,
+        company: true,
+      },
+    });
+
+    // Enviar confirmação ao cliente
+    if (appointment.client?.phone) {
+      const phone = normalizePhone(appointment.client.phone);
+      
+      if (phone) {
+        const dateText = format(newStart, "dd/MM/yyyy", { locale: ptBR });
+        const timeText = format(newStart, "HH:mm", { locale: ptBR });
+        
+        const clientMessage =
+          `✅ *Reagendamento Confirmado!*\n\n` +
+          `Olá ${appointment.clientName}!\n\n` +
+          `Seu agendamento foi reagendado com sucesso:\n\n` +
+          `📅 *Nova Data/Hora:* ${dateText}, ${timeText}\n` +
+          `💼 *Serviço:* ${appointment.service.name}\n` +
+          `👤 *Profissional:* ${appointment.professional.name}\n` +
+          `🏢 *Local:* ${appointment.company.nomeFantasia}\n\n` +
+          `Nos vemos em breve! 😊`;
+
+        sendWhatsAppMessage
+          .sendText({ to: phone, message: clientMessage })
+          .catch((err) => {
+            console.error("[reschedule POST] Failed to send client confirmation:", err);
+          });
+      }
+    }
+
+    // Emitir notificação em tempo real no dashboard
+    emitNotification(appointment.companyId, {
+      id: `reschedule-completed-${id}`,
+      type: "appointment",
+      title: "Agendamento Reagendado",
+      message: `${appointment.clientName} reagendou ${appointment.service.name} para ${format(newStart, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`,
+      timestamp: new Date().toISOString(),
+      data: { 
+        appointmentId: id, 
+        action: "rescheduled",
+        newStartTime: newStart.toISOString(),
+        newEndTime: newEnd.toISOString(),
+      },
+    });
+
+    return api.ok({
+      appointment: updated,
+      message: "Agendamento reagendado com sucesso",
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return api.badRequest("Dados inválidos", err.issues);
+    }
+    console.error("[reschedule POST] Error:", err);
     return api.serverError("Erro ao reagendar");
   }
 }
