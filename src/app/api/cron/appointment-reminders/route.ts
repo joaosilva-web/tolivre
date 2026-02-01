@@ -149,34 +149,6 @@ async function handle(req: NextRequest) {
     );
   }
 
-  // If debug mode is requested (query param ?debug=1), return the matching appointments
-  try {
-    const urlObj = new URL(req.url);
-    const debugMode = urlObj.searchParams.get("debug") === "1";
-    if (debugMode) {
-      const debugList = filteredAppointments.map((a) => ({
-        id: a.id,
-        startTime: a.startTime,
-        status: a.status,
-        reminderSentAt: a.reminderSentAt,
-        companyId: a.companyId,
-        clientPhone: a.client?.phone
-          ? a.client.phone.replace(/[\x00-\x1F\x7F]/g, "")
-          : null,
-      }));
-      console.log("[cron-reminder] debug response prepared", debugList.length);
-      return api.ok({
-        now: now.toISOString(),
-        windowStart: windowStart.toISOString(),
-        windowEnd: windowEnd.toISOString(),
-        total: filteredAppointments.length,
-        appointments: debugList,
-      });
-    }
-  } catch (e) {
-    // ignore debug failures
-  }
-
   let sent = 0;
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
