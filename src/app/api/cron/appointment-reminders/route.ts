@@ -109,6 +109,14 @@ async function handle(req: NextRequest) {
   const allowedStatuses = new Set(["ACTIVE", "TRIALING"]);
   const filteredAppointments = appointments.filter((a) => {
     const s = a.company?.subscription?.status;
+    console.log('[cron-reminder] filtering appointment', { 
+      id: a.id, 
+      hasCompany: !!a.company, 
+      hasSubscription: !!a.company?.subscription, 
+      status: s,
+      statusUpper: s ? String(s).toUpperCase() : null,
+      allowed: s ? allowedStatuses.has(String(s).toUpperCase()) : false
+    });
     if (!s) return false;
     const st = String(s).toUpperCase();
     return allowedStatuses.has(st);
