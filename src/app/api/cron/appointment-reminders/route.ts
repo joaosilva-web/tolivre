@@ -87,6 +87,7 @@ async function handle(req: NextRequest) {
         select: {
           nomeFantasia: true,
           contrato: true,
+          trialEndsAt: true,
           subscription: { select: { plan: true, status: true } },
         },
       },
@@ -104,22 +105,30 @@ async function handle(req: NextRequest) {
     );
   }
 
-  // Filter appointments by subscription status (case-insensitive) in JS to avoid
-  // TypeScript/Prisma enum literal mismatches during build.
+  // Filter appointments by subscription status or trial status
+  // Accept if:
+  // 1. Company has subscription with status ACTIVE or TRIALING
+  // 2. Company is in trial period (trialEndsAt > now)
   const allowedStatuses = new Set(["ACTIVE", "TRIALING"]);
+  const nowForTrial = new Date();
   const filteredAppointments = appointments.filter((a) => {
     const s = a.company?.subscription?.status;
+    const trialEndsAt = a.company?.trialEndsAt;
+    const isInTrial = trialEndsAt && new Date(trialEndsAt) > nowForTrial;
+    const hasActiveSubscription = s && allowedStatuses.has(String(s).toUpperCase());
+    
     console.log('[cron-reminder] filtering appointment', { 
       id: a.id, 
       hasCompany: !!a.company, 
       hasSubscription: !!a.company?.subscription, 
       status: s,
-      statusUpper: s ? String(s).toUpperCase() : null,
-      allowed: s ? allowedStatuses.has(String(s).toUpperCase()) : false
+      trialEndsAt: trialEndsAt?.toISOString(),
+      isInTrial,
+      hasActiveSubscription,
+      allowed: hasActiveSubscription || isInTrial
     });
-    if (!s) return false;
-    const st = String(s).toUpperCase();
-    return allowedStatuses.has(st);
+    
+    return hasActiveSubscription || isInTrial;
   });
 
   console.log(
