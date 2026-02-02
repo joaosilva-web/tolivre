@@ -3,6 +3,7 @@ import { z, ZodError } from "zod";
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma";
 import { buildAppointmentWhere } from "@/lib/appointmentsRange";
+import { toBrazilTime } from "@/lib/uazapi";
 import * as api from "@/app/libs/apiResponse";
 import { checkRateLimit } from "@/app/libs/rateLimit";
 import { getUserFromCookie } from "@/app/libs/auth";
@@ -235,7 +236,8 @@ export async function POST(req: NextRequest) {
         });
 
         if (company?.telefone && clientPhone) {
-          const startLocal = new Date(parsed.startTime).toLocaleString(
+          const startBrazil = toBrazilTime(start);
+          const startLocal = startBrazil.toLocaleString(
             "pt-BR",
             {
               day: "2-digit",
@@ -243,6 +245,7 @@ export async function POST(req: NextRequest) {
               year: "numeric",
               hour: "2-digit",
               minute: "2-digit",
+              timeZone: "UTC",
             },
           );
 
