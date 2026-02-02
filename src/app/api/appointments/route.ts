@@ -122,22 +122,53 @@ export async function POST(req: NextRequest) {
     const endBrazil = getBrazilTime(end);
     const day = startBrazil.getDay(); // Usar dia do Brasil, não UTC
 
+    console.log("🔍 [WORKING HOURS VALIDATION]", {
+      startUTC: start.toISOString(),
+      startBrazil: startBrazil.toISOString(),
+      startBrazilLocal: startBrazil.toString(),
+      endUTC: end.toISOString(),
+      endBrazil: endBrazil.toISOString(),
+      dayOfWeek: day,
+      dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][day]
+    });
+
     const wh = await prisma.workingHours.findFirst({
       where: { companyId: parsed.companyId, dayOfWeek: day },
     });
-    if (!wh)
+    if (!wh) {
+      console.log("❌ [WORKING HOURS] Horário de funcionamento não encontrado para dia", day);
       return api.badRequest(
         "Horário de funcionamento não configurado para esse dia",
       );
+    }
+
+    console.log("🔍 [WORKING HOURS FOUND]", {
+      openTime: wh.openTime,
+      closeTime: wh.closeTime,
+      openMinutes: timeToMinutes(wh.openTime),
+      closeMinutes: timeToMinutes(wh.closeTime)
+    });
 
     const startMinutes = startBrazil.getHours() * 60 + startBrazil.getMinutes();
     const endMinutes = endBrazil.getHours() * 60 + endBrazil.getMinutes();
+    
+    console.log("🔍 [TIME COMPARISON]", {
+      startMinutes,
+      endMinutes,
+      isStartBeforeOpen: startMinutes < timeToMinutes(wh.openTime),
+      isEndAfterClose: endMinutes > timeToMinutes(wh.closeTime),
+      willFail: startMinutes < timeToMinutes(wh.openTime) || endMinutes > timeToMinutes(wh.closeTime)
+    });
+    
     if (
       startMinutes < timeToMinutes(wh.openTime) ||
       endMinutes > timeToMinutes(wh.closeTime)
     ) {
+      console.log("❌ [WORKING HOURS] Agendamento fora do horário permitido");
       return api.badRequest("Agendamento fora do horário de funcionamento");
     }
+    
+    console.log("✅ [WORKING HOURS] Validação passou");
 
     const [lock1, lock2] = hashToTwoInts(parsed.professionalId);
 

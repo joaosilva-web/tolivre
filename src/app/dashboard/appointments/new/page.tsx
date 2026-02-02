@@ -449,6 +449,18 @@ export default function NewAppointmentPage() {
       endDateTime.setMinutes(
         endDateTime.getMinutes() + selectedService.duration,
       );
+      
+      console.log("🔍 [FRONTEND] Criando appointment", {
+        selectedDate: selectedDate.toString(),
+        selectedTime,
+        hours,
+        minutes,
+        startDateTime: startDateTime.toString(),
+        startDateTimeISO: startDateTime.toISOString(),
+        endDateTime: endDateTime.toString(),
+        endDateTimeISO: endDateTime.toISOString(),
+        serviceDuration: selectedService.duration
+      });
 
       // Encontrar um profissional disponível para este serviço
       const professionalServiceRes = await fetch(
