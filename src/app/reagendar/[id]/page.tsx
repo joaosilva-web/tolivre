@@ -104,10 +104,15 @@ export default function ReschedulePage() {
       setWorkingHours(json.data.workingHours);
       setExistingAppointments(json.data.existingAppointments);
 
+      console.log("🔍 [RESCHEDULE] Working hours:", json.data.workingHours);
+      console.log("🔍 [RESCHEDULE] Existing appointments:", json.data.existingAppointments);
+
       // Pre-calcular datas com slots disponíveis para os próximos 30 dias
       const slotsMap = new Set<string>();
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+
+      console.log("🔍 [RESCHEDULE] Calculando slots para próximos 30 dias, starting from:", today.toISOString());
 
       for (let i = 0; i < 30; i++) {
         const checkDate = new Date(today);
@@ -120,11 +125,18 @@ export default function ReschedulePage() {
           json.data.existingAppointments,
         );
 
-        if (slots.some((slot) => slot.available)) {
-          slotsMap.add(checkDate.toISOString().split("T")[0]);
+        const availableSlots = slots.filter(slot => slot.available);
+        const dateStr = checkDate.toISOString().split("T")[0];
+        
+        if (availableSlots.length > 0) {
+          console.log(`✅ [RESCHEDULE] ${dateStr}: ${availableSlots.length} slots disponíveis`);
+          slotsMap.add(dateStr);
+        } else {
+          console.log(`❌ [RESCHEDULE] ${dateStr}: sem slots (total: ${slots.length})`);
         }
       }
 
+      console.log("🔍 [RESCHEDULE] Datas habilitadas:", Array.from(slotsMap));
       setDatesWithSlots(slotsMap);
     } catch (err: any) {
       console.error("Error loading appointment:", err);
