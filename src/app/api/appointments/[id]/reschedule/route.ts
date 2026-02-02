@@ -3,7 +3,10 @@ import { z } from "zod";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
-import sendWhatsAppMessage, { normalizePhone, toBrazilTime } from "@/lib/uazapi";
+import sendWhatsAppMessage, {
+  normalizePhone,
+  toBrazilTime,
+} from "@/lib/uazapi";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { emitNotification } from "@/lib/websocketEmit";
@@ -143,14 +146,26 @@ export async function PATCH(
     // Enviar notificação via WhatsApp (background)
     const clientPhone = updated.client?.phone;
     if (clientPhone) {
-      const oldFormattedDate = format(toBrazilTime(oldStartTime), "dd/MM/yyyy", {
+      const oldFormattedDate = format(
+        toBrazilTime(oldStartTime),
+        "dd/MM/yyyy",
+        {
+          locale: ptBR,
+        },
+      );
+      const oldFormattedTime = format(toBrazilTime(oldStartTime), "HH:mm", {
         locale: ptBR,
       });
-      const oldFormattedTime = format(toBrazilTime(oldStartTime), "HH:mm", { locale: ptBR });
-      const newFormattedDate = format(toBrazilTime(newStartTime), "dd/MM/yyyy", {
+      const newFormattedDate = format(
+        toBrazilTime(newStartTime),
+        "dd/MM/yyyy",
+        {
+          locale: ptBR,
+        },
+      );
+      const newFormattedTime = format(toBrazilTime(newStartTime), "HH:mm", {
         locale: ptBR,
       });
-      const newFormattedTime = format(toBrazilTime(newStartTime), "HH:mm", { locale: ptBR });
 
       const messageText =
         `Olá *${updated.clientName}*!\n\n` +
@@ -300,8 +315,12 @@ export async function POST(
       const phone = normalizePhone(appointment.client.phone);
 
       if (phone) {
-        const dateText = format(toBrazilTime(newStart), "dd/MM/yyyy", { locale: ptBR });
-        const timeText = format(toBrazilTime(newStart), "HH:mm", { locale: ptBR });
+        const dateText = format(toBrazilTime(newStart), "dd/MM/yyyy", {
+          locale: ptBR,
+        });
+        const timeText = format(toBrazilTime(newStart), "HH:mm", {
+          locale: ptBR,
+        });
 
         const clientMessage =
           `✅ *Reagendamento Confirmado!*\n\n` +

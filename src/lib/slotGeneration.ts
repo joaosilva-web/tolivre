@@ -33,11 +33,16 @@ export function generateSlots(
   existingAppointments: UIAppointment[],
   serviceDurationMap?: Record<string, number>,
   exceptions?: WorkingHourException[],
-  debug: boolean = false
+  debug: boolean = false,
 ): AvailableSlot[] {
+  console.log("🔍 [SLOT DEBUG] Iniciando geração de slots");
+  console.log("🔍 [SLOT DEBUG] Data selecionada:", selectedDate);
+  console.log("🔍 [SLOT DEBUG] Appointments existentes:", existingAppointments.length);
+  console.log("🔍 [SLOT DEBUG] Detalhes dos appointments:", existingAppointments);
+  
   const slots: AvailableSlot[] = [];
   const dayIndex = selectedDate.getDay();
-  
+
   // Verificar se há exceção para este dia
   const dayException = exceptions?.find((exc) => {
     const excDate = new Date(exc.date);
@@ -49,21 +54,31 @@ export function generateSlots(
   });
 
   // Se dia está bloqueado ou é feriado, retornar vazio
-  if (dayException && (dayException.type === "BLOCKED" || dayException.type === "HOLIDAY")) {
+  if (
+    dayException &&
+    (dayException.type === "BLOCKED" || dayException.type === "HOLIDAY")
+  ) {
     return slots;
   }
 
   // Se há exceção CUSTOM, usar horários customizados
   let effectiveWorkingHours: WorkingHour[];
-  if (dayException && dayException.type === "CUSTOM" && dayException.openTime && dayException.closeTime) {
-    effectiveWorkingHours = [{
-      dayOfWeek: dayIndex,
-      openTime: dayException.openTime,
-      closeTime: dayException.closeTime,
-    }];
+  if (
+    dayException &&
+    dayException.type === "CUSTOM" &&
+    dayException.openTime &&
+    dayException.closeTime
+  ) {
+    effectiveWorkingHours = [
+      {
+        dayOfWeek: dayIndex,
+        openTime: dayException.openTime,
+        closeTime: dayException.closeTime,
+      },
+    ];
   } else {
     effectiveWorkingHours = workingHours.filter(
-      (wh) => wh?.dayOfWeek === dayIndex
+      (wh) => wh?.dayOfWeek === dayIndex,
     );
   }
 
@@ -90,7 +105,7 @@ export function generateSlots(
         // determine appointment duration: prefer map value, fall back to provided duration
         const apptDuration = Number(
           (appt.serviceId && serviceDurationMap?.[appt.serviceId]) ??
-            durationMinutes
+            durationMinutes,
         );
         const apptEnd = new Date(apptStart);
         apptEnd.setMinutes(apptEnd.getMinutes() + apptDuration);
@@ -108,7 +123,7 @@ export function generateSlots(
               appt.id
             } apptDate=${
               appt.date
-            } apptStartMs=${apptStart.getTime()} apptEndMs=${apptEnd.getTime()} overlap=${overlap}`
+            } apptStartMs=${apptStart.getTime()} apptEndMs=${apptEnd.getTime()} overlap=${overlap}`,
           );
         }
 

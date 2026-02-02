@@ -3,7 +3,10 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage, { normalizePhone, toBrazilTime } from "@/lib/uazapi";
+import sendWhatsAppMessage, {
+  normalizePhone,
+  toBrazilTime,
+} from "@/lib/uazapi";
 import { PLANS, type PlanName } from "@/lib/subscriptionLimits";
 
 const DEFAULT_HOURS_BEFORE = Number(
@@ -56,7 +59,7 @@ async function handle(req: NextRequest) {
   // Ou seja: windowStart = now + hoursBefore
   const windowStart = new Date(now.getTime() + hoursBefore * 60 * 60 * 1000);
   const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
-  
+
   // Calcular nowBrazil apenas para exibir nos logs
   const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
 
@@ -177,8 +180,12 @@ async function handle(req: NextRequest) {
       continue;
     }
 
-    const dateText = format(toBrazilTime(appt.startTime), "dd/MM/yyyy", { locale: ptBR });
-    const timeText = format(toBrazilTime(appt.startTime), "HH:mm", { locale: ptBR });
+    const dateText = format(toBrazilTime(appt.startTime), "dd/MM/yyyy", {
+      locale: ptBR,
+    });
+    const timeText = format(toBrazilTime(appt.startTime), "HH:mm", {
+      locale: ptBR,
+    });
     const serviceName = appt.service?.name || "seu atendimento";
     const professionalName = appt.professional?.name || "nossa equipe";
     const companyName = appt.company?.nomeFantasia || "TôLivre";

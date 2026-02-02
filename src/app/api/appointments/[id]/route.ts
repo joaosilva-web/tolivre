@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     const startBrazil = getBrazilTime(start);
     const endBrazil = getBrazilTime(end);
     const day = startBrazil.getDay(); // Usar dia do Brasil, não UTC
-    
+
     const wh = await prisma.workingHours.findFirst({
       where: { companyId, dayOfWeek: day },
     });

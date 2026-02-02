@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
     const startBrazil = getBrazilTime(start);
     const endBrazil = getBrazilTime(end);
     const day = startBrazil.getDay(); // Usar dia do Brasil, não UTC
-    
+
     const wh = await prisma.workingHours.findFirst({
       where: { companyId: parsed.companyId, dayOfWeek: day },
     });
@@ -237,17 +237,14 @@ export async function POST(req: NextRequest) {
 
         if (company?.telefone && clientPhone) {
           const startBrazil = toBrazilTime(start);
-          const startLocal = startBrazil.toLocaleString(
-            "pt-BR",
-            {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              timeZone: "UTC",
-            },
-          );
+          const startLocal = startBrazil.toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "UTC",
+          });
 
           const messageText =
             `Olá *${clientNameToUse}*!\n\n` +

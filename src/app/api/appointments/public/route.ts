@@ -195,8 +195,12 @@ export async function POST(req: NextRequest) {
 
     // Enviar notificação via WhatsApp com menu interativo (background, não bloqueia resposta)
     if (parsed.clientPhone) {
-      const formattedDate = format(toBrazilTime(startTime), "dd/MM/yyyy", { locale: ptBR });
-      const formattedTime = format(toBrazilTime(startTime), "HH:mm", { locale: ptBR });
+      const formattedDate = format(toBrazilTime(startTime), "dd/MM/yyyy", {
+        locale: ptBR,
+      });
+      const formattedTime = format(toBrazilTime(startTime), "HH:mm", {
+        locale: ptBR,
+      });
 
       const messageText =
         `Olá *${parsed.clientName}*!\n\n` +
