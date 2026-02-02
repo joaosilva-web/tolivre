@@ -76,8 +76,9 @@ export async function POST(req: NextRequest) {
       );
 
     // convert start/end to minutes (Brazil time-of-day)
-    const startMinutes = startBrazil.getHours() * 60 + startBrazil.getMinutes();
-    const endMinutes = endBrazil.getHours() * 60 + endBrazil.getMinutes();
+    // IMPORTANTE: usar getUTCHours() porque startBrazil/endBrazil já foram ajustados
+    const startMinutes = startBrazil.getUTCHours() * 60 + startBrazil.getUTCMinutes();
+    const endMinutes = endBrazil.getUTCHours() * 60 + endBrazil.getUTCMinutes();
     const openMinutes = timeToMinutes(wh.openTime);
     const closeMinutes = timeToMinutes(wh.closeTime);
 

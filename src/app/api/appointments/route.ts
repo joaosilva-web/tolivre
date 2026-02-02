@@ -149,8 +149,10 @@ export async function POST(req: NextRequest) {
       closeMinutes: timeToMinutes(wh.closeTime)
     });
 
-    const startMinutes = startBrazil.getHours() * 60 + startBrazil.getMinutes();
-    const endMinutes = endBrazil.getHours() * 60 + endBrazil.getMinutes();
+    // IMPORTANTE: usar getUTCHours() porque startBrazil/endBrazil já foram ajustados para Brasil timezone
+    // O Date object foi criado subtraindo 3 horas, então getUTCHours() retorna o horário Brasil correto
+    const startMinutes = startBrazil.getUTCHours() * 60 + startBrazil.getUTCMinutes();
+    const endMinutes = endBrazil.getUTCHours() * 60 + endBrazil.getUTCMinutes();
     
     console.log("🔍 [TIME COMPARISON]", {
       startMinutes,
