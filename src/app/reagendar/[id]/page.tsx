@@ -70,6 +70,12 @@ export default function ReschedulePage() {
   const [rescheduling, setRescheduling] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  // Matcher para habilitar apenas datas com slots disponíveis
+  const dateIsAvailable = (date: Date) => {
+    const dateStr = date.toISOString().split("T")[0];
+    return datesWithSlots.has(dateStr);
+  };
+
   useEffect(() => {
     loadAppointmentData();
   }, [appointmentId]);

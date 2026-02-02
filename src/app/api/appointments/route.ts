@@ -129,14 +129,17 @@ export async function POST(req: NextRequest) {
       endUTC: end.toISOString(),
       endBrazil: endBrazil.toISOString(),
       dayOfWeek: day,
-      dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][day]
+      dayName: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][day],
     });
 
     const wh = await prisma.workingHours.findFirst({
       where: { companyId: parsed.companyId, dayOfWeek: day },
     });
     if (!wh) {
-      console.log("❌ [WORKING HOURS] Horário de funcionamento não encontrado para dia", day);
+      console.log(
+        "❌ [WORKING HOURS] Horário de funcionamento não encontrado para dia",
+        day,
+      );
       return api.badRequest(
         "Horário de funcionamento não configurado para esse dia",
       );
@@ -146,22 +149,25 @@ export async function POST(req: NextRequest) {
       openTime: wh.openTime,
       closeTime: wh.closeTime,
       openMinutes: timeToMinutes(wh.openTime),
-      closeMinutes: timeToMinutes(wh.closeTime)
+      closeMinutes: timeToMinutes(wh.closeTime),
     });
 
     // IMPORTANTE: usar getUTCHours() porque startBrazil/endBrazil já foram ajustados para Brasil timezone
     // O Date object foi criado subtraindo 3 horas, então getUTCHours() retorna o horário Brasil correto
-    const startMinutes = startBrazil.getUTCHours() * 60 + startBrazil.getUTCMinutes();
+    const startMinutes =
+      startBrazil.getUTCHours() * 60 + startBrazil.getUTCMinutes();
     const endMinutes = endBrazil.getUTCHours() * 60 + endBrazil.getUTCMinutes();
-    
+
     console.log("🔍 [TIME COMPARISON]", {
       startMinutes,
       endMinutes,
       isStartBeforeOpen: startMinutes < timeToMinutes(wh.openTime),
       isEndAfterClose: endMinutes > timeToMinutes(wh.closeTime),
-      willFail: startMinutes < timeToMinutes(wh.openTime) || endMinutes > timeToMinutes(wh.closeTime)
+      willFail:
+        startMinutes < timeToMinutes(wh.openTime) ||
+        endMinutes > timeToMinutes(wh.closeTime),
     });
-    
+
     if (
       startMinutes < timeToMinutes(wh.openTime) ||
       endMinutes > timeToMinutes(wh.closeTime)
@@ -169,7 +175,7 @@ export async function POST(req: NextRequest) {
       console.log("❌ [WORKING HOURS] Agendamento fora do horário permitido");
       return api.badRequest("Agendamento fora do horário de funcionamento");
     }
-    
+
     console.log("✅ [WORKING HOURS] Validação passou");
 
     const [lock1, lock2] = hashToTwoInts(parsed.professionalId);

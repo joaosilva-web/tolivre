@@ -7,6 +7,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { usePathname } from "next/navigation";
 
 type UserShape = {
   id?: string;
@@ -116,9 +117,39 @@ export function clearSessionCache() {
 export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const pathname = usePathname();
   const [user, setUser] = useState<UserShape>(globalCachedUser);
   const [loading, setLoading] = useState<boolean>(globalCachedUser === null);
   const [error, setError] = useState<string | null>(null);
+
+  // Define public paths that don't need authentication
+  const isPublicPath = (): boolean => {
+    if (!pathname) return false;
+    
+    const publicPaths = [
+      "/",
+      "/login",
+      "/sobre",
+      "/recursos",
+      "/precos",
+      "/contato",
+      "/blog",
+      "/legal/privacidade",
+      "/legal/termos",
+      "/legal/seguranca",
+      "/demonstracao",
+      "/escolher-plano",
+      "/verificar-email",
+      "/reenviar-verificacao",
+    ];
+
+    return (
+      publicPaths.includes(pathname) ||
+      pathname.startsWith("/api/") ||
+      pathname.startsWith("/reagendar/") ||
+      pathname.match(/^\/[a-z0-9-]+(\/agendar)?$/) !== null
+    );
+  };
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -137,6 +168,12 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
+    // Skip session loading for public paths
+    if (isPublicPath()) {
+      setLoading(false);
+      return;
+    }
+
     if (globalCachedUser !== null) return; // already have user
     let mounted = true;
     setLoading(true);
@@ -158,7 +195,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <SessionContext.Provider value={{ user, loading, error, refresh }}>

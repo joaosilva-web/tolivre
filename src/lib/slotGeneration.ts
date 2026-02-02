@@ -37,9 +37,15 @@ export function generateSlots(
 ): AvailableSlot[] {
   console.log("🔍 [SLOT DEBUG] Iniciando geração de slots");
   console.log("🔍 [SLOT DEBUG] Data selecionada:", selectedDate);
-  console.log("🔍 [SLOT DEBUG] Appointments existentes:", existingAppointments.length);
-  console.log("🔍 [SLOT DEBUG] Detalhes dos appointments:", existingAppointments);
-  
+  console.log(
+    "🔍 [SLOT DEBUG] Appointments existentes:",
+    existingAppointments.length,
+  );
+  console.log(
+    "🔍 [SLOT DEBUG] Detalhes dos appointments:",
+    existingAppointments,
+  );
+
   const slots: AvailableSlot[] = [];
   const dayIndex = selectedDate.getDay();
 

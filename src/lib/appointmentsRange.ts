@@ -19,7 +19,7 @@ export function parseDayRange(from: string, to: string) {
 export function buildAppointmentWhere(
   companyId: string,
   from: string,
-  to: string
+  to: string,
 ) {
   const { fromDate, toDate } = parseDayRange(from, to);
   return {

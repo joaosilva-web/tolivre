@@ -75,6 +75,18 @@ const baseNavMain = [
         url: "/dashboard/company",
       },
       {
+        title: "Profissionais",
+        url: "/dashboard/company/professionals",
+      },
+      {
+        title: "Horários",
+        url: "/dashboard/company/working-hours",
+      },
+      {
+        title: "Serviços",
+        url: "/dashboard/company/services",
+      },
+      {
         title: "Equipe",
         url: "/dashboard/company/team",
       },
