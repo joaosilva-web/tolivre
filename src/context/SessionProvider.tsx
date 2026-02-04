@@ -146,8 +146,8 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     return (
       publicPaths.includes(pathname) ||
       pathname.startsWith("/api/") ||
-      pathname.startsWith("/reagendar/") ||
-      pathname.match(/^\/[a-z0-9-]+(\/agendar)?$/) !== null
+      pathname.match(/^\/[a-z0-9-]+(\/agendar)?$/) !== null ||
+      pathname.match(/^\/[a-z0-9-]+\/reagendar\/[a-z0-9-]+$/) !== null
     );
   };
 

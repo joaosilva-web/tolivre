@@ -50,6 +50,7 @@ interface AppointmentData {
 export default function ReschedulePage() {
   const params = useParams();
   const router = useRouter();
+  const slug = params.slug as string;
   const appointmentId = params.id as string;
 
   const [appointment, setAppointment] = useState<AppointmentData | null>(null);
@@ -213,12 +214,12 @@ export default function ReschedulePage() {
       const endTime = new Date(startTime);
       endTime.setMinutes(endTime.getMinutes() + appointment.service.duration);
 
-      const res = await fetch(`/api/appointments/${appointmentId}/reschedule`, {
-        method: "POST",
+      const res = await fetch(`/api/appointments/${appointment.id}/reschedule`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          newStartTime: startTime.toISOString(),
-          newEndTime: endTime.toISOString(),
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
         }),
       });
 
@@ -230,10 +231,6 @@ export default function ReschedulePage() {
 
       setSuccess(true);
       toast.success("Agendamento reagendado com sucesso!");
-
-      setTimeout(() => {
-        router.push(`/${appointment.company.slug}`);
-      }, 3000);
     } catch (err: any) {
       console.error("Error rescheduling:", err);
       toast.error(err.message || "Erro ao reagendar");
@@ -244,9 +241,9 @@ export default function ReschedulePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-primary" />
+          <Loader2 className="w-16 h-16 animate-spin mx-auto mb-4 text-primary" />
           <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
@@ -255,8 +252,8 @@ export default function ReschedulePage() {
 
   if (error || !appointment) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted">
+        <div className="text-center max-w-md p-8">
           <h1 className="text-2xl font-bold mb-4">
             Agendamento não encontrado
           </h1>
@@ -313,7 +310,7 @@ export default function ReschedulePage() {
       <header className="bg-card border-b py-4">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <button
-            onClick={() => router.push(`/${appointment.company.slug}`)}
+            onClick={() => router.push(`/${slug}`)}
             className="inline-flex items-center gap-2 px-3 py-2 rounded-md transition-all hover:opacity-80 cursor-pointer"
             style={{ color: appointment.company.primaryColor }}
           >

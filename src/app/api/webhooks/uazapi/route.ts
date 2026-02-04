@@ -181,7 +181,19 @@ export async function POST(req: NextRequest) {
       // Gerar link de reagendamento
       const baseUrl =
         process.env.NEXT_PUBLIC_APP_URL || "https://tolivre.com.br";
-      const rescheduleUrl = `${baseUrl}/reagendar/${appointmentId}`;
+      
+      // Buscar a página da empresa para pegar o slug
+      const companyPage = await prisma.companyPage.findUnique({
+        where: { companyId: appointment.companyId },
+        select: { slug: true },
+      });
+
+      if (!companyPage) {
+        console.error("[uazapi webhook] Company page not found for reschedule");
+        return api.ok({ received: true });
+      }
+
+      const rescheduleUrl = `${baseUrl}/${companyPage.slug}/reagendar/${appointmentId}`;
 
       const rescheduleMessage =
         `📅 *Reagendamento*\n\n` +
