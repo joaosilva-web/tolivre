@@ -308,53 +308,49 @@ export default function ReschedulePage() {
   const hasAvailableSlots = availableSlots.some((slot) => slot.available);
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-b from-background to-muted"
-      style={
-        {
-          "--primary": appointment.company.primaryColor,
-          "--accent": appointment.company.accentColor,
-        } as React.CSSProperties
-      }
-    >
-      <div className="container max-w-4xl mx-auto px-4 py-8">
-        <Button
-          variant="ghost"
-          onClick={() => router.push(`/${appointment.company.slug}`)}
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
-        </Button>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+      {/* Header */}
+      <header className="bg-card border-b py-4">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <button
+            onClick={() => router.push(`/${appointment.company.slug}`)}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md transition-all hover:opacity-80 cursor-pointer"
+            style={{ color: appointment.company.primaryColor }}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar
+          </button>
+          <h1 className="text-2xl font-bold">{appointment.company.nomeFantasia}</h1>
+          <div className="w-24" /> {/* Spacer */}
+        </div>
+      </header>
 
-        <div className="bg-card rounded-lg shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold mb-2">Reagendar Atendimento</h1>
-          <p className="text-muted-foreground mb-6">
-            Escolha uma nova data e horário para seu atendimento
-          </p>
-
-          {/* Dados atuais do agendamento */}
-          <div className="bg-muted p-4 rounded-lg mb-6">
-            <p className="text-sm font-semibold mb-2">Agendamento Atual:</p>
-            <p className="text-sm">
-              📅{" "}
-              {format(
-                new Date(appointment.startTime),
-                "dd/MM/yyyy 'às' HH:mm",
-                { locale: ptBR },
-              )}
+      <div className="max-w-5xl mx-auto px-4 py-12">
+        <div className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-2">Escolha a Data e Horário</h2>
+            <p className="text-muted-foreground">
+              Selecione uma nova data e horário para seu atendimento
             </p>
-            <p className="text-sm">💼 {appointment.service.name}</p>
-            <p className="text-sm">👤 {appointment.professional.name}</p>
           </div>
 
-          {/* Seleção de nova data */}
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          {/* Dados atuais do agendamento */}
+          <div className="bg-card border rounded-xl p-6 mb-6">
+            <h3 className="text-lg font-semibold mb-4">Agendamento Atual</h3>
+            <div className="space-y-2 text-sm">
+              <p>📅 {format(new Date(appointment.startTime), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</p>
+              <p>💼 {appointment.service.name}</p>
+              <p>👤 {appointment.professional.name}</p>
+            </div>
+          </div>
+
+          {/* Seleção de nova data e horário */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card border rounded-xl p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5" />
-                Escolha uma nova data
-              </h2>
+                Selecione a Data
+              </h3>
               <div className="flex justify-center">
                 <Calendar
                   mode="single"
@@ -370,93 +366,102 @@ export default function ReschedulePage() {
                     return !datesWithSlots.has(dateStr);
                   }}
                   className="rounded-md border"
+                  primaryColor={appointment.company.primaryColor}
+                  accentColor={appointment.company.accentColor}
                 />
               </div>
             </div>
-
-            {/* Seleção de horário */}
-            {selectedDate && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Escolha um horário
-                </h2>
-
-                {loadingSlots ? (
-                  <div className="text-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-primary" />
-                    <p className="text-sm text-muted-foreground">
-                      Carregando horários...
-                    </p>
-                  </div>
-                ) : !hasAvailableSlots ? (
-                  <div className="text-center py-8 bg-muted rounded-lg">
-                    <p className="text-muted-foreground">
-                      Não há horários disponíveis para esta data
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-3">
-                    {availableSlots
-                      .filter((slot) => slot.available)
-                      .map((slot, idx) => (
-                        <Button
-                          key={idx}
-                          variant={
-                            selectedSlot === slot ? "default" : "outline"
-                          }
-                          onClick={() => setSelectedSlot(slot)}
-                          className="w-full"
-                        >
-                          {slot.time}
-                        </Button>
-                      ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Botão de confirmar */}
-            {selectedSlot && selectedDate && (
-              <div className="pt-4 border-t">
-                <div className="bg-primary/10 p-4 rounded-lg mb-4">
-                  <p className="text-sm font-semibold mb-1">Novo horário:</p>
-                  <p className="text-lg font-bold">
-                    {format(
-                      (() => {
-                        const [hours, minutes] = selectedSlot.time
-                          .split(":")
-                          .map(Number);
-                        const date = new Date(selectedDate);
-                        date.setHours(hours, minutes, 0, 0);
-                        return date;
-                      })(),
-                      "dd/MM/yyyy 'às' HH:mm",
-                      { locale: ptBR },
-                    )}
-                  </p>
+            
+            <div className="bg-card border rounded-xl p-6">
+              <h3 className="text-xl font-bold mb-4">Horários Disponíveis</h3>
+              {!selectedDate ? (
+                <p className="text-muted-foreground text-center py-8">
+                  Selecione uma data para ver os horários disponíveis
+                </p>
+              ) : loadingSlots ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
                 </div>
-                <Button
-                  onClick={handleReschedule}
-                  disabled={rescheduling}
-                  className="w-full"
-                  size="lg"
-                >
-                  {rescheduling ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Reagendando...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Confirmar Reagendamento
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
+              ) : !hasAvailableSlots ? (
+                <p className="text-muted-foreground text-center py-8">
+                  Nenhum horário disponível nesta data
+                </p>
+              ) : (
+                <div className="grid grid-cols-3 gap-2 max-h-96 overflow-y-auto">
+                  {availableSlots
+                    .filter((slot) => slot.available)
+                    .map((slot) => (
+                      <button
+                        key={slot.time}
+                        onClick={() => setSelectedSlot(slot)}
+                        className={`py-3 px-4 rounded-lg border font-semibold transition-all hover:shadow-lg cursor-pointer ${
+                          selectedSlot?.time === slot.time
+                            ? "text-white"
+                            : "bg-card"
+                        }`}
+                        style={{
+                          backgroundColor:
+                            selectedSlot?.time === slot.time
+                              ? appointment.company.primaryColor
+                              : undefined,
+                        }}
+                      >
+                        {slot.time}
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Botão de confirmar */}
+          {selectedSlot && selectedDate && (
+            <div className="bg-card border rounded-xl p-6">
+              <h3 className="text-xl font-bold mb-4">Confirmação</h3>
+              <div
+                className="p-4 rounded-lg mb-4"
+                style={{
+                  backgroundColor: `${appointment.company.primaryColor}15`,
+                }}
+              >
+                <p className="text-sm font-semibold mb-1">Novo horário:</p>
+                <p className="text-lg font-bold">
+                  {format(
+                    (() => {
+                      const [hours, minutes] = selectedSlot.time
+                        .split(":")
+                        .map(Number);
+                      const date = new Date(selectedDate);
+                      date.setHours(hours, minutes, 0, 0);
+                      return date;
+                    })(),
+                    "dd/MM/yyyy 'às' HH:mm",
+                    { locale: ptBR },
+                  )}
+                </p>
+              </div>
+              <button
+                onClick={handleReschedule}
+                disabled={rescheduling}
+                className="w-full py-4 px-6 rounded-lg text-white font-bold text-lg transition-all hover:opacity-90 disabled:opacity-50"
+                style={{
+                  backgroundColor: appointment.company.primaryColor,
+                }}
+              >
+                {rescheduling ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Reagendando...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <CheckCircle className="w-5 h-5" />
+                    Confirmar Reagendamento
+                  </span>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

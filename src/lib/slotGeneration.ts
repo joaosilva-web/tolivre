@@ -109,7 +109,7 @@ export function generateSlots(
         // Suporta tanto appt.date (UIAppointment) quanto appt.startTime (API raw)
         const apptDateStr = (appt as any).date || (appt as any).startTime;
         if (!apptDateStr) return false;
-        
+
         const apptStart = new Date(apptDateStr);
         // determine appointment duration: prefer map value, fall back to provided duration
         const apptDuration = Number(
