@@ -120,6 +120,14 @@ export default function ReschedulePage() {
         today.toISOString(),
       );
 
+      // Criar mapa de durações dos serviços dos appointments existentes
+      const serviceDurationMap: Record<string, number> = {};
+      json.data.existingAppointments.forEach((appt: any) => {
+        if (appt.service?.id && appt.service?.duration) {
+          serviceDurationMap[appt.service.id] = appt.service.duration;
+        }
+      });
+
       for (let i = 0; i < 30; i++) {
         const checkDate = new Date(today);
         checkDate.setDate(today.getDate() + i);
@@ -129,6 +137,7 @@ export default function ReschedulePage() {
           json.data.workingHours,
           json.data.appointment.service.duration,
           json.data.existingAppointments,
+          serviceDurationMap,
         );
 
         const availableSlots = slots.filter((slot) => slot.available);
@@ -162,6 +171,14 @@ export default function ReschedulePage() {
     try {
       setLoadingSlots(true);
 
+      // Criar mapa de durações dos serviços
+      const serviceDurationMap: Record<string, number> = {};
+      existingAppointments.forEach((appt: any) => {
+        if (appt.service?.id && appt.service?.duration) {
+          serviceDurationMap[appt.service.id] = appt.service.duration;
+        }
+      });
+
       const slots = generateSlots(
         selectedDate,
         workingHours,
@@ -170,6 +187,7 @@ export default function ReschedulePage() {
           // Excluir o agendamento atual da lista de conflitos
           (apt) => apt.id !== appointment.id,
         ),
+        serviceDurationMap,
       );
 
       setAvailableSlots(slots);

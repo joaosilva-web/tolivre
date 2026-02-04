@@ -106,8 +106,11 @@ export function generateSlots(
       const timeStr = current.toTimeString().slice(0, 5);
 
       const isOccupied = existingAppointments.some((appt) => {
-        // appt.date is expected to be full ISO string (UTC or with timezone)
-        const apptStart = new Date(appt.date);
+        // Suporta tanto appt.date (UIAppointment) quanto appt.startTime (API raw)
+        const apptDateStr = (appt as any).date || (appt as any).startTime;
+        if (!apptDateStr) return false;
+        
+        const apptStart = new Date(apptDateStr);
         // determine appointment duration: prefer map value, fall back to provided duration
         const apptDuration = Number(
           (appt.serviceId && serviceDurationMap?.[appt.serviceId]) ??
@@ -127,9 +130,7 @@ export function generateSlots(
           console.log(
             `[slotGeneration] slot=${timeStr} slotMs=${current.getTime()} appt=${
               appt.id
-            } apptDate=${
-              appt.date
-            } apptStartMs=${apptStart.getTime()} apptEndMs=${apptEnd.getTime()} overlap=${overlap}`,
+            } apptDate=${apptDateStr} apptStartMs=${apptStart.getTime()} apptEndMs=${apptEnd.getTime()} overlap=${overlap}`,
           );
         }
 
