@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
       // Gerar link de reagendamento
       const baseUrl =
         process.env.NEXT_PUBLIC_APP_URL || "https://tolivre.com.br";
-      
+
       // Buscar a página da empresa para pegar o slug
       const companyPage = await prisma.companyPage.findUnique({
         where: { companyId: appointment.companyId },
