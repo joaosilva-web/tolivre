@@ -45,27 +45,22 @@ async function handle(req: NextRequest) {
     return api.unauthorized("Token inválido para cron de lembretes");
   }
 
-  const hoursBefore = DEFAULT_HOURS_BEFORE;
-  const windowMinutes = DEFAULT_WINDOW_MINUTES;
   const batchSize = DEFAULT_BATCH_SIZE;
 
   // Brasil timezone offset: UTC-3 (3 horas a menos que UTC)
   const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
 
   const now = new Date();
-  // Calcular janela de busca: agora + hoursBefore (em UTC)
-  // Appointments são salvos em UTC (convertidos do horário local do browser pelo .toISOString())
-  // Se agora é 20:31 Brasil (23:31 UTC), queremos appointments que começam em 23:31 Brasil (02:31 UTC)
-  // Ou seja: windowStart = now + hoursBefore
-  const windowStart = new Date(now.getTime() + hoursBefore * 60 * 60 * 1000);
-  const windowEnd = new Date(windowStart.getTime() + windowMinutes * 60 * 1000);
+  // Nova lógica: buscar agendamentos nos próximos 15 minutos que ainda não receberam lembrete
+  // Janela: now até now + 15 minutos (em UTC)
+  const windowStart = now; // Agora
+  const windowEnd = new Date(now.getTime() + 15 * 60 * 1000); // +15 minutos
 
   // Calcular nowBrazil apenas para exibir nos logs
   const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
 
   console.log("[cron-reminder] params", {
-    hoursBefore,
-    windowMinutes,
+    windowMinutes: 15,
     batchSize,
   });
   console.log("[cron-reminder] now/windowStart/windowEnd", {

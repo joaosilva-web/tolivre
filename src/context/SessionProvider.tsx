@@ -26,7 +26,7 @@ type SessionContextValue = {
 };
 
 const SessionContext = createContext<SessionContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 let globalCachedUser: UserShape | null = null;
@@ -80,8 +80,8 @@ async function fetchUserOnce(): Promise<UserShape | null> {
             typeof u.photoUrl === "string"
               ? u.photoUrl
               : u.photoUrl === null
-              ? null
-              : undefined,
+                ? null
+                : undefined,
         };
       } else {
         globalCachedUser = null;
@@ -125,7 +125,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   // Define public paths that don't need authentication
   const isPublicPath = (): boolean => {
     if (!pathname) return false;
-    
+
     const publicPaths = [
       "/",
       "/login",
