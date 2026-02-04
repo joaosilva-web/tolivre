@@ -51,16 +51,16 @@ async function handle(req: NextRequest) {
   const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
 
   const now = new Date();
-  // Nova lógica: buscar agendamentos nos próximos 15 minutos que ainda não receberam lembrete
-  // Janela: now até now + 15 minutos (em UTC)
-  const windowStart = now; // Agora
-  const windowEnd = new Date(now.getTime() + 15 * 60 * 1000); // +15 minutos
+  // Janela de lembretes: de 15 minutos antes até 2 horas antes do agendamento
+  // Busca agendamentos entre: now + 15min e now + 2h
+  const windowStart = new Date(now.getTime() + 15 * 60 * 1000); // +15 minutos
+  const windowEnd = new Date(now.getTime() + 2 * 60 * 60 * 1000); // +2 horas
 
   // Calcular nowBrazil apenas para exibir nos logs
   const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
 
   console.log("[cron-reminder] params", {
-    windowMinutes: 15,
+    reminderWindow: "15min to 2h before",
     batchSize,
   });
   console.log("[cron-reminder] now/windowStart/windowEnd", {
