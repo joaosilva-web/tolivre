@@ -49,6 +49,21 @@ const plans: Record<string, PlanConfig> = {
       "Página pública de agendamento",
     ],
   },
+  "pro-plus": {
+    id: "PRO_PLUS",
+    name: "Pro Plus",
+    price: 129.9,
+    description: "Até 10 profissionais + Comissões + Fotos",
+    stripeProductId: "tolivre-pro-plus",
+    features: [
+      "Tudo do Profissional +",
+      "Até 10 profissionais",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Exceções de horário",
+      "Relatórios avançados",
+    ],
+  },
   business: {
     id: "BUSINESS",
     name: "Business",
@@ -56,12 +71,12 @@ const plans: Record<string, PlanConfig> = {
     description: "Profissionais ilimitados + Comissões + Suporte 24/7",
     stripeProductId: "tolivre-business",
     features: [
-      "Tudo do Profissional +",
+      "Tudo do Pro Plus +",
       "Profissionais ilimitados",
-      "Sistema de comissões",
-      "Fotos dos profissionais",
       "Notificações em tempo real",
       "Suporte 24/7",
+      "API personalizada",
+      "Gerente de conta dedicado",
     ],
   },
 };

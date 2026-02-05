@@ -47,18 +47,34 @@ export const PLANS = {
       professionals: 3,
     },
   },
+  PRO_PLUS: {
+    id: "PRO_PLUS",
+    name: "Pro Plus",
+    price: 129.9,
+    features: [
+      "Tudo do Profissional +",
+      "Até 10 profissionais",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Exceções de horário",
+      "Relatórios avançados",
+    ],
+    limits: {
+      appointments: -1,
+      professionals: 10,
+    },
+  },
   BUSINESS: {
     id: "BUSINESS",
     name: "Business",
     price: 169.9,
     features: [
-      "Tudo do Profissional +",
+      "Tudo do Pro Plus +",
       "Profissionais ilimitados",
-      "Sistema de comissões",
-      "Fotos dos profissionais",
       "Notificações em tempo real",
       "Suporte prioritário 24/7",
       "Migração assistida",
+      "API personalizada",
     ],
     limits: {
       appointments: -1,
@@ -68,7 +84,7 @@ export const PLANS = {
 };
 
 const checkoutSchema = z.object({
-  plan: z.enum(["BASIC", "PROFESSIONAL", "BUSINESS"]),
+  plan: z.enum(["BASIC", "PROFESSIONAL", "PRO_PLUS", "BUSINESS"]),
 });
 
 // POST - Criar preferência de pagamento

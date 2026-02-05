@@ -1,3 +1,312 @@
+# 📋 TASKS - Implementação do Plano Pro Plus
+
+## 🎯 **OBJETIVO GERAL**
+
+Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sistema de comissões, fotos e exceções de horário. Atualizar toda a plataforma para refletir os 4 planos e implementar controle de acesso estrito por funcionalidade.
+
+---
+
+## 📊 **FASE 1: Atualização de Schema e Enums** (Banco de Dados)
+
+### ✅ Tarefa 1.1 - Atualizar enum ContractType no Prisma
+
+- [x] Editar `prisma/schema.prisma`
+- [x] Adicionar `PRO_PLUS` ao enum `ContractType`
+- [x] Atualizar comentários de documentação do enum
+- [x] Criar migration: `npx prisma migrate dev --name add_pro_plus_plan`
+- [x] Verificar se migration foi aplicada
+- [x] Regenerar Prisma Client
+
+### ✅ Tarefa 1.2 - Atualizar arquivo de constantes de planos
+
+- [x] Editar `src/lib/subscriptionLimits.ts`
+- [x] Adicionar definição do plano `PRO_PLUS`:
+  ```typescript
+  PRO_PLUS: {
+    name: "Pro Plus",
+    maxProfessionals: 10,
+    features: {
+      whatsapp: true,
+      publicPage: true,
+      reports: true,
+      commissions: true,
+      professionalPhotos: true,
+      workingHourExceptions: true,
+      websocket: false,
+      unlimitedProfessionals: false
+    },
+    monthlyPrice: 129.90,
+    annualPrice: 1247.04 // 20% desconto
+  }
+  ```
+- [ ] Atualizar array `PLAN_ORDER` para incluir `PRO_PLUS`
+- [ ] Verificar funções `getPlanLimits()` e `canAccessFeature()`
+
+---
+
+## 🎨 **FASE 2: Atualização de UI - Páginas Públicas** (Marketing)
+
+### ✅ Tarefa 2.1 - Atualizar página de Preços (`/precos`)
+
+- [x] Editar `src/app/(landing)/precos/page.tsx`
+- [x] Adicionar card do plano "Pro Plus" entre Profissional e Business
+- [x] Atualizar grid para 4 colunas (ou manter 3 com scroll)
+- [x] Destacar "Pro Plus" como "Melhor Custo-Benefício" ou "Recomendado"
+- [x] Atualizar badges/marcadores visuais
+- [x] Verificar responsividade mobile
+
+### ✅ Tarefa 2.2 - Atualizar página Escolher Plano (`/escolher-plano`)
+
+- [x] Editar `src/app/(landing)/escolher-plano/page.tsx`
+- [x] Adicionar opção Pro Plus na seleção de planos
+- [x] Atualizar lógica de redirecionamento para checkout
+- [x] Verificar fluxo de trial → Pro Plus
+
+### ⏳ Tarefa 2.3 - Atualizar landing page principal
+
+- [ ] Editar `src/app/page.tsx`
+- [ ] Atualizar seção de pricing (se houver preview)
+- [ ] Verificar CTAs e links para `/precos` e `/escolher-plano`
+
+### ✅ Tarefa 2.4 - Atualizar documentação de planos
+
+- [x] Editar `PLANOS_MODELO.md`
+- [x] Adicionar seção completa do Pro Plus
+- [x] Atualizar tabela de comparação
+- [x] Atualizar desconto anual
+
+---
+
+## 💳 **FASE 3: Atualização de Checkout e Pagamentos**
+
+### ✅ Tarefa 3.1 - Atualizar integração Mercado Pago
+
+- [x] Editar `src/app/api/subscriptions/checkout/route.ts`
+- [x] Adicionar caso `PRO_PLUS` no switch de preços
+- [x] Verificar criação de preference com valor correto
+- [x] Testar redirecionamento de checkout
+
+### ✅ Tarefa 3.2 - Atualizar integração Stripe
+
+- [x] Editar `src/app/api/subscription/stripe-checkout/route.ts`
+- [x] Adicionar price ID do Pro Plus no Stripe
+- [x] Atualizar mapping de planos → Stripe prices
+- [x] Criar produto/preço no Stripe Dashboard (ou via API)
+- [x] Testar checkout Stripe com Pro Plus
+
+### ⏳ Tarefa 3.3 - Atualizar webhook de confirmação
+
+- [ ] Editar `src/app/api/subscription/stripe-webhook/route.ts`
+- [ ] Verificar atualização de `contrato` para `PRO_PLUS`
+- [ ] Testar fluxo completo de pagamento
+
+---
+
+## 🔐 **FASE 4: Controle de Acesso por Plano** (Regras de Negócio)
+
+### ✅ Tarefa 4.1 - Middleware de verificação de limites
+
+- [x] Criar `src/app/libs/planGuard.ts`
+- [x] Função `checkProfessionalLimit(companyId: string)`:
+  - Conta profissionais ativos da empresa
+  - Compara com limite do plano (`maxProfessionals`)
+  - Retorna `{ allowed: boolean, current: number, limit: number }`
+- [x] Função `checkFeatureAccess(companyId: string, feature: string)`:
+  - Busca plano da empresa
+  - Verifica se feature está habilitada
+  - Retorna `{ allowed: boolean, planRequired: string }`
+
+### ⏳ Tarefa 4.2 - Proteção de API: Criar Profissionais
+
+- [ ] Editar `src/app/api/users/route.ts` (POST)
+- [ ] Adicionar verificação de limite ANTES de criar:
+  ```typescript
+  const { allowed, current, limit } = await checkProfessionalLimit(companyId);
+  if (!allowed) {
+    return api.forbidden(
+      `Limite de ${limit} profissionais atingido. Faça upgrade.`,
+    );
+  }
+  ```
+- [ ] Retornar erro específico com sugestão de upgrade
+
+### ⏳ Tarefa 4.3 - Proteção de API: WhatsApp
+
+- [ ] Editar `src/app/api/integrations/uazapi/init/route.ts`
+- [ ] Editar `src/app/api/integrations/uazapi/status/route.ts`
+- [ ] Adicionar verificação:
+  ```typescript
+  const { allowed } = await checkFeatureAccess(companyId, "whatsapp");
+  if (!allowed) {
+    return api.forbidden(
+      "WhatsApp disponível apenas nos planos Profissional, Pro Plus e Business",
+    );
+  }
+  ```
+
+### ⏳ Tarefa 4.4 - Proteção de API: Sistema de Comissões
+
+- [ ] Editar `src/app/api/reports/commissions/route.ts`
+- [ ] Editar `src/app/api/reports/commissions/pay/route.ts`
+- [ ] Adicionar verificação de feature `commissions`
+- [ ] Bloquear acesso para planos Básico e Profissional
+
+### ⏳ Tarefa 4.5 - Proteção de API: Fotos de Profissionais
+
+- [ ] Editar `src/app/api/users/photo/route.ts`
+- [ ] Verificar feature `professionalPhotos`
+- [ ] Permitir apenas para Pro Plus e Business
+
+### ⏳ Tarefa 4.6 - Proteção de API: Exceções de Horário
+
+- [ ] Editar `src/app/api/working-hours/exceptions/route.ts`
+- [ ] Verificar feature `workingHourExceptions`
+- [ ] Permitir apenas para Pro Plus e Business
+
+### ⏳ Tarefa 4.7 - Proteção de API: Relatórios Avançados
+
+- [ ] Editar `src/app/api/stats/route.ts`
+- [ ] Editar `src/app/api/stats/revenue/route.ts`
+- [ ] Verificar feature `reports`
+- [ ] Bloquear plano Básico
+
+---
+
+## 🎨 **FASE 5: Atualização de Dashboard** (Frontend)
+
+### ⏳ Tarefa 5.1 - Atualizar página de Assinatura
+
+- [ ] Editar `src/app/dashboard/assinatura/page.tsx`
+- [ ] Adicionar card Pro Plus na comparação
+- [ ] Atualizar badge do plano atual
+- [ ] Verificar botões de upgrade/downgrade
+
+### ⏳ Tarefa 5.2 - Atualizar página de Planos (upgrade)
+
+- [ ] Editar `src/app/dashboard/assinatura/planos/page.tsx`
+- [ ] Adicionar opção Pro Plus
+- [ ] Atualizar lógica de recomendação de plano
+- [ ] Verificar fluxo de upgrade Profissional → Pro Plus
+
+### ⏳ Tarefa 5.3 - Adicionar avisos de limite no Dashboard
+
+- [ ] Criar componente `PlanLimitWarning.tsx`
+- [ ] Mostrar aviso quando próximo do limite de profissionais
+- [ ] Exemplo: "Você está usando 2/3 profissionais. Upgrade para Pro Plus para até 10!"
+- [ ] Adicionar em páginas relevantes (Team, Settings)
+
+### ⏳ Tarefa 5.4 - Atualizar sidebar com badges de plano
+
+- [ ] Editar `src/components/DashboardSidebar.tsx`
+- [ ] Adicionar badge "PRO+" ao lado de features exclusivas
+- [ ] Links desabilitados mostram tooltip: "Disponível no plano Pro Plus"
+
+### ⏳ Tarefa 5.5 - Desabilitar features não disponíveis
+
+- [ ] Editar `src/app/dashboard/company/team/page.tsx`
+  - Desabilitar botão "Novo Profissional" se limite atingido
+  - Mostrar modal de upgrade ao tentar adicionar
+- [ ] Editar `src/app/dashboard/integrations/page.tsx`
+  - Bloquear WhatsApp para plano Básico
+- [ ] Editar `src/app/dashboard/reports/commissions/page.tsx`
+  - Mostrar paywall se plano < Pro Plus
+
+---
+
+## 🧪 **FASE 6: Testes e Validação**
+
+### ⏳ Tarefa 6.1 - Testes de Limites de Profissionais
+
+- [ ] Criar empresa com plano Básico
+  - Tentar criar 2º profissional → Deve bloquear
+- [ ] Criar empresa com plano Profissional
+  - Criar até 3 profissionais → Deve permitir
+  - Tentar 4º → Deve bloquear
+- [ ] Criar empresa com plano Pro Plus
+  - Criar até 10 profissionais → Deve permitir
+  - Tentar 11º → Deve bloquear
+- [ ] Business: profissionais ilimitados → Sempre permitir
+
+### ⏳ Tarefa 6.2 - Testes de Features por Plano
+
+- [ ] Básico: Verificar bloqueios
+  - WhatsApp ❌
+  - Página Pública ❌
+  - Relatórios ❌
+  - Comissões ❌
+- [ ] Profissional: Verificar acessos
+  - WhatsApp ✅
+  - Página Pública ✅
+  - Relatórios ✅
+  - Comissões ❌
+  - Fotos ❌
+- [ ] Pro Plus: Verificar acessos
+  - Tudo do Profissional ✅
+  - Comissões ✅
+  - Fotos ✅
+  - Exceções ✅
+- [ ] Business: Verificar tudo liberado
+
+### ⏳ Tarefa 6.3 - Testes de Checkout
+
+- [ ] Iniciar trial → Escolher Pro Plus → Verificar criação
+- [ ] Assinar Pro Plus via Mercado Pago
+- [ ] Assinar Pro Plus via Stripe
+- [ ] Upgrade Profissional → Pro Plus
+- [ ] Downgrade Business → Pro Plus
+- [ ] Verificar cálculo de desconto anual
+
+### ⏳ Tarefa 6.4 - Testes de Mensagens de Erro
+
+- [ ] Tentar exceder limite: Mensagem clara + CTA upgrade
+- [ ] Tentar acessar feature bloqueada: Tooltip/modal explicativo
+- [ ] Verificar UX em mobile
+
+---
+
+## 📝 **FASE 7: Documentação e Deploy**
+
+### ⏳ Tarefa 7.1 - Atualizar documentação
+
+- [ ] Atualizar `README.md` com novos planos
+- [ ] Atualizar `PLANOS_MODELO.md` completo
+- [ ] Criar changelog/release notes
+
+### ⏳ Tarefa 7.2 - Migração de dados (se necessário)
+
+- [ ] Script para empresas existentes
+- [ ] Verificar se alguma empresa atual se encaixa melhor no Pro Plus
+- [ ] Comunicar mudanças aos clientes
+
+### ⏳ Tarefa 7.3 - Deploy em staging
+
+- [ ] Deploy em ambiente de homologação
+- [ ] Testes end-to-end completos
+- [ ] Verificar performance
+
+### ⏳ Tarefa 7.4 - Deploy em produção
+
+- [ ] Backup do banco de dados
+- [ ] Deploy da migration
+- [ ] Deploy do código
+- [ ] Monitorar logs e métricas
+- [ ] Comunicado oficial de lançamento
+
+---
+
+## 🎯 **CHECKLIST FINAL**
+
+- [ ] Todos os 4 planos aparecem corretamente em todas as páginas
+- [ ] Limites de profissionais são respeitados por plano
+- [ ] Features bloqueadas não são acessíveis via API nem UI
+- [ ] Checkout funciona para todos os planos
+- [ ] Webhooks atualizam planos corretamente
+- [ ] Mensagens de erro são claras e direcionam para upgrade
+- [ ] Mobile funciona perfeitamente
+- [ ] Documentação atualizada
+
+---
+
 # 📋 TASKS - Sistema de Suporte via Chat em Tempo Real
 
 ## ✅ **FASE 1: Banco de Dados & Models** (COMPLETA)

@@ -29,7 +29,7 @@ O TôLivre agora opera com um modelo de assinatura baseado em **trial de 14 dias
 
 ---
 
-### 2. Profissional - R$ 99,90/mês ⭐ MAIS POPULAR
+### 2. Profissional - R$ 99,90/mês
 
 **Ideal para:** Pequenos negócios com equipe
 
@@ -45,31 +45,54 @@ O TôLivre agora opera com um modelo de assinatura baseado em **trial de 14 dias
 - ✅ Upload de logo
 - ✅ Tags e categorias
 - ✅ Suporte prioritário
-- ❌ Profissionais ilimitados
 - ❌ Sistema de comissões
+- ❌ Fotos dos profissionais
+- ❌ Exceções de horário
 
 **ContractType:** `PROFESSIONAL`
 
 ---
 
-### 3. Business - R$ 169,90/mês
+### 3. Pro Plus - R$ 129,90/mês ⭐ MELHOR CUSTO-BENEFÍCIO
+
+**Ideal para:** Equipes em crescimento
+
+**Funcionalidades:**
+
+- ✅ Tudo do plano Profissional +
+- ✅ Até 10 profissionais
+- ✅ Sistema de comissões
+- ✅ Fotos dos profissionais
+- ✅ Exceções de horário personalizadas
+- ✅ Relatórios avançados
+- ✅ Backup automático
+- ✅ Suporte prioritário
+- ✅ Personalização completa
+- ❌ Profissionais ilimitados
+- ❌ Suporte 24/7
+
+**ContractType:** `PRO_PLUS`
+
+---
+
+### 4. Business - R$ 169,90/mês
 
 **Ideal para:** Empresas estabelecidas
 
 **Funcionalidades:**
 
-- ✅ Tudo do plano Profissional +
+- ✅ Tudo do plano Pro Plus +
 - ✅ Profissionais ilimitados
-- ✅ Sistema de comissões
-- ✅ Fotos dos profissionais
 - ✅ Múltiplos serviços por agendamento
-- ✅ Gestão de exceções de horário
 - ✅ Notificações em tempo real (WebSocket)
 - ✅ Assinaturas e pagamentos (Subscription model)
-- ✅ Suporte prioritário por WhatsApp
+- ✅ Suporte 24/7 por WhatsApp
 - ✅ Migração assistida
 - ✅ Treinamento personalizado
 - ✅ Backup automático diário
+- ✅ API personalizada
+- ✅ Gerente de conta dedicado
+- ✅ SLA garantido
 
 **ContractType:** `BUSINESS`
 
@@ -83,6 +106,7 @@ Todos os planos têm **20% de desconto** no pagamento anual:
 | ------------ | --------- | ----------- | --------- |
 | Básico       | R$ 69,90  | R$ 670,32   | R$ 168,48 |
 | Profissional | R$ 99,90  | R$ 958,32   | R$ 240,48 |
+| Pro Plus     | R$ 129,90 | R$ 1.247,04 | R$ 311,76 |
 | Business     | R$ 169,90 | R$ 1.630,32 | R$ 408,48 |
 
 ## Trial de 14 Dias
@@ -103,7 +127,7 @@ Todos os planos têm **20% de desconto** no pagamento anual:
 - Horários de funcionamento
 - Exportação de dados CSV
 
-### Premium (Profissional e Business)
+### Premium (Profissional, Pro Plus e Business)
 
 - Integração WhatsApp (UAZAPI)
 - Lembretes automáticos
@@ -112,14 +136,17 @@ Todos os planos têm **20% de desconto** no pagamento anual:
 - Tags e categorias
 - Personalização visual
 
+### Pro Plus e Business Only
+
+- Sistema de comissões (`Professional.commission`)
+- Fotos de profissionais (`Professional.photoUrl`)
+- Exceções de horário (`WorkingHourException`)
+
 ### Business Only
 
 - Profissionais ilimitados
-- Sistema de comissões (`Professional.commission`)
-- Fotos de profissionais (`Professional.photoUrl`)
 - WebSocket (notificações em tempo real)
 - Sistema de assinaturas (`Subscription` model)
-- Exceções de horário (`WorkingHourException`)
 
 ## Estrutura de Banco de Dados
 
@@ -128,6 +155,7 @@ enum ContractType {
   TRIAL         // Durante período de teste
   BASIC         // Plano Básico
   PROFESSIONAL  // Plano Profissional
+  PRO_PLUS      // Plano Pro Plus
   BUSINESS      // Plano Business
 }
 
@@ -145,6 +173,7 @@ model Company {
 
 - **Básico:** Máximo 1 profissional
 - **Profissional:** Máximo 3 profissionais
+- **Pro Plus:** Máximo 10 profissionais
 - **Business:** Ilimitado
 
 ### WhatsApp

@@ -82,7 +82,7 @@ export default function PrecosPage() {
       monthlyPrice: 99.9,
       yearlyPrice: 958.32,
       discount: 20,
-      popular: true,
+      popular: false,
       features: [
         { text: "Tudo do plano Básico +", included: true },
         { text: "Até 3 profissionais", included: true },
@@ -94,12 +94,39 @@ export default function PrecosPage() {
         { text: "Upload de logo", included: true },
         { text: "Tags e categorias", included: true },
         { text: "Suporte prioritário", included: true },
-        { text: "Profissionais ilimitados", included: false },
         { text: "Sistema de comissões", included: false },
+        { text: "Fotos dos profissionais", included: false },
+      ],
+      cta: "Começar Teste Grátis",
+      ctaVariant: "outline" as const,
+      gradient: "from-purple-500 to-blue-600",
+    },
+    {
+      id: "pro-plus",
+      name: "Pro Plus",
+      tagline: "Melhor custo-benefício",
+      icon: Zap,
+      monthlyPrice: 129.9,
+      yearlyPrice: 1247.04,
+      discount: 20,
+      popular: true,
+      features: [
+        { text: "Tudo do plano Profissional +", included: true },
+        { text: "Até 10 profissionais", included: true },
+        { text: "Sistema de comissões", included: true },
+        { text: "Fotos dos profissionais", included: true },
+        { text: "Exceções de horário", included: true },
+        { text: "Relatórios avançados", included: true },
+        { text: "Suporte prioritário", included: true },
+        { text: "Backup automático", included: true },
+        { text: "Gestão de tags", included: true },
+        { text: "Personalização completa", included: true },
+        { text: "Profissionais ilimitados", included: false },
+        { text: "Suporte 24/7", included: false },
       ],
       cta: "Começar Teste Grátis",
       ctaVariant: "default" as const,
-      gradient: "from-primary to-blue-600",
+      gradient: "from-primary to-purple-600",
     },
     {
       id: "business",
@@ -111,22 +138,22 @@ export default function PrecosPage() {
       discount: 20,
       popular: false,
       features: [
-        { text: "Tudo do plano Profissional +", included: true },
+        { text: "Tudo do plano Pro Plus +", included: true },
         { text: "Profissionais ilimitados", included: true },
-        { text: "Sistema de comissões", included: true },
-        { text: "Fotos dos profissionais", included: true },
         { text: "Múltiplos serviços por agendamento", included: true },
-        { text: "Gestão de exceções de horário", included: true },
         { text: "Notificações em tempo real", included: true },
         { text: "Assinaturas e pagamentos", included: true },
-        { text: "Suporte prioritário por WhatsApp", included: true },
+        { text: "Suporte 24/7 por WhatsApp", included: true },
         { text: "Migração assistida", included: true },
         { text: "Treinamento personalizado", included: true },
         { text: "Backup automático diário", included: true },
+        { text: "API personalizada", included: true },
+        { text: "Gerente de conta dedicado", included: true },
+        { text: "SLA garantido", included: true },
       ],
       cta: "Começar Teste Grátis",
       ctaVariant: "outline" as const,
-      gradient: "from-purple-500 to-pink-600",
+      gradient: "from-amber-500 to-orange-600",
     },
   ];
 
@@ -362,7 +389,7 @@ export default function PrecosPage() {
       {/* Pricing Cards */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {plans.map((plan) => (
               <div
                 key={plan.id}

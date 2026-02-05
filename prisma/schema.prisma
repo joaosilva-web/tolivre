@@ -76,6 +76,7 @@ enum ContractType {
   TRIAL
   BASIC
   PROFESSIONAL
+  PRO_PLUS
   BUSINESS
 }
 
@@ -339,6 +340,7 @@ enum SubscriptionPlan {
   TRIAL // Trial de 14 dias com acesso completo
   BASIC // R$ 69.90/mês, 1 profissional, sem WhatsApp
   PROFESSIONAL // R$ 99.90/mês, 3 profissionais, WhatsApp, relatórios
+  PRO_PLUS // R$ 129.90/mês, 10 profissionais, comissões, fotos
   BUSINESS // R$ 169.90/mês, ilimitado, comissões, suporte 24/7
 }
 

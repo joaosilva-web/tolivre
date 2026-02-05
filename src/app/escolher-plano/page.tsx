@@ -44,6 +44,20 @@ const plans: PlanOption[] = [
       "Relatórios e estatísticas",
       "Página pública de agendamento",
     ],
+  },
+  {
+    id: "pro-plus",
+    name: "Pro Plus",
+    price: 129.9,
+    interval: "mês",
+    features: [
+      "Tudo do Profissional +",
+      "Até 10 profissionais",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Exceções de horário",
+      "Relatórios avançados",
+    ],
     recommended: true,
   },
   {
@@ -52,12 +66,12 @@ const plans: PlanOption[] = [
     price: 169.9,
     interval: "mês",
     features: [
-      "Tudo do Profissional +",
+      "Tudo do Pro Plus +",
       "Profissionais ilimitados",
-      "Sistema de comissões",
-      "Fotos dos profissionais",
       "Notificações em tempo real",
       "Suporte 24/7",
+      "API personalizada",
+      "Gerente de conta dedicado",
     ],
   },
 ];

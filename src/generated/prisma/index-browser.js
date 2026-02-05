@@ -460,6 +460,7 @@ exports.ContractType = exports.$Enums.ContractType = {
   TRIAL: 'TRIAL',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
+  PRO_PLUS: 'PRO_PLUS',
   BUSINESS: 'BUSINESS'
 };
 
@@ -493,6 +494,7 @@ exports.SubscriptionPlan = exports.$Enums.SubscriptionPlan = {
   TRIAL: 'TRIAL',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
+  PRO_PLUS: 'PRO_PLUS',
   BUSINESS: 'BUSINESS'
 };
 

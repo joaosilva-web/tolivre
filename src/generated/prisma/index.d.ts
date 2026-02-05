@@ -146,6 +146,7 @@ export const ContractType: {
   TRIAL: 'TRIAL',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
+  PRO_PLUS: 'PRO_PLUS',
   BUSINESS: 'BUSINESS'
 };
 
@@ -194,6 +195,7 @@ export const SubscriptionPlan: {
   TRIAL: 'TRIAL',
   BASIC: 'BASIC',
   PROFESSIONAL: 'PROFESSIONAL',
+  PRO_PLUS: 'PRO_PLUS',
   BUSINESS: 'BUSINESS'
 };
 
