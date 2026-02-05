@@ -47,11 +47,11 @@ export default function TeamManagementPage() {
 
     try {
       setLoading(true);
-      
+
       // Carregar profissionais e dados da empresa em paralelo
       const [profRes, companyRes] = await Promise.all([
         fetch(`/api/company/${user.companyId}/professionals`),
-        fetch(`/api/company/${user.companyId}`)
+        fetch(`/api/company/${user.companyId}`),
       ]);
 
       if (!profRes.ok) {
@@ -62,7 +62,7 @@ export default function TeamManagementPage() {
 
       const profData = await profRes.json();
       setProfessionals(profData.data ?? profData);
-      
+
       // Buscar plano da empresa
       if (companyRes.ok) {
         const companyData = await companyRes.json();
@@ -191,10 +191,8 @@ export default function TeamManagementPage() {
   // Calcular limites do plano
   const limits = companyPlan ? PLANS[companyPlan] : null;
   const professionalsFeature = limits?.features.professionals;
-  const professionalLimit = 
-    professionalsFeature === "unlimited" 
-      ? 999 
-      : professionalsFeature ?? 999;
+  const professionalLimit =
+    professionalsFeature === "unlimited" ? 999 : (professionalsFeature ?? 999);
   const currentCount = professionals.length;
 
   // Determinar plano recomendado para upgrade

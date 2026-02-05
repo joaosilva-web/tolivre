@@ -17,11 +17,11 @@ export async function GET(req: NextRequest) {
     // Verificar se o plano tem acesso ao sistema de comissões
     const { allowed, planRequired } = await checkFeatureAccess(
       user.companyId,
-      "commissions"
+      "commissions",
     );
     if (!allowed) {
       return api.forbidden(
-        `Sistema de comissões disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+        `Sistema de comissões disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`,
       );
     }
 
@@ -74,45 +74,48 @@ export async function GET(req: NextRequest) {
     });
 
     // Agrupar por profissional
-    const professionalStats = appointments.reduce((acc, apt) => {
-      const profId = apt.professionalId;
+    const professionalStats = appointments.reduce(
+      (acc, apt) => {
+        const profId = apt.professionalId;
 
-      if (!acc[profId]) {
-        acc[profId] = {
-          professional: apt.professional,
-          totalAppointments: 0,
-          totalRevenue: 0,
-          totalCommission: 0,
-          commissionPaid: 0,
-          commissionPending: 0,
-          appointments: [],
-        };
-      }
+        if (!acc[profId]) {
+          acc[profId] = {
+            professional: apt.professional,
+            totalAppointments: 0,
+            totalRevenue: 0,
+            totalCommission: 0,
+            commissionPaid: 0,
+            commissionPending: 0,
+            appointments: [],
+          };
+        }
 
-      acc[profId].totalAppointments++;
-      acc[profId].totalRevenue += apt.price || 0;
-      acc[profId].totalCommission += apt.commissionAmount || 0;
+        acc[profId].totalAppointments++;
+        acc[profId].totalRevenue += apt.price || 0;
+        acc[profId].totalCommission += apt.commissionAmount || 0;
 
-      if (apt.commissionPaid) {
-        acc[profId].commissionPaid += apt.commissionAmount || 0;
-      } else {
-        acc[profId].commissionPending += apt.commissionAmount || 0;
-      }
+        if (apt.commissionPaid) {
+          acc[profId].commissionPaid += apt.commissionAmount || 0;
+        } else {
+          acc[profId].commissionPending += apt.commissionAmount || 0;
+        }
 
-      acc[profId].appointments.push({
-        id: apt.id,
-        startTime: apt.startTime,
-        service: apt.service,
-        client: apt.client?.name || apt.clientName,
-        price: apt.price,
-        commissionRate: apt.commissionRate,
-        commissionAmount: apt.commissionAmount,
-        commissionPaid: apt.commissionPaid,
-        commissionPaidAt: apt.commissionPaidAt,
-      });
+        acc[profId].appointments.push({
+          id: apt.id,
+          startTime: apt.startTime,
+          service: apt.service,
+          client: apt.client?.name || apt.clientName,
+          price: apt.price,
+          commissionRate: apt.commissionRate,
+          commissionAmount: apt.commissionAmount,
+          commissionPaid: apt.commissionPaid,
+          commissionPaidAt: apt.commissionPaidAt,
+        });
 
-      return acc;
-    }, {} as Record<string, any>);
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 
     const report = Object.values(professionalStats);
 
@@ -121,11 +124,11 @@ export async function GET(req: NextRequest) {
       totalAppointments: appointments.length,
       totalRevenue: appointments.reduce(
         (sum, apt) => sum + (apt.price || 0),
-        0
+        0,
       ),
       totalCommission: appointments.reduce(
         (sum, apt) => sum + (apt.commissionAmount || 0),
-        0
+        0,
       ),
       commissionPaid: appointments
         .filter((apt) => apt.commissionPaid)

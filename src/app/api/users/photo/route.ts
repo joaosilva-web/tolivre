@@ -14,11 +14,11 @@ export async function POST(req: NextRequest) {
     if (user.companyId) {
       const { allowed, planRequired } = await checkFeatureAccess(
         user.companyId,
-        "professionalPhotos"
+        "professionalPhotos",
       );
       if (!allowed) {
         return api.forbidden(
-          `Fotos de profissionais disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+          `Fotos de profissionais disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`,
         );
       }
     }
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
       if (!isOwnerOrManager) {
         return api.forbidden(
-          "Você não pode atualizar fotos de outros usuários"
+          "Você não pode atualizar fotos de outros usuários",
         );
       }
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
       if (!targetUser || targetUser.companyId !== user.companyId) {
         return api.forbidden(
-          "Você não pode atualizar fotos de usuários de outra empresa"
+          "Você não pode atualizar fotos de usuários de outra empresa",
         );
       }
 
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     });
 
     console.log(
-      `[Photo Upload] User ${user.id} uploaded photo for user ${userIdToUpdate}`
+      `[Photo Upload] User ${user.id} uploaded photo for user ${userIdToUpdate}`,
     );
 
     return api.ok({

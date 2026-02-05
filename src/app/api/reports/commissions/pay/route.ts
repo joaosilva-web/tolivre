@@ -19,11 +19,11 @@ export async function POST(req: NextRequest) {
     // Verificar se o plano tem acesso ao sistema de comissões
     const { allowed, planRequired } = await checkFeatureAccess(
       user.companyId,
-      "commissions"
+      "commissions",
     );
     if (!allowed) {
       return api.forbidden(
-        `Sistema de comissões disponível apenas a partir do plano ${planRequired}.`
+        `Sistema de comissões disponível apenas a partir do plano ${planRequired}.`,
       );
     }
 

@@ -33,6 +33,7 @@ import {
 import IconLogo from "./ui/icon-logo";
 import { useSessionContext } from "@/context/SessionProvider";
 import { SupportMenuItem } from "@/components/support/SupportMenuItem";
+import type { ContractType } from "@/generated/prisma/client";
 
 // Helper para verificar se é usuário interno do ToLivre
 function isToLivreStaff(email?: string): boolean {
@@ -89,10 +90,14 @@ const baseNavMain = [
       {
         title: "Equipe",
         url: "/dashboard/company/team",
+        badge: "PRO+",
+        requiredPlan: "PRO_PLUS" as ContractType,
       },
       {
         title: "Página Pública",
         url: "/dashboard/company/page-settings",
+        badge: "PRO",
+        requiredPlan: "PROFESSIONAL" as ContractType,
       },
     ],
   },
@@ -104,10 +109,14 @@ const baseNavMain = [
       {
         title: "Financeiro",
         url: "/dashboard/financial",
+        badge: "PRO",
+        requiredPlan: "PROFESSIONAL" as ContractType,
       },
       {
         title: "Comissões",
         url: "/dashboard/reports/commissions",
+        badge: "PRO+",
+        requiredPlan: "PRO_PLUS" as ContractType,
       },
     ],
   },
@@ -154,6 +163,19 @@ const commonNavItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useSessionContext();
+  const [companyPlan, setCompanyPlan] = React.useState<ContractType | null>(null);
+
+  // Buscar plano da empresa
+  React.useEffect(() => {
+    if (user?.companyId) {
+      fetch(`/api/company/${user.companyId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCompanyPlan(data.data?.contrato || data.contrato || null);
+        })
+        .catch(() => setCompanyPlan(null));
+    }
+  }, [user?.companyId]);
 
   // Constrói o menu dinamicamente baseado no usuário
   const navMain = React.useMemo(() => {
@@ -188,7 +210,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavMain items={navMain} companyPlan={companyPlan} />
         {/* NavDocuments has been removed */}
         <SidebarGroup className="mt-auto">
           <SidebarMenu>

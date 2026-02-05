@@ -35,11 +35,11 @@ export async function GET(req: NextRequest) {
     if (companyId) {
       const { allowed, planRequired } = await checkFeatureAccess(
         companyId,
-        "whatsapp"
+        "whatsapp",
       );
       if (!allowed) {
         return api.forbidden(
-          `WhatsApp disponível apenas a partir do plano ${planRequired}.`
+          `WhatsApp disponível apenas a partir do plano ${planRequired}.`,
         );
       }
     }
@@ -119,11 +119,11 @@ export async function POST(req: NextRequest) {
     // Verificar se o plano tem acesso ao WhatsApp
     const { allowed, planRequired } = await checkFeatureAccess(
       parsed.companyId,
-      "whatsapp"
+      "whatsapp",
     );
     if (!allowed) {
       return api.forbidden(
-        `WhatsApp disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+        `WhatsApp disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`,
       );
     }
 
@@ -135,7 +135,7 @@ export async function POST(req: NextRequest) {
 
     if (!UAZAPI_TOKEN) {
       return api.serverError(
-        "Configuração Uazapi não encontrada. Verifique as variáveis de ambiente."
+        "Configuração Uazapi não encontrada. Verifique as variáveis de ambiente.",
       );
     }
 
@@ -170,12 +170,12 @@ export async function POST(req: NextRequest) {
 
     console.log(
       "[uazapi-init] Initializing instance:",
-      JSON.stringify(payload)
+      JSON.stringify(payload),
     );
     console.log("[uazapi-init] UAZAPI_BASE_URL:", UAZAPI_BASE_URL);
     console.log(
       "[uazapi-init] initUrl will be:",
-      `${UAZAPI_BASE_URL}/instance/init`
+      `${UAZAPI_BASE_URL}/instance/init`,
     );
     // Log headers with masked token to avoid leaking secret
     console.log("[uazapi-init] headers (masked):", {
@@ -210,11 +210,11 @@ export async function POST(req: NextRequest) {
         "[uazapi-init] API error:",
         response.status,
         responseText,
-        responseHeadersObj
+        responseHeadersObj,
       );
       return api.badRequest(
         `Erro ao criar instância: ${response.status} - ${responseText}`,
-        { status: response.status, response: responseText }
+        { status: response.status, response: responseText },
       );
     }
 
@@ -256,7 +256,7 @@ export async function POST(req: NextRequest) {
         const connectText = await connectResponse.text();
         console.log(
           "[uazapi-init] Connect response status:",
-          connectResponse.status
+          connectResponse.status,
         );
         console.log("[uazapi-init] Connect response body:", connectText);
 
@@ -264,7 +264,7 @@ export async function POST(req: NextRequest) {
           const connectData = JSON.parse(connectText);
           console.log(
             "[uazapi-init] Connect data fields:",
-            Object.keys(connectData)
+            Object.keys(connectData),
           );
           qrCodeData =
             connectData.qrCode ||
@@ -274,13 +274,13 @@ export async function POST(req: NextRequest) {
             connectData.instance?.qrcode;
         } else {
           console.error(
-            "[uazapi-init] Connect failed, trying alternative approach..."
+            "[uazapi-init] Connect failed, trying alternative approach...",
           );
           // Try as query parameter
           const connectUrlWithQuery = `${UAZAPI_BASE_URL}/instance/connect?token=${instanceToken}`;
           console.log(
             "[uazapi-init] Trying with query param:",
-            connectUrlWithQuery
+            connectUrlWithQuery,
           );
 
           const retryResponse = await fetch(connectUrlWithQuery, {
@@ -295,7 +295,7 @@ export async function POST(req: NextRequest) {
           const retryText = await retryResponse.text();
           console.log(
             "[uazapi-init] Retry response status:",
-            retryResponse.status
+            retryResponse.status,
           );
           console.log("[uazapi-init] Retry response body:", retryText);
 

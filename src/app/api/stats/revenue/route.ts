@@ -18,11 +18,11 @@ export async function GET(req: NextRequest) {
     // Verificar se o plano tem acesso a relatórios
     const { allowed, planRequired } = await checkFeatureAccess(
       user.companyId,
-      "reports"
+      "reports",
     );
     if (!allowed) {
       return api.forbidden(
-        `Relatórios de receita disponíveis apenas a partir do plano ${planRequired}.`
+        `Relatórios de receita disponíveis apenas a partir do plano ${planRequired}.`,
       );
     }
 
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     const revenueByDate = appointments.reduce(
       (
         acc: Record<string, { revenue: number; appointments: number }>,
-        appointment
+        appointment,
       ) => {
         const date = appointment.startTime.toISOString().split("T")[0];
 
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
 
         return acc;
       },
-      {}
+      {},
     );
 
     // Convert to array format

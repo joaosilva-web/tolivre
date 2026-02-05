@@ -20,11 +20,11 @@ export async function GET(req: NextRequest) {
     // Verificar se o plano tem acesso a relatórios
     const { allowed, planRequired } = await checkFeatureAccess(
       user.companyId,
-      "reports"
+      "reports",
     );
     if (!allowed) {
       return api.forbidden(
-        `Relatórios e estatísticas disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+        `Relatórios e estatísticas disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`,
       );
     }
 

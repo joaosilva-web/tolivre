@@ -198,21 +198,28 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 - [x] Adicionar em página Team (`src/app/dashboard/company/team/page.tsx`)
 - [ ] Adicionar em outras páginas relevantes (Settings, se necessário)
 
-### ⏳ Tarefa 5.4 - Atualizar sidebar com badges de plano
+### ✅ Tarefa 5.4 - Atualizar sidebar com badges de plano
 
-- [ ] Editar `src/components/DashboardSidebar.tsx`
-- [ ] Adicionar badge "PRO+" ao lado de features exclusivas
-- [ ] Links desabilitados mostram tooltip: "Disponível no plano Pro Plus"
+- [x] Editar `src/components/app-sidebar.tsx`
+- [x] Adicionar badges "PRO+" e "PRO" nos itens de menu
+- [x] Adicionar `requiredPlan` aos itens premium
+- [x] Buscar plano da empresa via API
+- [x] Passar `companyPlan` para NavMain
+- [x] Links desabilitados mostram tooltip: "Disponível no plano X"
+- [x] Implementar hierarquia de planos e verificação de acesso
+- [x] Aplicar estilos visuais (opacity-50) para features bloqueadas
 
-### ⏳ Tarefa 5.5 - Desabilitar features não disponíveis
+### ✅ Tarefa 5.5 - Desabilitar features não disponíveis (UI)
 
+- [x] Sidebar com badges e tooltips implementados
+- [x] Features premium visualmente desabilitadas (opacity + cursor)
 - [ ] Editar `src/app/dashboard/company/team/page.tsx`
   - Desabilitar botão "Novo Profissional" se limite atingido
   - Mostrar modal de upgrade ao tentar adicionar
 - [ ] Editar `src/app/dashboard/integrations/page.tsx`
-  - Bloquear WhatsApp para plano Básico
+  - Bloquear WhatsApp para plano Básico (já protegido na API)
 - [ ] Editar `src/app/dashboard/reports/commissions/page.tsx`
-  - Mostrar paywall se plano < Pro Plus
+  - Mostrar paywall se plano < Pro Plus (já protegido na API)
 
 ---
 

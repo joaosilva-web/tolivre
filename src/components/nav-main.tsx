@@ -16,21 +16,62 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ContractType } from "@/generated/prisma/client";
+
+// Ordem dos planos (para comparação)
+const PLAN_HIERARCHY: Record<ContractType, number> = {
+  TRIAL: 0,
+  BASIC: 1,
+  PROFESSIONAL: 2,
+  PRO_PLUS: 3,
+  BUSINESS: 4,
+};
+
+function canAccessFeature(currentPlan: ContractType | null, requiredPlan?: ContractType): boolean {
+  if (!requiredPlan) return true; // Feature sem restrição
+  if (!currentPlan) return false; // Sem plano, sem acesso
+  
+  return PLAN_HIERARCHY[currentPlan] >= PLAN_HIERARCHY[requiredPlan];
+}
+
+function getPlanDisplayName(plan: ContractType): string {
+  const names: Record<ContractType, string> = {
+    TRIAL: "Trial",
+    BASIC: "Básico",
+    PROFESSIONAL: "Profissional",
+    PRO_PLUS: "Pro Plus",
+    BUSINESS: "Business",
+  };
+  return names[plan] || plan;
+}
 
 export function NavMain({
   items,
+  companyPlan,
 }: {
   items: {
     title: string;
     url: string;
     icon?: Icon;
+    badge?: string;
+    requiredPlan?: ContractType;
     items?: {
       title: string;
       url: string;
+      badge?: string;
+      requiredPlan?: ContractType;
     }[];
   }[];
+  companyPlan: ContractType | null;
 }) {
   const pathname = usePathname();
 
@@ -68,17 +109,52 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => {
                         const subActive = isExact(subItem.url);
-                        return (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              className={subActive ? "text-primary" : ""}
-                              aria-current={subActive ? "page" : undefined}
-                            >
+                        const hasAccess = canAccessFeature(companyPlan, subItem.requiredPlan);
+                        
+                        const menuButton = (
+                          <SidebarMenuSubButton
+                            asChild={hasAccess}
+                            className={`${subActive ? "text-primary" : ""} ${!hasAccess ? "opacity-50 cursor-not-allowed" : ""}`}
+                            aria-current={subActive ? "page" : undefined}
+                          >
+                            {hasAccess ? (
                               <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
+                                {subItem.badge && (
+                                  <Badge variant="secondary" className="ml-auto text-xs">
+                                    {subItem.badge}
+                                  </Badge>
+                                )}
                               </Link>
-                            </SidebarMenuSubButton>
+                            ) : (
+                              <div className="flex items-center gap-2 w-full">
+                                <span>{subItem.title}</span>
+                                {subItem.badge && (
+                                  <Badge variant="outline" className="ml-auto text-xs">
+                                    {subItem.badge}
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                          </SidebarMenuSubButton>
+                        );
+
+                        return (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            {!hasAccess && subItem.requiredPlan ? (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    {menuButton}
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right">
+                                    <p>Disponível no plano {getPlanDisplayName(subItem.requiredPlan)}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            ) : (
+                              menuButton
+                            )}
                           </SidebarMenuSubItem>
                         );
                       })}

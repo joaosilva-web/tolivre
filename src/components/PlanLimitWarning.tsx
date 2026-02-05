@@ -22,7 +22,7 @@ export function PlanLimitWarning({
 }: PlanLimitWarningProps) {
   const router = useRouter();
   const percentage = (currentCount / limit) * 100;
-  
+
   // Mostrar aviso quando estiver acima de 80% do limite
   if (percentage < 80) return null;
 
@@ -36,13 +36,17 @@ export function PlanLimitWarning({
         <div className="flex-1">
           {isAtLimit ? (
             <p>
-              <strong>Limite atingido!</strong> Você está usando {currentCount}/{limit} {resourceType}.
-              {recommendedPlan && ` Faça upgrade para o plano ${recommendedPlan} para continuar.`}
+              <strong>Limite atingido!</strong> Você está usando {currentCount}/
+              {limit} {resourceType}.
+              {recommendedPlan &&
+                ` Faça upgrade para o plano ${recommendedPlan} para continuar.`}
             </p>
           ) : (
             <p>
-              <strong>Atenção!</strong> Você está usando {currentCount}/{limit} {resourceType}. 
-              Restam apenas {remaining}. {recommendedPlan && `Upgrade para ${recommendedPlan} para até ${resourceType === "profissionais" ? "10 profissionais" : "mais recursos"}!`}
+              <strong>Atenção!</strong> Você está usando {currentCount}/{limit}{" "}
+              {resourceType}. Restam apenas {remaining}.{" "}
+              {recommendedPlan &&
+                `Upgrade para ${recommendedPlan} para até ${resourceType === "profissionais" ? "10 profissionais" : "mais recursos"}!`}
             </p>
           )}
         </div>

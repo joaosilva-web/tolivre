@@ -66,11 +66,11 @@ export async function POST(req: NextRequest) {
     // Verificar se o plano tem acesso a exceções de horário
     const { allowed, planRequired } = await checkFeatureAccess(
       user.companyId,
-      "workingHourExceptions"
+      "workingHourExceptions",
     );
     if (!allowed) {
       return api.forbidden(
-        `Exceções de horário disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+        `Exceções de horário disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`,
       );
     }
 
