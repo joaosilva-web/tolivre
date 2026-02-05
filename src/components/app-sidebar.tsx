@@ -96,8 +96,6 @@ const baseNavMain = [
       {
         title: "Página Pública",
         url: "/dashboard/company/page-settings",
-        badge: "PRO",
-        requiredPlan: "PROFESSIONAL" as ContractType,
       },
     ],
   },

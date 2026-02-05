@@ -21,7 +21,8 @@ export const PLANS = {
       "1 profissional",
       "Gestão de clientes",
       "Gestão de serviços",
-      "Calendário semanal",
+      "WhatsApp integrado",
+      "Página de agendamento pública",
       "Suporte por email",
     ],
     limits: {

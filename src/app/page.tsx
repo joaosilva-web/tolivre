@@ -887,7 +887,8 @@ const pricing = [
       "1 profissional",
       "Agendamentos ilimitados",
       "Gestão de clientes",
-      "Calendário semanal",
+      "WhatsApp integrado",
+      "Página de agendamento",
       "Suporte por email",
     ],
   },
@@ -899,10 +900,9 @@ const pricing = [
     features: [
       "Até 5 profissionais",
       "Tudo do Básico +",
-      "WhatsApp integrado",
-      "Lembretes automáticos",
       "Relatórios detalhados",
-      "Página de agendamento",
+      "Lembretes automáticos",
+      "Suporte prioritário",
     ],
   },
   {

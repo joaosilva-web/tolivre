@@ -86,8 +86,8 @@ export async function checkFeatureAccess(
       websocket: true,
     },
     BASIC: {
-      whatsapp: false,
-      publicPage: false,
+      whatsapp: true,
+      publicPage: true,
       reports: false,
       commissions: false,
       professionalPhotos: false,
