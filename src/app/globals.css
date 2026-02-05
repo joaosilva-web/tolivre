@@ -84,12 +84,13 @@
   --sidebar-ring: oklch(0.7409 0.148 166.89);
 }
 
+/* Animações de scroll - variações dinâmicas */
 .scroll-reveal {
   opacity: 0;
   transform: translateY(32px);
   transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -97,6 +98,64 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Animações de entrada com direções diferentes */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-down {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-up.visible,
+.fade-in-down.visible,
+.fade-in-left.visible,
+.fade-in-right.visible,
+.fade-in-scale.visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Delays escalonados para animações */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
 
 .dark {
   --background: oklch(0.145 0 0);
