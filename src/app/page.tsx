@@ -188,9 +188,14 @@ export default function Home() {
         </div>
 
         <div className="container mx-auto max-w-7xl relative z-10">
-          <div ref={heroRef} className="flex flex-col items-center text-center space-y-8">
+          <div
+            ref={heroRef}
+            className="flex flex-col items-center text-center space-y-8"
+          >
             {/* Badge */}
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 fade-in-down ${heroVisible ? "visible" : ""}`}>
+            <div
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 fade-in-down ${heroVisible ? "visible" : ""}`}
+            >
               <span className="h-2 w-2 rounded-full bg-secondary animate-pulse"></span>
               <span className="text-sm font-medium text-primary-foreground">
                 Sistema de agendamento profissional
@@ -198,19 +203,25 @@ export default function Home() {
             </div>
 
             {/* Title */}
-            <h1 className={`text-5xl md:text-7xl text-primary-foreground font-bold tracking-tight max-w-4xl fade-in-up delay-100 ${heroVisible ? "visible" : ""}`}>
+            <h1
+              className={`text-5xl md:text-7xl text-primary-foreground font-bold tracking-tight max-w-4xl fade-in-up delay-100 ${heroVisible ? "visible" : ""}`}
+            >
               Agendamentos <span className="text-secondary">simplificados</span>{" "}
               para seu negócio
             </h1>
 
             {/* Subtitle */}
-            <p className={`text-xl text-primary-foreground/60 max-w-2xl fade-in-up delay-200 ${heroVisible ? "visible" : ""}`}>
+            <p
+              className={`text-xl text-primary-foreground/60 max-w-2xl fade-in-up delay-200 ${heroVisible ? "visible" : ""}`}
+            >
               Gerencie sua agenda, clientes e pagamentos em um só lugar. Sistema
               completo para salões, barbearias e profissionais autônomos.
             </p>
 
             {/* CTAs */}
-            <div className={`flex flex-col sm:flex-row gap-4 mt-8 fade-in-scale delay-300 ${heroVisible ? "visible" : ""}`}>
+            <div
+              className={`flex flex-col sm:flex-row gap-4 mt-8 fade-in-scale delay-300 ${heroVisible ? "visible" : ""}`}
+            >
               <Button size="lg" className="rounded-full px-8" asChild>
                 <Link href="/login">
                   Começar grátis
@@ -228,7 +239,9 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className={`flex flex-wrap justify-center gap-8 mt-12 text-sm text-muted-foreground fade-in-up delay-400 ${heroVisible ? "visible" : ""}`}>
+            <div
+              className={`flex flex-wrap justify-center gap-8 mt-12 text-sm text-muted-foreground fade-in-up delay-400 ${heroVisible ? "visible" : ""}`}
+            >
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-secondary" />
                 <span className="text-primary-foreground/60">
@@ -255,7 +268,9 @@ export default function Home() {
       {/* Clients Section */}
       <section ref={clientsRef} className="py-12 border-y bg-muted/30">
         <div className="container mx-auto max-w-7xl px-4">
-          <p className={`text-center text-sm text-muted-foreground mb-8 fade-in-down ${clientsVisible ? "visible" : ""}`}>
+          <p
+            className={`text-center text-sm text-muted-foreground mb-8 fade-in-down ${clientsVisible ? "visible" : ""}`}
+          >
             Confiado por centenas de profissionais em todo Brasil
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center opacity-60">
@@ -277,11 +292,15 @@ export default function Home() {
       <section ref={featuresRef} className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${featuresVisible ? "visible" : ""}`}>
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${featuresVisible ? "visible" : ""}`}
+            >
               Agendamento reimaginado para o{" "}
               <span className="text-primary">seu futuro</span>
             </h2>
-            <p className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${featuresVisible ? "visible" : ""}`}>
+            <p
+              className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${featuresVisible ? "visible" : ""}`}
+            >
               Todas as ferramentas que você precisa para gerenciar seu negócio
               de beleza
             </p>
@@ -291,14 +310,14 @@ export default function Home() {
             {features.map((feature, index) => {
               const animationClass = [
                 "fade-in-left",
-                "fade-in-up", 
+                "fade-in-up",
                 "fade-in-right",
                 "fade-in-left",
                 "fade-in-up",
-                "fade-in-right"
+                "fade-in-right",
               ][index % 6];
               const delayClass = `delay-${100 * ((index % 3) + 1)}`;
-              
+
               return (
                 <Card
                   key={index}
@@ -311,7 +330,9 @@ export default function Home() {
                     <h3 className="text-xl font-semibold mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <p className="text-muted-foreground">
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               );
@@ -325,18 +346,25 @@ export default function Home() {
         <div className="container mx-auto max-w-7xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <h2 className={`text-4xl md:text-5xl font-bold mb-6 fade-in-left ${multiVisible ? "visible" : ""}`}>
+              <h2
+                className={`text-4xl md:text-5xl font-bold mb-6 fade-in-left ${multiVisible ? "visible" : ""}`}
+              >
                 Um sistema para{" "}
                 <span className="text-primary">múltiplos profissionais</span>
               </h2>
-              <p className={`text-xl text-muted-foreground mb-8 fade-in-left delay-100 ${multiVisible ? "visible" : ""}`}>
+              <p
+                className={`text-xl text-muted-foreground mb-8 fade-in-left delay-100 ${multiVisible ? "visible" : ""}`}
+              >
                 Gerencie toda sua equipe em um só lugar. Controle de horários,
                 comissões e muito mais.
               </p>
 
               <div className="space-y-4">
                 {multiProfessionalFeatures.map((item, index) => (
-                  <div key={index} className={`flex items-start gap-4 fade-in-left delay-${200 + (index * 100)} ${multiVisible ? "visible" : ""}`}>
+                  <div
+                    key={index}
+                    className={`flex items-start gap-4 fade-in-left delay-${200 + index * 100} ${multiVisible ? "visible" : ""}`}
+                  >
                     <div className="h-8 w-8 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-1">
                       <CheckCircle className="h-5 w-5 text-green-500" />
                     </div>
@@ -350,13 +378,19 @@ export default function Home() {
                 ))}
               </div>
 
-              <Button size="lg" className={`mt-8 rounded-full fade-in-scale delay-500 ${multiVisible ? "visible" : ""}`} asChild>
+              <Button
+                size="lg"
+                className={`mt-8 rounded-full fade-in-scale delay-500 ${multiVisible ? "visible" : ""}`}
+                asChild
+              >
                 <Link href="/login">Começar agora</Link>
               </Button>
             </div>
 
             <div className="relative">
-              <Card className={`p-6 fade-in-right ${multiVisible ? "visible" : ""}`}>
+              <Card
+                className={`p-6 fade-in-right ${multiVisible ? "visible" : ""}`}
+              >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
@@ -422,11 +456,15 @@ export default function Home() {
       <section ref={stepsRef} className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${stepsVisible ? "visible" : ""}`}>
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${stepsVisible ? "visible" : ""}`}
+            >
               Nosso sistema é{" "}
               <span className="text-primary">fácil de usar</span>
             </h2>
-            <p className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${stepsVisible ? "visible" : ""}`}>
+            <p
+              className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${stepsVisible ? "visible" : ""}`}
+            >
               Comece a receber agendamentos em minutos
             </p>
           </div>
@@ -481,38 +519,52 @@ export default function Home() {
       <section ref={pricingRef} className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${pricingVisible ? "visible" : ""}`}>
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${pricingVisible ? "visible" : ""}`}
+            >
               Escolha um plano que{" "}
               <span className="text-primary">impulsione seu negócio</span>
             </h2>
-            <p className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${pricingVisible ? "visible" : ""}`}>
+            <p
+              className={`text-xl text-muted-foreground max-w-2xl mx-auto fade-in-up delay-100 ${pricingVisible ? "visible" : ""}`}
+            >
               Sem taxas ocultas. Cancele quando quiser.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {pricing.map((plan, index) => {
-              const animationClass = ["fade-in-left", "fade-in-scale", "fade-in-right"][index];
+          {/* Top 3 cards */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-8">
+            {pricing.slice(0, 3).map((plan, index) => {
+              const animationClass = [
+                "fade-in-left",
+                "fade-in-scale",
+                "fade-in-right",
+              ][index];
               const delayClass = `delay-${100 * (index + 1)}`;
               
+              // Pro Plus (popular) fica no meio com destaque extra
+              const isPopular = plan.popular;
+
               return (
                 <Card
                   key={index}
                   className={`relative ${
-                    plan.popular
-                      ? "border-primary shadow-lg scale-105"
+                    isPopular
+                      ? "border-2 border-primary shadow-2xl md:scale-105 md:-mt-2 z-10"
                       : "border-border"
                   } ${animationClass} ${delayClass} ${pricingVisible ? "visible" : ""}`}
                 >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-sm font-semibold rounded-full">
+                  {isPopular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-sm font-semibold rounded-full shadow-lg">
                       Mais popular
                     </div>
                   )}
                   <CardContent className="p-8">
                     <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                     <div className="mb-6">
-                      <span className="text-4xl font-bold">R$ {plan.price}</span>
+                      <span className="text-4xl font-bold">
+                        R$ {plan.price}
+                      </span>
                       <span className="text-muted-foreground">/mês</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-6">
@@ -538,6 +590,40 @@ export default function Home() {
               );
             })}
           </div>
+
+          {/* Business plan centered below */}
+          <div className="flex justify-center max-w-5xl mx-auto">
+            <div className="w-full md:w-1/3">
+              {pricing.slice(3).map((plan, index) => (
+                <Card
+                  key={index}
+                  className={`relative border-border fade-in-scale delay-400 ${pricingVisible ? "visible" : ""}`}
+                >
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold">R$ {plan.price}</span>
+                    <span className="text-muted-foreground">/mês</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    {plan.description}
+                  </p>
+                  <Button className="w-full rounded-full" variant="outline" asChild>
+                    <Link href="/login">Começar agora</Link>
+                  </Button>
+                  <div className="mt-6 space-y-3">
+                    {plan.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -545,22 +631,33 @@ export default function Home() {
       <section ref={testimonialsRef} className="py-24 px-4 bg-muted/30">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${testimonialsVisible ? "visible" : ""}`}>
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-4 fade-in-down ${testimonialsVisible ? "visible" : ""}`}
+            >
               Feedback de{" "}
               <span className="text-primary">clientes satisfeitos</span>
             </h2>
-            <p className={`text-xl text-muted-foreground fade-in-up delay-100 ${testimonialsVisible ? "visible" : ""}`}>
+            <p
+              className={`text-xl text-muted-foreground fade-in-up delay-100 ${testimonialsVisible ? "visible" : ""}`}
+            >
               Veja o que nossos usuários dizem sobre o TôLivre
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => {
-              const animationClass = ["fade-in-left", "fade-in-up", "fade-in-right"][index];
+              const animationClass = [
+                "fade-in-left",
+                "fade-in-up",
+                "fade-in-right",
+              ][index];
               const delayClass = `delay-${100 * (index + 2)}`;
-              
+
               return (
-                <Card key={index} className={`${animationClass} ${delayClass} ${testimonialsVisible ? "visible" : ""}`}>
+                <Card
+                  key={index}
+                  className={`${animationClass} ${delayClass} ${testimonialsVisible ? "visible" : ""}`}
+                >
                   <CardContent className="p-6">
                     <div className="flex gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (
@@ -604,10 +701,14 @@ export default function Home() {
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/0" />
         <div className="container mx-auto max-w-4xl text-center relative z-10">
-          <h2 className={`text-4xl md:text-5xl font-bold mb-6 fade-in-down ${ctaVisible ? "visible" : ""}`}>
+          <h2
+            className={`text-4xl md:text-5xl font-bold mb-6 fade-in-down ${ctaVisible ? "visible" : ""}`}
+          >
             Impulsione sua liberdade financeira
           </h2>
-          <p className={`text-xl mb-8 text-primary-foreground/90 fade-in-up delay-100 ${ctaVisible ? "visible" : ""}`}>
+          <p
+            className={`text-xl mb-8 text-primary-foreground/90 fade-in-up delay-100 ${ctaVisible ? "visible" : ""}`}
+          >
             Comece hoje mesmo a gerenciar seus agendamentos de forma
             profissional e aumente sua receita.
           </p>

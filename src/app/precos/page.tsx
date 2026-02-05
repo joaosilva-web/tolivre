@@ -1,320 +1,108 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-  ArrowLeft,
   CheckCircle,
-  X,
   ArrowRight,
-  Star,
-  Zap,
-  Shield,
-  Users,
-  Calendar,
-  MessageCircle,
-  BarChart3,
-  Clock,
   Sparkles,
-  HelpCircle,
-  Check,
-  Crown,
-  Rocket,
-  Building,
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 export default function PrecosPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "monthly",
   );
-  const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
-  const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    // Parallax effect
-    const handleScroll = () => {
-      const elements = document.querySelectorAll(".parallax-bg");
-      elements.forEach((el) => {
-        const speed = parseFloat((el as HTMLElement).dataset.speed || "0.5");
-        const yPos = -(window.scrollY * speed);
-        (el as HTMLElement).style.transform = `translateY(${yPos}px)`;
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const plans = [
+  const pricing = [
     {
-      id: "basic",
       name: "Básico",
-      tagline: "Ideal para profissionais autônomos",
-      icon: Rocket,
-      monthlyPrice: 69.9,
-      yearlyPrice: 670.32,
-      discount: 20,
+      monthlyPrice: 29.9,
+      yearlyPrice: 287.04,
+      description: "Perfeito para profissionais autônomos",
       popular: false,
       features: [
-        { text: "Agendamentos ilimitados", included: true },
-        { text: "1 profissional", included: true },
-        { text: "Gestão de clientes", included: true },
-        { text: "Gestão de serviços", included: true },
-        { text: "Calendário semanal", included: true },
-        { text: "Horários de funcionamento", included: true },
-        { text: "Exportação de dados (CSV)", included: true },
-        { text: "Suporte por email", included: true },
-        { text: "Integração WhatsApp", included: false },
-        { text: "Lembretes automáticos", included: false },
-        { text: "Relatórios e estatísticas", included: false },
-        { text: "Página de agendamento pública", included: false },
+        "1 profissional",
+        "Agendamentos ilimitados",
+        "Gestão de clientes",
+        "WhatsApp integrado",
+        "Página de agendamento",
+        "Suporte por email",
       ],
-      cta: "Começar Teste Grátis",
-      ctaVariant: "outline" as const,
-      gradient: "from-blue-500 to-cyan-600",
     },
     {
-      id: "professional",
       name: "Profissional",
-      tagline: "Para pequenos negócios",
-      icon: Star,
-      monthlyPrice: 99.9,
-      yearlyPrice: 958.32,
-      discount: 20,
-      popular: false,
-      features: [
-        { text: "Tudo do plano Básico +", included: true },
-        { text: "Até 3 profissionais", included: true },
-        { text: "Integração WhatsApp", included: true },
-        { text: "Lembretes automáticos via WhatsApp", included: true },
-        { text: "Relatórios e estatísticas", included: true },
-        { text: "Página de agendamento pública", included: true },
-        { text: "Personalização de cores", included: true },
-        { text: "Upload de logo", included: true },
-        { text: "Tags e categorias", included: true },
-        { text: "Suporte prioritário", included: true },
-        { text: "Sistema de comissões", included: false },
-        { text: "Fotos dos profissionais", included: false },
-      ],
-      cta: "Começar Teste Grátis",
-      ctaVariant: "outline" as const,
-      gradient: "from-purple-500 to-blue-600",
-    },
-    {
-      id: "pro-plus",
-      name: "Pro Plus",
-      tagline: "Melhor custo-benefício",
-      icon: Zap,
-      monthlyPrice: 129.9,
-      yearlyPrice: 1247.04,
-      discount: 20,
+      monthlyPrice: 59.9,
+      yearlyPrice: 574.08,
+      description: "Ideal para pequenos salões e barbearias",
       popular: true,
       features: [
-        { text: "Tudo do plano Profissional +", included: true },
-        { text: "Até 10 profissionais", included: true },
-        { text: "Sistema de comissões", included: true },
-        { text: "Fotos dos profissionais", included: true },
-        { text: "Exceções de horário", included: true },
-        { text: "Relatórios avançados", included: true },
-        { text: "Suporte prioritário", included: true },
-        { text: "Backup automático", included: true },
-        { text: "Gestão de tags", included: true },
-        { text: "Personalização completa", included: true },
-        { text: "Profissionais ilimitados", included: false },
-        { text: "Suporte 24/7", included: false },
+        "Até 5 profissionais",
+        "Tudo do Básico +",
+        "Relatórios detalhados",
+        "Lembretes automáticos",
+        "Suporte prioritário",
       ],
-      cta: "Começar Teste Grátis",
-      ctaVariant: "default" as const,
-      gradient: "from-primary to-purple-600",
     },
     {
-      id: "business",
-      name: "Business",
-      tagline: "Para empresas estabelecidas",
-      icon: Crown,
-      monthlyPrice: 169.9,
-      yearlyPrice: 1630.32,
-      discount: 20,
+      name: "Pro Plus",
+      monthlyPrice: 99.9,
+      yearlyPrice: 958.08,
+      description: "Para salões em crescimento",
       popular: false,
       features: [
-        { text: "Tudo do plano Pro Plus +", included: true },
-        { text: "Profissionais ilimitados", included: true },
-        { text: "Múltiplos serviços por agendamento", included: true },
-        { text: "Notificações em tempo real", included: true },
-        { text: "Assinaturas e pagamentos", included: true },
-        { text: "Suporte 24/7 por WhatsApp", included: true },
-        { text: "Migração assistida", included: true },
-        { text: "Treinamento personalizado", included: true },
-        { text: "Backup automático diário", included: true },
-        { text: "API personalizada", included: true },
-        { text: "Gerente de conta dedicado", included: true },
-        { text: "SLA garantido", included: true },
+        "Até 15 profissionais",
+        "Tudo do Profissional +",
+        "Sistema de comissões",
+        "Fotos dos profissionais",
+        "Exceções de horário",
+        "Relatórios avançados",
       ],
-      cta: "Começar Teste Grátis",
-      ctaVariant: "outline" as const,
-      gradient: "from-amber-500 to-orange-600",
+    },
+    {
+      name: "Business",
+      monthlyPrice: 149.9,
+      yearlyPrice: 1438.08,
+      description: "Para estabelecimentos maiores",
+      popular: false,
+      features: [
+        "Profissionais ilimitados",
+        "Tudo do Pro Plus +",
+        "Múltiplas unidades",
+        "Suporte prioritário 24/7",
+        "API de integração",
+      ],
     },
   ];
 
-  const faqs = [
-    {
-      question: "Como funciona o período de teste gratuito?",
-      answer:
-        "Todos os planos incluem 14 dias de teste grátis com acesso completo a todas as funcionalidades. Não é necessário cartão de crédito para começar. Após o período de teste, você escolhe o plano que melhor se encaixa no seu negócio.",
-    },
-    {
-      question: "Posso mudar de plano a qualquer momento?",
-      answer:
-        "Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento. As mudanças são aplicadas imediatamente e o valor é ajustado proporcionalmente. Não há taxas ou penalidades para mudanças de plano.",
-    },
-    {
-      question: "Como funciona a cobrança?",
-      answer:
-        "A cobrança é feita mensalmente ou anualmente (com desconto de 20%) via cartão de crédito ou Pix. Você recebe uma fatura alguns dias antes da data de renovação e pode gerenciar seu método de pagamento a qualquer momento no painel.",
-    },
-    {
-      question: "Há desconto para pagamento anual?",
-      answer:
-        "Sim! Oferecemos 20% de desconto para assinaturas anuais em todos os planos. Por exemplo, o plano Profissional sai de R$ 1.198,80/ano para apenas R$ 958,32/ano. É como ganhar mais de 2 meses grátis!",
-    },
-    {
-      question: "Os agendamentos são ilimitados em todos os planos?",
-      answer:
-        "Sim! Todos os nossos planos oferecem agendamentos ilimitados. Você nunca precisará se preocupar em atingir limites ou pagar taxas extras por volume de agendamentos. Seu negócio pode crescer sem restrições.",
-    },
-    {
-      question: "Posso cancelar a qualquer momento?",
-      answer:
-        "Sim! Não há contratos de longo prazo ou taxas de cancelamento. Você pode cancelar sua assinatura a qualquer momento diretamente no painel. Se cancelar um plano anual, você continuará tendo acesso até o final do período pago.",
-    },
-    {
-      question: "Vocês oferecem garantia de devolução do dinheiro?",
-      answer:
-        "Sim! Oferecemos garantia de 30 dias em todos os planos. Se você não ficar completamente satisfeito com o TôLivre, reembolsamos 100% do valor pago, sem perguntas. Simples assim.",
-    },
-    {
-      question: "O que está incluído no suporte?",
-      answer:
-        "O plano Básico tem suporte por email com resposta em até 48h. Profissional tem suporte prioritário por email. Business inclui suporte prioritário por email e WhatsApp, além de treinamento personalizado e migração assistida.",
-    },
-    {
-      question: "Posso adicionar mais profissionais depois?",
-      answer:
-        "Claro! No plano Básico você tem 1 profissional, no Profissional até 3 profissionais. Se precisar de mais, basta fazer upgrade para o Business que oferece profissionais ilimitados. A mudança é instantânea e o valor é ajustado proporcionalmente.",
-    },
-    {
-      question: "Como funciona a integração com WhatsApp?",
-      answer:
-        "A partir do plano Profissional, você tem integração com WhatsApp para envio de lembretes automáticos e confirmações de agendamento. A configuração é simples e nosso suporte te ajuda no processo de integração com a API do WhatsApp.",
-    },
-  ];
-
-  const additionalFeatures = [
-    {
-      icon: Shield,
-      title: "Segurança Garantida",
-      description:
-        "Certificação SSL, criptografia de dados e conformidade LGPD em todos os planos",
-    },
-    {
-      icon: Zap,
-      title: "Atualizações Incluídas",
-      description:
-        "Todos os novos recursos e melhorias são automaticamente incluídos, sem custo adicional",
-    },
-    {
-      icon: Users,
-      title: "Treinamento Gratuito",
-      description:
-        "Vídeos tutoriais, documentação completa e sessões de onboarding para todos os planos",
-    },
-    {
-      icon: Clock,
-      title: "Migração Gratuita",
-      description:
-        "Nossa equipe ajuda a migrar seus dados de outras plataformas sem custo",
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: "Maria Silva",
-      role: "Salão Bella Donna",
-      avatar: "MS",
-      plan: "Professional",
-      text: "Mudamos para o plano Professional e não me arrependo. A integração com WhatsApp reduziu nossos cancelamentos pela metade!",
-      rating: 5,
-    },
-    {
-      name: "Carlos Mendes",
-      role: "Clínica Med+",
-      avatar: "CM",
-      plan: "Enterprise",
-      text: "Como clínica com 8 profissionais, o plano Enterprise foi essencial. O suporte 24/7 e a API nos permitiram integrar com nosso sistema interno.",
-      rating: 5,
-    },
-    {
-      name: "Ana Costa",
-      role: "Personal Trainer",
-      avatar: "AC",
-      plan: "Professional",
-      text: "Comecei no plano gratuito e em 2 meses já havia migrado para o Professional. Melhor investimento que fiz no meu negócio!",
-      rating: 5,
-    },
-  ];
-
-  const getPrice = (plan: (typeof plans)[0]) => {
-    if (plan.monthlyPrice === 0) return "R$ 0";
-    return billingCycle === "monthly"
-      ? `R$ ${plan.monthlyPrice}`
-      : `R$ ${Math.round(plan.yearlyPrice / 12)}`;
+  const getPrice = (plan: typeof pricing[0]) => {
+    return billingCycle === "monthly" ? plan.monthlyPrice : plan.yearlyPrice;
   };
 
-  const getTotalYearlyPrice = (plan: (typeof plans)[0]) => {
-    if (plan.monthlyPrice === 0) return null;
-    return billingCycle === "yearly"
-      ? `R$ ${plan.yearlyPrice}/ano`
-      : `R$ ${plan.monthlyPrice * 12}/ano`;
+  const getSavings = (plan: typeof pricing[0]) => {
+    const yearlyTotal = plan.monthlyPrice * 12;
+    const savings = yearlyTotal - plan.yearlyPrice;
+    return Math.round(savings);
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-background via-background to-muted overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="parallax-bg absolute top-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-          data-speed="0.3"
-        />
-        <div
-          className="parallax-bg absolute top-1/3 left-10 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"
-          data-speed="0.5"
-        />
-        <div
-          className="parallax-bg absolute bottom-20 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl"
-          data-speed="0.4"
-        />
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Header */}
-      <header className="relative z-50 border-b bg-background/80 backdrop-blur-lg sticky top-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="border-b bg-background/80 backdrop-blur-lg sticky top-0 z-50">
+        <div className="container mx-auto max-w-7xl px-4">
           <div className="flex justify-between items-center h-16">
-            <Link
-              href="/"
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-semibold">Voltar</span>
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/logo.svg" alt="TôLivre" width={32} height={32} />
+              <span className="text-2xl font-bold text-primary">TôLivre</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/login">
                 <Button variant="ghost">Entrar</Button>
               </Link>
-              <Link href="/register">
-                <Button className="bg-gradient-to-r from-primary to-blue-600">
-                  Começar Grátis
-                </Button>
+              <Link href="/login">
+                <Button>Começar grátis</Button>
               </Link>
             </div>
           </div>
@@ -322,802 +110,211 @@ export default function PrecosPage() {
       </header>
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative pt-20 pb-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-6">
-            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-6 py-2 mb-4">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">
-                Planos Transparentes
-              </span>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-              <span className="block bg-gradient-to-r from-foreground via-primary to-blue-600 bg-clip-text text-transparent">
-                Preços que crescem
-              </span>
-              <span className="block">com o seu negócio</span>
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Planos que <span className="text-primary">impulsionam</span> seu
+              negócio
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              Escolha o plano ideal para o seu momento. Sem taxas escondidas,
-              sem surpresas. Cancele quando quiser.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+              Escolha o plano ideal para o seu negócio. Teste grátis por 7
+              dias, sem precisar de cartão de crédito.
             </p>
 
-            {/* Billing Cycle Toggle */}
-            <div className="flex items-center justify-center gap-4 pt-8">
-              <span
-                className={`text-lg font-medium transition-colors ${
+            {/* Billing Toggle */}
+            <div className="inline-flex items-center gap-4 p-1 rounded-full bg-muted">
+              <button
+                onClick={() => setBillingCycle("monthly")}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
                   billingCycle === "monthly"
-                    ? "text-foreground"
-                    : "text-muted-foreground"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Mensal
-              </span>
-              <button
-                onClick={() =>
-                  setBillingCycle(
-                    billingCycle === "monthly" ? "yearly" : "monthly",
-                  )
-                }
-                className="relative w-16 h-8 bg-primary rounded-full transition-all duration-300 hover:scale-110"
-              >
-                <div
-                  className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${
-                    billingCycle === "yearly" ? "translate-x-8" : ""
-                  }`}
-                />
               </button>
-              <span
-                className={`text-lg font-medium transition-colors ${
+              <button
+                onClick={() => setBillingCycle("yearly")}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
                   billingCycle === "yearly"
-                    ? "text-foreground"
-                    : "text-muted-foreground"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Anual
-              </span>
-              {billingCycle === "yearly" && (
-                <span className="ml-2 bg-green-500/10 text-green-600 dark:text-green-400 text-sm font-semibold px-3 py-1 rounded-full animate-pulse">
-                  Economize 20%
+                <span className="ml-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
+                  -20%
                 </span>
-              )}
+              </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Pricing Cards */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                onMouseEnter={() => setHoveredPlan(plan.id)}
-                onMouseLeave={() => setHoveredPlan(null)}
-                className={`relative group ${
-                  plan.popular ? "md:-mt-8 md:scale-105" : ""
-                }`}
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {pricing.map((plan, index) => (
+              <Card
+                key={index}
+                className={`relative ${
+                  plan.popular
+                    ? "border-primary shadow-lg scale-105"
+                    : "border-border"
+                } hover:shadow-xl transition-all duration-300`}
               >
-                <div
-                  className={`relative bg-card rounded-3xl p-8 h-full flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-                    plan.popular
-                      ? "border-2 border-primary shadow-primary/20"
-                      : "border border-border"
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="bg-gradient-to-r from-primary to-blue-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-                        ⭐ Mais Popular
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Plan Header */}
-                  <div className="mb-6">
-                    <div
-                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <plan.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-3xl font-bold mb-2">{plan.name}</h3>
-                    <p className="text-muted-foreground">{plan.tagline}</p>
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-sm font-semibold rounded-full flex items-center gap-1">
+                    <Sparkles className="h-3 w-3" />
+                    Mais popular
                   </div>
-
-                  {/* Pricing */}
-                  <div className="mb-8">
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span
-                        className={`text-5xl font-bold ${
-                          plan.popular
-                            ? "bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"
-                            : ""
-                        }`}
-                      >
-                        {getPrice(plan)}
-                      </span>
-                      <span className="text-muted-foreground text-lg">
-                        /mês
-                      </span>
-                    </div>
-                    {billingCycle === "yearly" && plan.monthlyPrice > 0 && (
-                      <div className="text-sm space-y-1">
-                        <p className="text-muted-foreground">
-                          {getTotalYearlyPrice(plan)}
-                        </p>
-                        {plan.discount > 0 && (
-                          <p className="text-green-600 dark:text-green-400 font-semibold">
-                            Economize {plan.discount}% no plano anual
-                          </p>
-                        )}
-                      </div>
-                    )}
-                    {plan.monthlyPrice === 0 && (
-                      <p className="text-sm text-muted-foreground mt-2">
-                        Grátis para sempre
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Features List */}
-                  <ul className="space-y-4 mb-8 flex-grow">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        {feature.included ? (
-                          <CheckCircle
-                            className={`w-5 h-5 shrink-0 mt-0.5 ${
-                              plan.popular ? "text-primary" : "text-green-500"
-                            }`}
-                          />
-                        ) : (
-                          <X className="w-5 h-5 text-muted-foreground/40 shrink-0 mt-0.5" />
-                        )}
-                        <span
-                          className={
-                            feature.included
-                              ? plan.popular
-                                ? "font-medium"
-                                : ""
-                              : "text-muted-foreground/60"
-                          }
-                        >
-                          {feature.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* CTA Button */}
-                  <Link
-                    href={plan.id === "enterprise" ? "/contato" : "/register"}
-                    className="w-full"
-                  >
-                    <Button
-                      variant={plan.ctaVariant}
-                      className={`w-full text-lg py-6 ${
-                        plan.popular
-                          ? "bg-gradient-to-r from-primary to-blue-600 hover:opacity-90"
-                          : ""
-                      }`}
-                      size="lg"
-                    >
-                      {plan.cta}
-                      {plan.id !== "enterprise" && (
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      )}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Trust Badge */}
-          <div className="mt-16 text-center">
-            <div className="flex flex-wrap justify-center gap-6 items-center">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Sem cartão de crédito</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Cancele quando quiser</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Garantia de 30 dias</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Suporte em português</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Comparison Table */}
-      <section className="relative py-20 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Compare todos os recursos
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Veja em detalhes o que está incluído em cada plano
-            </p>
-          </div>
-
-          <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-primary/10">
-                <tr>
-                  <th className="px-6 py-4 text-left font-semibold">
-                    Recursos
-                  </th>
-                  <th className="px-6 py-4 text-center font-semibold">
-                    Starter
-                  </th>
-                  <th className="px-6 py-4 text-center font-semibold text-primary">
-                    Professional
-                  </th>
-                  <th className="px-6 py-4 text-center font-semibold">
-                    Enterprise
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t border-border">
-                  <td className="px-6 py-4 font-medium" colSpan={4}>
-                    Agendamentos
-                  </td>
-                </tr>
-                {[
-                  {
-                    name: "Agendamentos por mês",
-                    starter: "50",
-                    professional: "Ilimitado",
-                    enterprise: "Ilimitado",
-                  },
-                  {
-                    name: "Profissionais",
-                    starter: "1",
-                    professional: "3",
-                    enterprise: "Ilimitado",
-                  },
-                  {
-                    name: "Agendamento online 24/7",
-                    starter: true,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Calendário inteligente",
-                    starter: true,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Agendamentos recorrentes",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                ].map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">{row.name}</td>
-                    <td className="px-6 py-4 text-center">
-                      {typeof row.starter === "boolean" ? (
-                        row.starter ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.starter
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center font-medium">
-                      {typeof row.professional === "boolean" ? (
-                        row.professional ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-primary" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.professional
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {typeof row.enterprise === "boolean" ? (
-                        row.enterprise ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.enterprise
-                      )}
-                    </td>
-                  </tr>
-                ))}
-
-                <tr className="border-t border-border">
-                  <td className="px-6 py-4 font-medium" colSpan={4}>
-                    Comunicação
-                  </td>
-                </tr>
-                {[
-                  {
-                    name: "Integração WhatsApp",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Lembretes automáticos",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Email marketing",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Notificações personalizadas",
-                    starter: false,
-                    professional: false,
-                    enterprise: true,
-                  },
-                ].map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">{row.name}</td>
-                    <td className="px-6 py-4 text-center">
-                      {row.starter ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {row.professional ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-primary" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {row.enterprise ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-
-                <tr className="border-t border-border">
-                  <td className="px-6 py-4 font-medium" colSpan={4}>
-                    Relatórios e Análises
-                  </td>
-                </tr>
-                {[
-                  {
-                    name: "Dashboard básico",
-                    starter: true,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Relatórios avançados",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Exportação de dados",
-                    starter: false,
-                    professional: true,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Análise de performance",
-                    starter: false,
-                    professional: false,
-                    enterprise: true,
-                  },
-                ].map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">{row.name}</td>
-                    <td className="px-6 py-4 text-center">
-                      {row.starter ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {row.professional ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-primary" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {row.enterprise ? (
-                        <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                      ) : (
-                        <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-
-                <tr className="border-t border-border">
-                  <td className="px-6 py-4 font-medium" colSpan={4}>
-                    Suporte e Integrações
-                  </td>
-                </tr>
-                {[
-                  {
-                    name: "Suporte",
-                    starter: "Email",
-                    professional: "Prioritário",
-                    enterprise: "24/7",
-                  },
-                  {
-                    name: "API completa",
-                    starter: false,
-                    professional: false,
-                    enterprise: true,
-                  },
-                  {
-                    name: "Integrações",
-                    starter: "Básicas",
-                    professional: "Avançadas",
-                    enterprise: "Customizadas",
-                  },
-                  {
-                    name: "White label",
-                    starter: false,
-                    professional: false,
-                    enterprise: true,
-                  },
-                ].map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">{row.name}</td>
-                    <td className="px-6 py-4 text-center">
-                      {typeof row.starter === "boolean" ? (
-                        row.starter ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.starter
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center font-medium">
-                      {typeof row.professional === "boolean" ? (
-                        row.professional ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-primary" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.professional
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      {typeof row.enterprise === "boolean" ? (
-                        row.enterprise ? (
-                          <CheckCircle className="w-5 h-5 mx-auto text-green-500" />
-                        ) : (
-                          <X className="w-5 h-5 mx-auto text-muted-foreground/40" />
-                        )
-                      ) : (
-                        row.enterprise
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Features */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Incluído em todos os planos
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Benefícios que fazem a diferença
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {additionalFeatures.map((feature, idx) => (
-              <div
-                key={idx}
-                className="bg-card border border-border rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300 hover:scale-105"
-              >
-                <feature.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-                <h4 className="text-lg font-bold mb-2">{feature.title}</h4>
-                <p className="text-sm text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="relative py-20 px-4 bg-muted/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              O que nossos clientes dizem
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Histórias reais de quem escolheu o ToLivre
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, idx) => (
-              <div
-                key={idx}
-                className="bg-card border border-border rounded-2xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold text-xl">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <h4 className="font-bold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                      Plano {testimonial.plan}
+                )}
+                <CardContent className="p-6">
+                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold">
+                      R$ {getPrice(plan).toFixed(2).replace(".", ",")}
+                    </span>
+                    <span className="text-muted-foreground">
+                      /{billingCycle === "monthly" ? "mês" : "ano"}
                     </span>
                   </div>
-                </div>
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 fill-yellow-500 text-yellow-500"
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  "{testimonial.text}"
-                </p>
-              </div>
+                  {billingCycle === "yearly" && (
+                    <p className="text-sm text-primary mb-4">
+                      Economize R$ {getSavings(plan)} por ano
+                    </p>
+                  )}
+                  <p className="text-sm text-muted-foreground mb-6">
+                    {plan.description}
+                  </p>
+                  <Button
+                    className="w-full rounded-full mb-6"
+                    variant={plan.popular ? "default" : "outline"}
+                    asChild
+                  >
+                    <Link href="/login">
+                      Começar agora
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <div className="space-y-3">
+                    {plan.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
+          </div>
+
+          {/* Trust Badges */}
+          <div className="mt-16 text-center">
+            <div className="flex flex-wrap justify-center gap-8 items-center opacity-60">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  Teste grátis de 7 dias
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  Sem cartão de crédito
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  Cancele quando quiser
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Perguntas Frequentes
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Tire suas dúvidas sobre nossos planos
-            </p>
-          </div>
-
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Perguntas Frequentes
+          </h2>
           <div className="space-y-6">
-            {faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <HelpCircle className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-lg mb-2">
-                      {faq.question}
-                    </h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {[
+              {
+                q: "Posso testar antes de assinar?",
+                a: "Sim! Oferecemos 7 dias de teste grátis em todos os planos, sem precisar de cartão de crédito.",
+              },
+              {
+                q: "Posso mudar de plano depois?",
+                a: "Claro! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento.",
+              },
+              {
+                q: "Como funciona o pagamento?",
+                a: "Aceitamos cartão de crédito e Pix. O pagamento é processado de forma segura através do Stripe e Mercado Pago.",
+              },
+              {
+                q: "Há taxa de cancelamento?",
+                a: "Não! Você pode cancelar sua assinatura a qualquer momento, sem custos adicionais.",
+              },
+            ].map((faq, index) => (
+              <Card key={index}>
+                <CardContent className="p-6">
+                  <h3 className="font-semibold mb-2">{faq.q}</h3>
+                  <p className="text-muted-foreground text-sm">{faq.a}</p>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-6">
-              Ainda tem dúvidas? Estamos aqui para ajudar!
-            </p>
-            <Link href="/contato">
-              <Button size="lg" variant="outline">
-                Falar com Nossa Equipe
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-32 px-4 bg-gradient-to-br from-primary via-blue-500 to-purple-500">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Comece gratuitamente hoje
+      <section className="py-20 px-4 bg-primary text-primary-foreground">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Pronto para começar?
           </h2>
-          <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-            Teste todos os recursos do plano Professional por 14 dias. Sem
-            cartão de crédito, sem compromisso.
+          <p className="text-xl mb-8 text-primary-foreground/90">
+            Experimente grátis por 7 dias e transforme a gestão do seu negócio.
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/register">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="text-lg px-8 py-6 bg-white text-primary hover:bg-white/90"
-              >
-                Começar Grátis Agora
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+          <Button size="lg" variant="secondary" className="rounded-full px-8" asChild>
+            <Link href="/login">
+              Começar teste grátis
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
-            <Link href="/contato">
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 bg-white/10 text-white border-white/20 hover:bg-white/20"
-              >
-                Falar com Vendas
-              </Button>
-            </Link>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-6 mt-12 text-white/90">
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>14 dias grátis</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>Sem cartão</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>Cancele quando quiser</span>
-            </div>
-          </div>
+          </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t bg-card py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <span className="text-xl font-bold">ToLivre</span>
-              <p className="text-muted-foreground mt-4">
-                Sistema completo de agendamentos para profissionais modernos.
-              </p>
+      <footer className="bg-muted/50 border-t border-border py-8">
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} TôLivre. Todos os direitos reservados.
+            </p>
+            <div className="flex gap-6">
+              <Link
+                href="/legal/termos"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Termos
+              </Link>
+              <Link
+                href="/legal/privacidade"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Privacidade
+              </Link>
+              <Link
+                href="/"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Voltar ao início
+              </Link>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Produto</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href="/recursos"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Recursos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/precos"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Preços
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/#demo"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Demonstração
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Empresa</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href="/sobre"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Sobre
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/blog"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contato"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Contato
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href="/legal/privacidade"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Privacidade
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/legal/termos"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Termos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/legal/seguranca"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Segurança
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t pt-8 text-center text-muted-foreground">
-            <p>&copy; 2025 ToLivre. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
