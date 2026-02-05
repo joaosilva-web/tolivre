@@ -895,7 +895,7 @@ const pricing = [
     name: "Profissional",
     price: "99,90",
     description: "Ideal para pequenos salões e barbearias",
-    popular: true,
+    popular: false,
     features: [
       "Até 3 profissionais",
       "Tudo do Básico +",
@@ -906,14 +906,27 @@ const pricing = [
     ],
   },
   {
+    name: "Pro Plus",
+    price: "129,90",
+    description: "Para salões em crescimento",
+    popular: true,
+    features: [
+      "Até 10 profissionais",
+      "Tudo do Profissional +",
+      "Sistema de comissões",
+      "Fotos dos profissionais",
+      "Exceções de horário",
+      "Relatórios avançados",
+    ],
+  },
+  {
     name: "Business",
     price: "169,90",
     description: "Para estabelecimentos maiores",
     popular: false,
     features: [
       "Profissionais ilimitados",
-      "Tudo do Profissional +",
-      "Sistema de comissões",
+      "Tudo do Pro Plus +",
       "Múltiplas unidades",
       "Suporte prioritário 24/7",
       "API de integração",

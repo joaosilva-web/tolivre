@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 import { getUserFromCookie } from "@/app/libs/auth";
 import { startOfMonth, endOfMonth, subMonths } from "date-fns";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 // GET - Estatísticas do dashboard
 export async function GET(req: NextRequest) {
@@ -14,6 +15,17 @@ export async function GET(req: NextRequest) {
 
     if (!user.companyId) {
       return api.badRequest("Usuário não possui empresa vinculada");
+    }
+
+    // Verificar se o plano tem acesso a relatórios
+    const { allowed, planRequired } = await checkFeatureAccess(
+      user.companyId,
+      "reports"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `Relatórios e estatísticas disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+      );
     }
 
     const now = new Date();

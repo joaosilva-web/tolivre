@@ -19,6 +19,9 @@ import useSession from "@/hooks/useSession";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { PlanLimitWarning } from "@/components/PlanLimitWarning";
+import { PLANS } from "@/lib/subscriptionLimits";
+import type { ContractType } from "@/generated/prisma/client";
 
 type Professional = {
   id: string;
@@ -37,22 +40,34 @@ export default function TeamManagementPage() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [uploading, setUploading] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
+  const [companyPlan, setCompanyPlan] = useState<ContractType | null>(null);
 
   const loadProfessionals = useCallback(async () => {
     if (!user?.companyId) return;
 
     try {
       setLoading(true);
-      const res = await fetch(`/api/company/${user.companyId}/professionals`);
+      
+      // Carregar profissionais e dados da empresa em paralelo
+      const [profRes, companyRes] = await Promise.all([
+        fetch(`/api/company/${user.companyId}/professionals`),
+        fetch(`/api/company/${user.companyId}`)
+      ]);
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
+      if (!profRes.ok) {
+        const err = await profRes.json().catch(() => ({}));
         toast.error(err.error || "Erro ao carregar profissionais");
         return;
       }
 
-      const data = await res.json();
-      setProfessionals(data.data ?? data);
+      const profData = await profRes.json();
+      setProfessionals(profData.data ?? profData);
+      
+      // Buscar plano da empresa
+      if (companyRes.ok) {
+        const companyData = await companyRes.json();
+        setCompanyPlan(companyData.data?.contrato || companyData.contrato);
+      }
     } catch (err) {
       console.error("Erro ao carregar profissionais", err);
       toast.error("Erro ao carregar profissionais");
@@ -173,6 +188,23 @@ export default function TeamManagementPage() {
 
   if (!user) return null;
 
+  // Calcular limites do plano
+  const limits = companyPlan ? PLANS[companyPlan] : null;
+  const professionalsFeature = limits?.features.professionals;
+  const professionalLimit = 
+    professionalsFeature === "unlimited" 
+      ? 999 
+      : professionalsFeature ?? 999;
+  const currentCount = professionals.length;
+
+  // Determinar plano recomendado para upgrade
+  const getRecommendedPlan = () => {
+    if (currentCount >= 10) return "Business";
+    if (currentCount >= 3) return "Pro Plus";
+    if (currentCount >= 1) return "Professional";
+    return "Basic";
+  };
+
   return (
     <SidebarInset>
       <SiteHeader />
@@ -189,6 +221,16 @@ export default function TeamManagementPage() {
               </p>
             </div>
           </div>
+
+          {companyPlan && professionalLimit < 999 && (
+            <PlanLimitWarning
+              currentCount={currentCount}
+              limit={professionalLimit}
+              resourceType="profissionais"
+              currentPlan={companyPlan}
+              recommendedPlan={getRecommendedPlan()}
+            />
+          )}
 
           {professionals.length === 0 ? (
             <Card>

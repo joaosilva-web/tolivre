@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,6 +13,17 @@ export async function GET(req: NextRequest) {
 
     if (!user.companyId) {
       return api.forbidden("Usuário não vinculado a uma empresa");
+    }
+
+    // Verificar se o plano tem acesso a relatórios
+    const { allowed, planRequired } = await checkFeatureAccess(
+      user.companyId,
+      "reports"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `Relatórios de receita disponíveis apenas a partir do plano ${planRequired}.`
+      );
     }
 
     // Get appointments from last 30 days

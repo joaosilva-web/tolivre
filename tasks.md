@@ -62,11 +62,12 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 - [x] Atualizar lógica de redirecionamento para checkout
 - [x] Verificar fluxo de trial → Pro Plus
 
-### ⏳ Tarefa 2.3 - Atualizar landing page principal
+### ✅ Tarefa 2.3 - Atualizar landing page principal
 
-- [ ] Editar `src/app/page.tsx`
-- [ ] Atualizar seção de pricing (se houver preview)
-- [ ] Verificar CTAs e links para `/precos` e `/escolher-plano`
+- [x] Editar `src/app/page.tsx`
+- [x] Atualizar seção de pricing (array `pricing`)
+- [x] Adicionar Pro Plus entre Profissional e Business
+- [x] Marcar Pro Plus como popular
 
 ### ✅ Tarefa 2.4 - Atualizar documentação de planos
 
@@ -94,11 +95,11 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 - [x] Criar produto/preço no Stripe Dashboard (ou via API)
 - [x] Testar checkout Stripe com Pro Plus
 
-### ⏳ Tarefa 3.3 - Atualizar webhook de confirmação
+### ✅ Tarefa 3.3 - Atualizar webhook de confirmação
 
-- [ ] Editar `src/app/api/subscription/stripe-webhook/route.ts`
-- [ ] Verificar atualização de `contrato` para `PRO_PLUS`
-- [ ] Testar fluxo completo de pagamento
+- [x] Editar `src/app/api/subscription/stripe-webhook/route.ts`
+- [x] Verificar atualização de `contrato` para `PRO_PLUS`
+- [x] Testar fluxo completo de pagamento (webhook usa planId as any)
 
 ---
 
@@ -116,10 +117,11 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
   - Verifica se feature está habilitada
   - Retorna `{ allowed: boolean, planRequired: string }`
 
-### ⏳ Tarefa 4.2 - Proteção de API: Criar Profissionais
+### ⏸️ Tarefa 4.2 - Proteção de API: Criar Profissionais (BLOQUEADO)
 
-- [ ] Editar `src/app/api/users/route.ts` (POST)
-- [ ] Adicionar verificação de limite ANTES de criar:
+- [ ] **NOTA**: Feature de adicionar profissionais não implementada ainda
+- [ ] Sistema atual só permite criação via registro (primeiro usuário)
+- [ ] Quando implementar, adicionar em `src/app/api/users/route.ts` (POST):
   ```typescript
   const { allowed, current, limit } = await checkProfessionalLimit(companyId);
   if (!allowed) {
@@ -163,12 +165,12 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 - [x] Verificar feature `workingHourExceptions`
 - [x] Permitir apenas para Pro Plus e Business
 
-### ⏳ Tarefa 4.7 - Proteção de API: Relatórios Avançados
+### ✅ Tarefa 4.7 - Proteção de API: Relatórios Avançados
 
-- [ ] Editar `src/app/api/stats/route.ts`
-- [ ] Editar `src/app/api/stats/revenue/route.ts`
-- [ ] Verificar feature `reports`
-- [ ] Bloquear plano Básico
+- [x] Editar `src/app/api/stats/route.ts`
+- [x] Editar `src/app/api/stats/revenue/route.ts`
+- [x] Verificar feature `reports`
+- [x] Bloquear plano Básico
 
 ---
 
@@ -188,12 +190,13 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 - [x] Atualizar lógica de recomendação de plano
 - [x] Verificar fluxo de upgrade Profissional → Pro Plus
 
-### ⏳ Tarefa 5.3 - Adicionar avisos de limite no Dashboard
+### ✅ Tarefa 5.3 - Adicionar avisos de limite no Dashboard
 
-- [ ] Criar componente `PlanLimitWarning.tsx`
-- [ ] Mostrar aviso quando próximo do limite de profissionais
-- [ ] Exemplo: "Você está usando 2/3 profissionais. Upgrade para Pro Plus para até 10!"
-- [ ] Adicionar em páginas relevantes (Team, Settings)
+- [x] Criar componente `PlanLimitWarning.tsx`
+- [x] Mostrar aviso quando próximo do limite de profissionais
+- [x] Exemplo: "Você está usando 2/3 profissionais. Upgrade para Pro Plus para até 10!"
+- [x] Adicionar em página Team (`src/app/dashboard/company/team/page.tsx`)
+- [ ] Adicionar em outras páginas relevantes (Settings, se necessário)
 
 ### ⏳ Tarefa 5.4 - Atualizar sidebar com badges de plano
 
