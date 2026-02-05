@@ -4,11 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  CheckCircle,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+import { CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 export default function PrecosPage() {
@@ -77,11 +73,11 @@ export default function PrecosPage() {
     },
   ];
 
-  const getPrice = (plan: typeof pricing[0]) => {
+  const getPrice = (plan: (typeof pricing)[0]) => {
     return billingCycle === "monthly" ? plan.monthlyPrice : plan.yearlyPrice;
   };
 
-  const getSavings = (plan: typeof pricing[0]) => {
+  const getSavings = (plan: (typeof pricing)[0]) => {
     const yearlyTotal = plan.monthlyPrice * 12;
     const savings = yearlyTotal - plan.yearlyPrice;
     return Math.round(savings);
@@ -118,8 +114,8 @@ export default function PrecosPage() {
               negócio
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Escolha o plano ideal para o seu negócio. Teste grátis por 7
-              dias, sem precisar de cartão de crédito.
+              Escolha o plano ideal para o seu negócio. Teste grátis por 7 dias,
+              sem precisar de cartão de crédito.
             </p>
 
             {/* Billing Toggle */}
@@ -279,7 +275,12 @@ export default function PrecosPage() {
           <p className="text-xl mb-8 text-primary-foreground/90">
             Experimente grátis por 7 dias e transforme a gestão do seu negócio.
           </p>
-          <Button size="lg" variant="secondary" className="rounded-full px-8" asChild>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="rounded-full px-8"
+            asChild
+          >
             <Link href="/login">
               Começar teste grátis
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -293,7 +294,8 @@ export default function PrecosPage() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TôLivre. Todos os direitos reservados.
+              © {new Date().getFullYear()} TôLivre. Todos os direitos
+              reservados.
             </p>
             <div className="flex gap-6">
               <Link

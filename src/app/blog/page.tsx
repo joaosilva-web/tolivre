@@ -1,11 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
-  ArrowLeft,
   Calendar,
   Clock,
   User,
-  Tag,
   ArrowRight,
   TrendingUp,
   Lightbulb,
@@ -121,20 +120,23 @@ export default function BlogPage() {
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="text-sm font-medium">Voltar para Home</span>
+          <div className="flex h-16 items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/logo.svg"
+                alt="TôLivre"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <span className="text-2xl font-bold text-primary">TôLivre</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/login">
                 <Button variant="ghost">Entrar</Button>
               </Link>
-              <Link href="/register">
-                <Button>Começar Grátis</Button>
+              <Link href="/login">
+                <Button>Começar grátis</Button>
               </Link>
             </div>
           </div>
@@ -143,11 +145,11 @@ export default function BlogPage() {
 
       {/* Hero Section */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-blue-500/5 to-purple-500/5" />
+        <div className="absolute inset-0 bg-primary/5" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Blog ToLivre
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-primary">
+              Blog TôLivre
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Insights, tendências e dicas práticas para otimizar sua gestão de
@@ -181,8 +183,8 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto">
           <div className="bg-card border border-border rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="relative h-80 md:h-auto bg-gradient-to-br from-primary via-blue-500 to-purple-500 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-black/20" />
+              <div className="relative h-80 md:h-auto bg-primary flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-black/10" />
                 <div className="relative z-10 p-8 text-center">
                   <TrendingUp className="w-24 h-24 text-white/90 mx-auto mb-4" />
                   <p className="text-white font-semibold text-lg">
@@ -246,25 +248,25 @@ export default function BlogPage() {
                 key={post.id}
                 className="bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
               >
-                <div className="relative h-48 bg-gradient-to-br from-primary/20 via-blue-500/20 to-purple-500/20 flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="relative h-48 bg-primary/20 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                   {post.image === "recursos" && (
                     <Lightbulb className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                   {post.image === "whatsapp" && (
-                    <MessageCircle className="w-16 h-16 text-green-500/60 relative z-10" />
+                    <MessageCircle className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                   {post.image === "case" && (
-                    <Target className="w-16 h-16 text-blue-500/60 relative z-10" />
+                    <Target className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                   {post.image === "lgpd" && (
-                    <Users className="w-16 h-16 text-purple-500/60 relative z-10" />
+                    <Users className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                   {post.image === "erros" && (
-                    <Zap className="w-16 h-16 text-orange-500/60 relative z-10" />
+                    <Zap className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                   {post.image === "ia" && (
-                    <TrendingUp className="w-16 h-16 text-cyan-500/60 relative z-10" />
+                    <TrendingUp className="w-16 h-16 text-primary/60 relative z-10" />
                   )}
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
@@ -302,7 +304,7 @@ export default function BlogPage() {
       {/* Newsletter Section */}
       <section className="py-20 px-6 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-primary via-blue-500 to-purple-500 rounded-3xl p-12 text-white">
+          <div className="bg-primary rounded-3xl p-12 text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Receba conteúdo exclusivo
             </h2>
@@ -349,34 +351,28 @@ export default function BlogPage() {
                 icon: TrendingUp,
                 title: "Estratégias de Crescimento",
                 count: "12 artigos",
-                color: "from-green-500 to-emerald-600",
               },
               {
                 icon: Lightbulb,
                 title: "Dicas de Produtividade",
                 count: "8 artigos",
-                color: "from-yellow-500 to-orange-600",
               },
               {
                 icon: Users,
                 title: "Gestão de Clientes",
                 count: "15 artigos",
-                color: "from-blue-500 to-cyan-600",
               },
               {
                 icon: Zap,
                 title: "Automação",
                 count: "10 artigos",
-                color: "from-purple-500 to-pink-600",
               },
             ].map((topic, idx) => (
               <div
                 key={idx}
                 className="bg-card border border-border rounded-2xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
               >
-                <div
-                  className={`w-12 h-12 bg-gradient-to-br ${topic.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                >
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <topic.icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">
@@ -415,35 +411,27 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Footer simplificado */}
-      <footer className="border-t bg-card py-8 px-6">
-        <div className="max-w-7xl mx-auto text-center text-muted-foreground">
-          <p>&copy; 2025 ToLivre. Todos os direitos reservados.</p>
-          <div className="flex justify-center gap-6 mt-4">
-            <Link
-              href="/sobre"
-              className="hover:text-primary transition-colors text-sm"
-            >
-              Sobre
-            </Link>
-            <Link
-              href="/legal/privacidade"
-              className="hover:text-primary transition-colors text-sm"
-            >
-              Privacidade
-            </Link>
-            <Link
-              href="/legal/termos"
-              className="hover:text-primary transition-colors text-sm"
-            >
-              Termos
-            </Link>
-            <Link
-              href="/legal/seguranca"
-              className="hover:text-primary transition-colors text-sm"
-            >
-              Segurança
-            </Link>
+      {/* Footer */}
+      <footer className="bg-muted/50 border-t border-border py-8 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © 2026 TôLivre. Todos os direitos reservados.
+            </p>
+            <div className="flex gap-6">
+              <Link
+                href="/legal/termos"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Termos de Uso
+              </Link>
+              <Link
+                href="/legal/privacidade"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Privacidade
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

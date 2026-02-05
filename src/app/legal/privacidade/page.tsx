@@ -105,7 +105,9 @@ export default function PrivacidadePage() {
                   <li>Fornecer suporte ao cliente</li>
                   <li>Prevenir fraudes e garantir segurança</li>
                   <li>Cumprir obrigações legais</li>
-                  <li>Enviar comunicações de marketing (com seu consentimento)</li>
+                  <li>
+                    Enviar comunicações de marketing (com seu consentimento)
+                  </li>
                 </ul>
               </section>
 
@@ -172,12 +174,12 @@ export default function PrivacidadePage() {
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                   <li>Confirmar a existência de tratamento de dados</li>
                   <li>Acessar seus dados pessoais</li>
-                  <li>Corrigir dados incompletos, inexatos ou desatualizados</li>
+                  <li>
+                    Corrigir dados incompletos, inexatos ou desatualizados
+                  </li>
                   <li>Solicitar anonimização, bloqueio ou eliminação</li>
                   <li>Obter portabilidade dos dados</li>
-                  <li>
-                    Revogar consentimento (quando aplicável)
-                  </li>
+                  <li>Revogar consentimento (quando aplicável)</li>
                   <li>Opor-se a tratamento de dados</li>
                   <li>Informações sobre compartilhamento</li>
                 </ul>

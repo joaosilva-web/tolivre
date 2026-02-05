@@ -2,14 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Target,
-  Heart,
-  Users,
-  Zap,
-  Shield,
-  TrendingUp,
-} from "lucide-react";
+import { Target, Heart, Users, Zap, Shield, TrendingUp } from "lucide-react";
 
 export default function SobrePage() {
   return (
@@ -181,7 +174,8 @@ export default function SobrePage() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TôLivre. Todos os direitos reservados.
+              © {new Date().getFullYear()} TôLivre. Todos os direitos
+              reservados.
             </p>
             <div className="flex gap-6">
               <Link

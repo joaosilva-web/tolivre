@@ -2,19 +2,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Users, BarChart3, MessageCircle, CheckCircle } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  BarChart3,
+  MessageCircle,
+  CheckCircle,
+} from "lucide-react";
 
 export default function DemonstracaoPage() {
   const demoFeatures = [
     {
       icon: Calendar,
       title: "Agenda Inteligente",
-      description: "Veja como é fácil gerenciar todos os seus agendamentos em um só lugar.",
+      description:
+        "Veja como é fácil gerenciar todos os seus agendamentos em um só lugar.",
     },
     {
       icon: Users,
       title: "Gestão de Clientes",
-      description: "Mantenha histórico completo de atendimentos e preferências.",
+      description:
+        "Mantenha histórico completo de atendimentos e preferências.",
     },
     {
       icon: MessageCircle,
@@ -24,7 +32,8 @@ export default function DemonstracaoPage() {
     {
       icon: BarChart3,
       title: "Relatórios Detalhados",
-      description: "Acompanhe faturamento, serviços mais vendidos e muito mais.",
+      description:
+        "Acompanhe faturamento, serviços mais vendidos e muito mais.",
     },
   ];
 
@@ -73,13 +82,18 @@ export default function DemonstracaoPage() {
         <div className="container mx-auto max-w-7xl">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {demoFeatures.map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300">
+              <Card
+                key={index}
+                className="hover:shadow-lg transition-all duration-300"
+              >
                 <CardContent className="p-6 text-center">
                   <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="h-6 w-6 text-primary" />
                   </div>
                   <h3 className="font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -91,7 +105,9 @@ export default function DemonstracaoPage() {
       <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Interface moderna e intuitiva</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              Interface moderna e intuitiva
+            </h2>
             <p className="text-muted-foreground">
               Sistema pensado para ser simples e eficiente
             </p>
@@ -133,7 +149,12 @@ export default function DemonstracaoPage() {
           <p className="text-xl mb-8 text-primary-foreground/90">
             Crie sua conta grátis e comece a usar em minutos.
           </p>
-          <Button size="lg" variant="secondary" className="rounded-full px-8" asChild>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="rounded-full px-8"
+            asChild
+          >
             <Link href="/login">Começar teste grátis</Link>
           </Button>
         </div>
@@ -144,7 +165,8 @@ export default function DemonstracaoPage() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TôLivre. Todos os direitos reservados.
+              © {new Date().getFullYear()} TôLivre. Todos os direitos
+              reservados.
             </p>
             <div className="flex gap-6">
               <Link

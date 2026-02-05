@@ -541,7 +541,7 @@ export default function Home() {
                 "fade-in-right",
               ][index];
               const delayClass = `delay-${100 * (index + 1)}`;
-              
+
               // Pro Plus (popular) fica no meio com destaque extra
               const isPopular = plan.popular;
 
@@ -599,28 +599,34 @@ export default function Home() {
                   key={index}
                   className={`relative border-border fade-in-scale delay-400 ${pricingVisible ? "visible" : ""}`}
                 >
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold">R$ {plan.price}</span>
-                    <span className="text-muted-foreground">/mês</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    {plan.description}
-                  </p>
-                  <Button className="w-full rounded-full" variant="outline" asChild>
-                    <Link href="/login">Começar agora</Link>
-                  </Button>
-                  <div className="mt-6 space-y-3">
-                    {plan.features.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold">
+                        R$ {plan.price}
+                      </span>
+                      <span className="text-muted-foreground">/mês</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      {plan.description}
+                    </p>
+                    <Button
+                      className="w-full rounded-full"
+                      variant="outline"
+                      asChild
+                    >
+                      <Link href="/login">Começar agora</Link>
+                    </Button>
+                    <div className="mt-6 space-y-3">
+                      {plan.features.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>

@@ -162,7 +162,12 @@ export default function RecursosPage() {
           <p className="text-xl mb-8 text-primary-foreground/90">
             Teste por 7 dias sem precisar de cartão de crédito.
           </p>
-          <Button size="lg" variant="secondary" className="rounded-full px-8" asChild>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="rounded-full px-8"
+            asChild
+          >
             <Link href="/login">Começar teste grátis</Link>
           </Button>
         </div>
@@ -173,7 +178,8 @@ export default function RecursosPage() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} TôLivre. Todos os direitos reservados.
+              © {new Date().getFullYear()} TôLivre. Todos os direitos
+              reservados.
             </p>
             <div className="flex gap-6">
               <Link
