@@ -174,19 +174,19 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
 
 ## 🎨 **FASE 5: Atualização de Dashboard** (Frontend)
 
-### ⏳ Tarefa 5.1 - Atualizar página de Assinatura
+### ✅ Tarefa 5.1 - Atualizar página de Assinatura
 
-- [ ] Editar `src/app/dashboard/assinatura/page.tsx`
-- [ ] Adicionar card Pro Plus na comparação
-- [ ] Atualizar badge do plano atual
-- [ ] Verificar botões de upgrade/downgrade
+- [x] Editar `src/app/dashboard/assinatura/page.tsx`
+- [x] Adicionar card Pro Plus na comparação (usa PLANS dinâmico)
+- [x] Atualizar badge do plano atual
+- [x] Verificar botões de upgrade/downgrade
 
-### ⏳ Tarefa 5.2 - Atualizar página de Planos (upgrade)
+### ✅ Tarefa 5.2 - Atualizar página de Planos (upgrade)
 
-- [ ] Editar `src/app/dashboard/assinatura/planos/page.tsx`
-- [ ] Adicionar opção Pro Plus
-- [ ] Atualizar lógica de recomendação de plano
-- [ ] Verificar fluxo de upgrade Profissional → Pro Plus
+- [x] Editar `src/app/dashboard/assinatura/planos/page.tsx`
+- [x] Adicionar opção Pro Plus (usa PLANS dinâmico)
+- [x] Atualizar lógica de recomendação de plano
+- [x] Verificar fluxo de upgrade Profissional → Pro Plus
 
 ### ⏳ Tarefa 5.3 - Adicionar avisos de limite no Dashboard
 
