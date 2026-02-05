@@ -19,7 +19,7 @@ export const PLANS = {
   BASIC: {
     name: "BASIC",
     displayName: "Básico",
-    price: 69.9,
+    price: 29.9,
     features: {
       appointments: "unlimited",
       professionals: 1,
@@ -34,10 +34,10 @@ export const PLANS = {
   PROFESSIONAL: {
     name: "PROFESSIONAL",
     displayName: "Profissional",
-    price: 99.9,
+    price: 59.9,
     features: {
       appointments: "unlimited",
-      professionals: 3,
+      professionals: 5,
       services: "unlimited",
       clients: "unlimited",
       whatsapp: true,
@@ -49,10 +49,10 @@ export const PLANS = {
   PRO_PLUS: {
     name: "PRO_PLUS",
     displayName: "Pro Plus",
-    price: 129.9,
+    price: 99.9,
     features: {
       appointments: "unlimited",
-      professionals: 10,
+      professionals: 15,
       services: "unlimited",
       clients: "unlimited",
       whatsapp: true,
@@ -69,7 +69,7 @@ export const PLANS = {
   BUSINESS: {
     name: "BUSINESS",
     displayName: "Business",
-    price: 169.9,
+    price: 149.9,
     features: {
       appointments: "unlimited",
       professionals: "unlimited",

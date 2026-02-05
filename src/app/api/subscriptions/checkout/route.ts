@@ -15,7 +15,7 @@ export const PLANS = {
   BASIC: {
     id: "BASIC",
     name: "Básico",
-    price: 69.9,
+    price: 29.9,
     features: [
       "Agendamentos ilimitados",
       "1 profissional",
@@ -32,10 +32,10 @@ export const PLANS = {
   PROFESSIONAL: {
     id: "PROFESSIONAL",
     name: "Profissional",
-    price: 99.9,
+    price: 59.9,
     features: [
       "Tudo do Básico +",
-      "Até 3 profissionais",
+      "Até 5 profissionais",
       "Integração WhatsApp",
       "Lembretes automáticos",
       "Relatórios e estatísticas",
@@ -44,16 +44,16 @@ export const PLANS = {
     ],
     limits: {
       appointments: -1,
-      professionals: 3,
+      professionals: 5,
     },
   },
   PRO_PLUS: {
     id: "PRO_PLUS",
     name: "Pro Plus",
-    price: 129.9,
+    price: 99.9,
     features: [
       "Tudo do Profissional +",
-      "Até 10 profissionais",
+      "Até 15 profissionais",
       "Sistema de comissões",
       "Fotos dos profissionais",
       "Exceções de horário",
@@ -61,13 +61,13 @@ export const PLANS = {
     ],
     limits: {
       appointments: -1,
-      professionals: 10,
+      professionals: 15,
     },
   },
   BUSINESS: {
     id: "BUSINESS",
     name: "Business",
-    price: 169.9,
+    price: 149.9,
     features: [
       "Tudo do Pro Plus +",
       "Profissionais ilimitados",

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     if (!limitCheck.allowed) {
       return api.badRequest(
         `Limite de ${limitCheck.limit} profissionais atingido. Faça upgrade do seu plano para adicionar mais profissionais.`,
-        { current: limitCheck.current, limit: limitCheck.limit }
+        { current: limitCheck.current, limit: limitCheck.limit },
       );
     }
 
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       const firstError = error.issues[0];
       return api.badRequest(
         firstError?.message || "Dados inválidos",
-        error.issues
+        error.issues,
       );
     }
 

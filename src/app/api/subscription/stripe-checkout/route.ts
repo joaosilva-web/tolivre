@@ -22,7 +22,7 @@ const plans: Record<string, PlanConfig> = {
   basic: {
     id: "BASIC",
     name: "Básico",
-    price: 69.9,
+    price: 29.9,
     description: "Agendamentos ilimitados para 1 profissional",
     stripeProductId: "tolivre-basic",
     features: [
@@ -37,12 +37,12 @@ const plans: Record<string, PlanConfig> = {
   professional: {
     id: "PROFESSIONAL",
     name: "Profissional",
-    price: 99.9,
+    price: 59.9,
     description: "Agendamentos ilimitados + WhatsApp + Relatórios",
     stripeProductId: "tolivre-professional",
     features: [
       "Tudo do Básico +",
-      "Até 3 profissionais",
+      "Até 5 profissionais",
       "Integração WhatsApp",
       "Lembretes automáticos",
       "Relatórios e estatísticas",
@@ -52,12 +52,12 @@ const plans: Record<string, PlanConfig> = {
   "pro-plus": {
     id: "PRO_PLUS",
     name: "Pro Plus",
-    price: 129.9,
-    description: "Até 10 profissionais + Comissões + Fotos",
+    price: 99.9,
+    description: "Até 15 profissionais + Comissões + Fotos",
     stripeProductId: "tolivre-pro-plus",
     features: [
       "Tudo do Profissional +",
-      "Até 10 profissionais",
+      "Até 15 profissionais",
       "Sistema de comissões",
       "Fotos dos profissionais",
       "Exceções de horário",
@@ -67,7 +67,7 @@ const plans: Record<string, PlanConfig> = {
   business: {
     id: "BUSINESS",
     name: "Business",
-    price: 169.9,
+    price: 149.9,
     description: "Profissionais ilimitados + Comissões + Suporte 24/7",
     stripeProductId: "tolivre-business",
     features: [

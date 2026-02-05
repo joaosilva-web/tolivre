@@ -36,10 +36,13 @@ const PLAN_HIERARCHY: Record<ContractType, number> = {
   BUSINESS: 4,
 };
 
-function canAccessFeature(currentPlan: ContractType | null, requiredPlan?: ContractType): boolean {
+function canAccessFeature(
+  currentPlan: ContractType | null,
+  requiredPlan?: ContractType,
+): boolean {
   if (!requiredPlan) return true; // Feature sem restrição
   if (!currentPlan) return false; // Sem plano, sem acesso
-  
+
   return PLAN_HIERARCHY[currentPlan] >= PLAN_HIERARCHY[requiredPlan];
 }
 
@@ -109,8 +112,11 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => {
                         const subActive = isExact(subItem.url);
-                        const hasAccess = canAccessFeature(companyPlan, subItem.requiredPlan);
-                        
+                        const hasAccess = canAccessFeature(
+                          companyPlan,
+                          subItem.requiredPlan,
+                        );
+
                         const menuButton = (
                           <SidebarMenuSubButton
                             asChild={hasAccess}
@@ -121,7 +127,10 @@ export function NavMain({
                               <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
                                 {subItem.badge && (
-                                  <Badge variant="secondary" className="ml-auto text-xs">
+                                  <Badge
+                                    variant="secondary"
+                                    className="ml-auto text-xs"
+                                  >
                                     {subItem.badge}
                                   </Badge>
                                 )}
@@ -130,7 +139,10 @@ export function NavMain({
                               <div className="flex items-center gap-2 w-full">
                                 <span>{subItem.title}</span>
                                 {subItem.badge && (
-                                  <Badge variant="outline" className="ml-auto text-xs">
+                                  <Badge
+                                    variant="outline"
+                                    className="ml-auto text-xs"
+                                  >
                                     {subItem.badge}
                                   </Badge>
                                 )}
@@ -148,7 +160,10 @@ export function NavMain({
                                     {menuButton}
                                   </TooltipTrigger>
                                   <TooltipContent side="right">
-                                    <p>Disponível no plano {getPlanDisplayName(subItem.requiredPlan)}</p>
+                                    <p>
+                                      Disponível no plano{" "}
+                                      {getPlanDisplayName(subItem.requiredPlan)}
+                                    </p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>

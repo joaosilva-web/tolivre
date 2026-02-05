@@ -67,11 +67,11 @@ export default function ProfessionalsManagementPage() {
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [companyPlan, setCompanyPlan] = useState<ContractType | null>(null);
-  
+
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -85,10 +85,10 @@ export default function ProfessionalsManagementPage() {
 
     try {
       setLoading(true);
-      
+
       const [profRes, companyRes] = await Promise.all([
         fetch(`/api/company/${user.companyId}/professionals`),
-        fetch(`/api/company/${user.companyId}`)
+        fetch(`/api/company/${user.companyId}`),
       ]);
 
       if (!profRes.ok) {
@@ -99,7 +99,7 @@ export default function ProfessionalsManagementPage() {
 
       const profData = await profRes.json();
       setProfessionals(profData.data ?? profData);
-      
+
       if (companyRes.ok) {
         const companyData = await companyRes.json();
         setCompanyPlan(companyData.data?.contrato || companyData.contrato);
@@ -118,7 +118,7 @@ export default function ProfessionalsManagementPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.email || !formData.password) {
       toast.error("Preencha todos os campos obrigatórios");
       return;
@@ -126,7 +126,7 @@ export default function ProfessionalsManagementPage() {
 
     try {
       setSubmitting(true);
-      
+
       const res = await fetch("/api/users/invite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -190,10 +190,8 @@ export default function ProfessionalsManagementPage() {
   // Calcular limites do plano
   const limits = companyPlan ? PLANS[companyPlan] : null;
   const professionalsFeature = limits?.features.professionals;
-  const professionalLimit = 
-    professionalsFeature === "unlimited" 
-      ? 999 
-      : professionalsFeature ?? 999;
+  const professionalLimit =
+    professionalsFeature === "unlimited" ? 999 : (professionalsFeature ?? 999);
   const currentCount = professionals.length;
   const canAddMore = currentCount < professionalLimit;
 
@@ -237,61 +235,79 @@ export default function ProfessionalsManagementPage() {
                     <DialogHeader>
                       <DialogTitle>Adicionar Profissional</DialogTitle>
                       <DialogDescription>
-                        Preencha os dados do novo profissional. Uma conta será criada automaticamente.
+                        Preencha os dados do novo profissional. Uma conta será
+                        criada automaticamente.
                       </DialogDescription>
                     </DialogHeader>
-                    
+
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
                         <Label htmlFor="name">Nome *</Label>
                         <Input
                           id="name"
                           value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
                           placeholder="João Silva"
                           required
                         />
                       </div>
-                      
+
                       <div className="grid gap-2">
                         <Label htmlFor="email">Email *</Label>
                         <Input
                           id="email"
                           type="email"
                           value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
                           placeholder="joao@exemplo.com"
                           required
                         />
                       </div>
-                      
+
                       <div className="grid gap-2">
                         <Label htmlFor="password">Senha Inicial *</Label>
                         <Input
                           id="password"
                           type="password"
                           value={formData.password}
-                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              password: e.target.value,
+                            })
+                          }
                           placeholder="Mínimo 6 caracteres"
                           required
                           minLength={6}
                         />
                         <p className="text-xs text-muted-foreground">
-                          O profissional poderá alterar a senha após o primeiro login
+                          O profissional poderá alterar a senha após o primeiro
+                          login
                         </p>
                       </div>
-                      
+
                       <div className="grid gap-2">
                         <Label htmlFor="role">Cargo</Label>
                         <Select
                           value={formData.role}
-                          onValueChange={(value) => setFormData({ ...formData, role: value as "EMPLOYEE" | "MANAGER" })}
+                          onValueChange={(value) =>
+                            setFormData({
+                              ...formData,
+                              role: value as "EMPLOYEE" | "MANAGER",
+                            })
+                          }
                         >
                           <SelectTrigger id="role">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="EMPLOYEE">Funcionário</SelectItem>
+                            <SelectItem value="EMPLOYEE">
+                              Funcionário
+                            </SelectItem>
                             <SelectItem value="MANAGER">Gerente</SelectItem>
                           </SelectContent>
                         </Select>
@@ -339,9 +355,14 @@ export default function ProfessionalsManagementPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Lista de Profissionais ({currentCount}/{professionalLimit === 999 ? "∞" : professionalLimit})</CardTitle>
+              <CardTitle>
+                Lista de Profissionais ({currentCount}/
+                {professionalLimit === 999 ? "∞" : professionalLimit})
+              </CardTitle>
               <CardDescription>
-                {isOwner ? "Gerencie os profissionais que têm acesso ao sistema" : "Visualize os profissionais da empresa"}
+                {isOwner
+                  ? "Gerencie os profissionais que têm acesso ao sistema"
+                  : "Visualize os profissionais da empresa"}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -368,16 +389,24 @@ export default function ProfessionalsManagementPage() {
                       <TableHead>Nome</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Cargo</TableHead>
-                      {isOwner && <TableHead className="text-right">Ações</TableHead>}
+                      {isOwner && (
+                        <TableHead className="text-right">Ações</TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {professionals.map((prof) => (
                       <TableRow key={prof.id}>
-                        <TableCell className="font-medium">{prof.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {prof.name}
+                        </TableCell>
                         <TableCell>{prof.email}</TableCell>
                         <TableCell>
-                          <Badge variant={prof.role === "OWNER" ? "default" : "secondary"}>
+                          <Badge
+                            variant={
+                              prof.role === "OWNER" ? "default" : "secondary"
+                            }
+                          >
                             {ROLE_LABELS[prof.role]}
                           </Badge>
                         </TableCell>
@@ -387,7 +416,9 @@ export default function ProfessionalsManagementPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleDeleteProfessional(prof.id)}
+                                onClick={() =>
+                                  handleDeleteProfessional(prof.id)
+                                }
                               >
                                 <Trash2 className="h-4 w-4 text-destructive" />
                               </Button>

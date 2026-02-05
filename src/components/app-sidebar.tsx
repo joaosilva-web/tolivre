@@ -163,7 +163,9 @@ const commonNavItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useSessionContext();
-  const [companyPlan, setCompanyPlan] = React.useState<ContractType | null>(null);
+  const [companyPlan, setCompanyPlan] = React.useState<ContractType | null>(
+    null,
+  );
 
   // Buscar plano da empresa
   React.useEffect(() => {

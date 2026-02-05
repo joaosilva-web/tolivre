@@ -880,7 +880,7 @@ const stats = [
 const pricing = [
   {
     name: "Básico",
-    price: "69,90",
+    price: "29,90",
     description: "Perfeito para profissionais autônomos",
     popular: false,
     features: [
@@ -893,11 +893,11 @@ const pricing = [
   },
   {
     name: "Profissional",
-    price: "99,90",
+    price: "59,90",
     description: "Ideal para pequenos salões e barbearias",
     popular: false,
     features: [
-      "Até 3 profissionais",
+      "Até 5 profissionais",
       "Tudo do Básico +",
       "WhatsApp integrado",
       "Lembretes automáticos",
@@ -907,11 +907,11 @@ const pricing = [
   },
   {
     name: "Pro Plus",
-    price: "129,90",
+    price: "99,90",
     description: "Para salões em crescimento",
     popular: true,
     features: [
-      "Até 10 profissionais",
+      "Até 15 profissionais",
       "Tudo do Profissional +",
       "Sistema de comissões",
       "Fotos dos profissionais",
@@ -921,7 +921,7 @@ const pricing = [
   },
   {
     name: "Business",
-    price: "169,90",
+    price: "149,90",
     description: "Para estabelecimentos maiores",
     popular: false,
     features: [
