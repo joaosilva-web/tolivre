@@ -117,20 +117,26 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
   - Verifica se feature está habilitada
   - Retorna `{ allowed: boolean, planRequired: string }`
 
-### ⏸️ Tarefa 4.2 - Proteção de API: Criar Profissionais (BLOQUEADO)
+### ✅ Tarefa 4.2 - Proteção de API: Criar Profissionais
 
-- [ ] **NOTA**: Feature de adicionar profissionais não implementada ainda
-- [ ] Sistema atual só permite criação via registro (primeiro usuário)
-- [ ] Quando implementar, adicionar em `src/app/api/users/route.ts` (POST):
+- [x] **IMPLEMENTADO**: Feature de adicionar profissionais criada
+- [x] Criar rota `src/app/api/users/invite/route.ts` (POST)
+- [x] Adicionar verificação de limite ANTES de criar:
   ```typescript
   const { allowed, current, limit } = await checkProfessionalLimit(companyId);
   if (!allowed) {
-    return api.forbidden(
+    return api.badRequest(
       `Limite de ${limit} profissionais atingido. Faça upgrade.`,
     );
   }
   ```
-- [ ] Retornar erro específico com sugestão de upgrade
+- [x] Retornar erro específico com sugestão de upgrade
+- [x] Validação com Zod (nome, email, senha, role)
+- [x] Apenas OWNER pode convidar profissionais
+- [x] Criar página `src/app/dashboard/company/professionals/page.tsx`
+- [x] Dialog para adicionar profissional com form completo
+- [x] Botão desabilitado quando limite atingido
+- [x] Lista de profissionais com opção de remover (exceto OWNER)
 
 ### ✅ Tarefa 4.3 - Proteção de API: WhatsApp
 
