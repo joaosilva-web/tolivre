@@ -39,8 +39,8 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
     annualPrice: 1247.04 // 20% desconto
   }
   ```
-- [ ] Atualizar array `PLAN_ORDER` para incluir `PRO_PLUS`
-- [ ] Verificar funções `getPlanLimits()` e `canAccessFeature()`
+- [x] Atualizar array `PLAN_ORDER` para incluir `PRO_PLUS`
+- [x] Verificar funções `getPlanLimits()` e `canAccessFeature()`
 
 ---
 
@@ -130,11 +130,11 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
   ```
 - [ ] Retornar erro específico com sugestão de upgrade
 
-### ⏳ Tarefa 4.3 - Proteção de API: WhatsApp
+### ✅ Tarefa 4.3 - Proteção de API: WhatsApp
 
-- [ ] Editar `src/app/api/integrations/uazapi/init/route.ts`
-- [ ] Editar `src/app/api/integrations/uazapi/status/route.ts`
-- [ ] Adicionar verificação:
+- [x] Editar `src/app/api/integrations/uazapi/init/route.ts`
+- [x] Editar `src/app/api/integrations/uazapi/status/route.ts`
+- [x] Adicionar verificação:
   ```typescript
   const { allowed } = await checkFeatureAccess(companyId, "whatsapp");
   if (!allowed) {
@@ -144,24 +144,24 @@ Adicionar novo plano "Pro Plus" a R$ 129,90/mês com até 10 profissionais, sist
   }
   ```
 
-### ⏳ Tarefa 4.4 - Proteção de API: Sistema de Comissões
+### ✅ Tarefa 4.4 - Proteção de API: Sistema de Comissões
 
-- [ ] Editar `src/app/api/reports/commissions/route.ts`
-- [ ] Editar `src/app/api/reports/commissions/pay/route.ts`
-- [ ] Adicionar verificação de feature `commissions`
-- [ ] Bloquear acesso para planos Básico e Profissional
+- [x] Editar `src/app/api/reports/commissions/route.ts`
+- [x] Editar `src/app/api/reports/commissions/pay/route.ts`
+- [x] Adicionar verificação de feature `commissions`
+- [x] Bloquear acesso para planos Básico e Profissional
 
-### ⏳ Tarefa 4.5 - Proteção de API: Fotos de Profissionais
+### ✅ Tarefa 4.5 - Proteção de API: Fotos de Profissionais
 
-- [ ] Editar `src/app/api/users/photo/route.ts`
-- [ ] Verificar feature `professionalPhotos`
-- [ ] Permitir apenas para Pro Plus e Business
+- [x] Editar `src/app/api/users/photo/route.ts`
+- [x] Verificar feature `professionalPhotos`
+- [x] Permitir apenas para Pro Plus e Business
 
-### ⏳ Tarefa 4.6 - Proteção de API: Exceções de Horário
+### ✅ Tarefa 4.6 - Proteção de API: Exceções de Horário
 
-- [ ] Editar `src/app/api/working-hours/exceptions/route.ts`
-- [ ] Verificar feature `workingHourExceptions`
-- [ ] Permitir apenas para Pro Plus e Business
+- [x] Editar `src/app/api/working-hours/exceptions/route.ts`
+- [x] Verificar feature `workingHourExceptions`
+- [x] Permitir apenas para Pro Plus e Business
 
 ### ⏳ Tarefa 4.7 - Proteção de API: Relatórios Avançados
 

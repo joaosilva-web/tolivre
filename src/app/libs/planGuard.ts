@@ -5,7 +5,7 @@ import { ContractType } from "@/generated/prisma";
  * Verifica se a empresa pode adicionar mais profissionais com base no plano atual
  */
 export async function checkProfessionalLimit(
-  companyId: string
+  companyId: string,
 ): Promise<{ allowed: boolean; current: number; limit: number }> {
   const company = await prisma.company.findUnique({
     where: { id: companyId },
@@ -52,7 +52,7 @@ export async function checkProfessionalLimit(
  */
 export async function checkFeatureAccess(
   companyId: string,
-  feature: string
+  feature: string,
 ): Promise<{ allowed: boolean; planRequired: string }> {
   const company = await prisma.company.findUnique({
     where: { id: companyId },
@@ -124,11 +124,16 @@ export async function checkFeatureAccess(
   };
 
   const currentPlanFeatures = planFeatures[company.contrato];
-  const hasFeature = currentPlanFeatures[feature as keyof typeof currentPlanFeatures];
+  const hasFeature =
+    currentPlanFeatures[feature as keyof typeof currentPlanFeatures];
 
   // Determinar qual plano mínimo é necessário
   let planRequired = "PROFESSIONAL";
-  if (feature === "commissions" || feature === "professionalPhotos" || feature === "workingHourExceptions") {
+  if (
+    feature === "commissions" ||
+    feature === "professionalPhotos" ||
+    feature === "workingHourExceptions"
+  ) {
     planRequired = "PRO_PLUS";
   }
   if (feature === "websocket") {

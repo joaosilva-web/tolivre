@@ -2,12 +2,26 @@ import { NextRequest } from "next/server";
 import { getUserFromCookie } from "@/app/libs/auth";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 // POST - Upload de foto do profissional
 export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
+
+    // Verificar se o plano tem acesso a fotos de profissionais
+    if (user.companyId) {
+      const { allowed, planRequired } = await checkFeatureAccess(
+        user.companyId,
+        "professionalPhotos"
+      );
+      if (!allowed) {
+        return api.forbidden(
+          `Fotos de profissionais disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+        );
+      }
+    }
 
     const formData = await req.formData();
     const file = formData.get("photo") as File;

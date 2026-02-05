@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getUserFromCookie } from "@/app/libs/auth";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 // GET - Relatório de comissões
 export async function GET(req: NextRequest) {
@@ -11,6 +12,17 @@ export async function GET(req: NextRequest) {
 
     if (!user.companyId) {
       return api.badRequest("Usuário não possui empresa associada");
+    }
+
+    // Verificar se o plano tem acesso ao sistema de comissões
+    const { allowed, planRequired } = await checkFeatureAccess(
+      user.companyId,
+      "commissions"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `Sistema de comissões disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+      );
     }
 
     const { searchParams } = new URL(req.url);

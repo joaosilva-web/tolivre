@@ -26,7 +26,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function PrecosPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
-    "monthly"
+    "monthly",
   );
   const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
   const heroRef = useRef<HTMLElement>(null);
@@ -356,7 +356,7 @@ export default function PrecosPage() {
               <button
                 onClick={() =>
                   setBillingCycle(
-                    billingCycle === "monthly" ? "yearly" : "monthly"
+                    billingCycle === "monthly" ? "yearly" : "monthly",
                   )
                 }
                 className="relative w-16 h-8 bg-primary rounded-full transition-all duration-300 hover:scale-110"

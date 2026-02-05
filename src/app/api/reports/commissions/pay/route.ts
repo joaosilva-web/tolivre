@@ -3,6 +3,7 @@ import { getUserFromCookie } from "@/app/libs/auth";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
 import { z } from "zod";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 const PayCommissionSchema = z.object({
   appointmentIds: z.array(z.string()),
@@ -14,6 +15,17 @@ export async function POST(req: NextRequest) {
     const user = await getUserFromCookie();
     if (!user) return api.unauthorized();
     if (!user.companyId) return api.forbidden("Usuário sem empresa");
+
+    // Verificar se o plano tem acesso ao sistema de comissões
+    const { allowed, planRequired } = await checkFeatureAccess(
+      user.companyId,
+      "commissions"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `Sistema de comissões disponível apenas a partir do plano ${planRequired}.`
+      );
+    }
 
     if (user.role !== "OWNER") {
       return api.forbidden("Apenas o dono pode marcar comissões como pagas");

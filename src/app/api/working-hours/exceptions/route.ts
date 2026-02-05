@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
 import prisma from "@/lib/prisma";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 const ExceptionSchema = z.object({
   professionalId: z.string().optional(),
@@ -61,6 +62,17 @@ export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromCookie();
     if (!user?.companyId) return api.unauthorized();
+
+    // Verificar se o plano tem acesso a exceções de horário
+    const { allowed, planRequired } = await checkFeatureAccess(
+      user.companyId,
+      "workingHourExceptions"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `Exceções de horário disponíveis apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+      );
+    }
 
     const body = await req.json();
     const parsed = ExceptionSchema.parse(body);

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z, ZodError } from "zod";
 import { getUserFromCookie } from "@/app/libs/auth";
 import * as api from "@/app/libs/apiResponse";
+import { checkFeatureAccess } from "@/app/libs/planGuard";
 
 // Validation schema for Uazapi instance initialization
 const uazapiInitSchema = z.object({
@@ -28,6 +29,19 @@ export async function GET(req: NextRequest) {
 
     if (user.companyId !== companyId) {
       return api.forbidden("Acesso negado a este recurso");
+    }
+
+    // Verificar se o plano tem acesso ao WhatsApp
+    if (companyId) {
+      const { allowed, planRequired } = await checkFeatureAccess(
+        companyId,
+        "whatsapp"
+      );
+      if (!allowed) {
+        return api.forbidden(
+          `WhatsApp disponível apenas a partir do plano ${planRequired}.`
+        );
+      }
     }
 
     const UAZAPI_BASE_URL =
@@ -100,6 +114,17 @@ export async function POST(req: NextRequest) {
     // Authorization check
     if (user.companyId !== parsed.companyId) {
       return api.forbidden("Acesso negado a este recurso");
+    }
+
+    // Verificar se o plano tem acesso ao WhatsApp
+    const { allowed, planRequired } = await checkFeatureAccess(
+      parsed.companyId,
+      "whatsapp"
+    );
+    if (!allowed) {
+      return api.forbidden(
+        `WhatsApp disponível apenas a partir do plano ${planRequired}. Faça upgrade para acessar esta funcionalidade.`
+      );
     }
 
     // Get Uazapi configuration from environment
