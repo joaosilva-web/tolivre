@@ -124,9 +124,14 @@ export default function PrecosPage() {
                 onClick={() => setBillingCycle("monthly")}
                 className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
                   billingCycle === "monthly"
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
+                style={
+                  billingCycle === "monthly"
+                    ? { backgroundColor: "var(--primary)" }
+                    : {}
+                }
               >
                 Mensal
               </button>
@@ -134,9 +139,14 @@ export default function PrecosPage() {
                 onClick={() => setBillingCycle("yearly")}
                 className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
                   billingCycle === "yearly"
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "text-white shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
+                style={
+                  billingCycle === "yearly"
+                    ? { backgroundColor: "var(--primary)" }
+                    : {}
+                }
               >
                 Anual
                 <span className="ml-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">

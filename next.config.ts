@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   // Output standalone para Docker (produção otimizada)
-  output: "standalone",
+  // Temporariamente desabilitado devido a conflito com Sentry no Windows
+  // output: "standalone",
 
   // Evita que o Turbopack tente empacotar libs de WhatsApp/logger com arquivos de teste embutidos
   // que quebram a build (thread-stream/pino/baileys e deps). Mantém essas libs como externas
@@ -54,4 +56,41 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options
+
+  org: "tolivre",
+  project: "tolivre-app",
+
+  // Only print logs for uploading source maps in CI
+  silent: !process.env.CI,
+
+  // For all available options, see:
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+  // This can increase your server load as well as your hosting bill.
+  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+  // side errors will fail.
+  tunnelRoute: "/monitoring",
+
+  // Source maps configuration
+  sourcemaps: {
+    disable: false, // Enable source maps for better debugging
+  },
+
+  // Webpack treeshaking configuration
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true, // Remove debug logging in production
+    },
+    reactComponentAnnotation: {
+      enabled: true, // Show full component names in Sentry
+    },
+    automaticVercelMonitors: true, // Enable Vercel Cron Monitors
+  },
+});
