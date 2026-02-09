@@ -27,16 +27,19 @@ SENTRY_PROJECT=tolivre-app
 ```
 
 Para gerar o auth token:
+
 1. Vá em https://sentry.io/settings/account/api/auth-tokens/
 2. Crie um novo token com permissões: `project:releases` e `org:read`
 
 ## 3. Comportamento
 
 ### Desenvolvimento
+
 - Erros são **logados no console** mas **não enviados** ao Sentry
 - Isso evita poluir o Sentry com erros de desenvolvimento
 
 ### Produção
+
 - Erros são automaticamente capturados e enviados ao Sentry
 - Session Replay ativo para 10% das sessões
 - Errors são sempre gravados com replay
@@ -46,7 +49,11 @@ Para gerar o auth token:
 Para testar se está funcionando, adicione em qualquer página:
 
 ```tsx
-<button onClick={() => { throw new Error("Test Sentry"); }}>
+<button
+  onClick={() => {
+    throw new Error("Test Sentry");
+  }}
+>
   Test Error
 </button>
 ```
@@ -61,11 +68,12 @@ Para testar se está funcionando, adicione em qualquer página:
 ✅ Automatic instrumentation  
 ✅ Source maps upload (quando configurado)  
 ✅ Filtragem de dados sensíveis (cookies, tokens)  
-✅ Remoção de erros irrelevantes (extensões de navegador, etc)  
+✅ Remoção de erros irrelevantes (extensões de navegador, etc)
 
 ## 6. Visualizar Erros
 
 Acesse https://sentry.io e vá no seu projeto para ver:
+
 - Erros em tempo real
 - Stack traces detalhados
 - Session replays
@@ -75,6 +83,7 @@ Acesse https://sentry.io e vá no seu projeto para ver:
 ## Custos
 
 Plano gratuito do Sentry inclui:
+
 - 5.000 erros/mês
 - 500 replays/mês
 - Retenção de 30 dias

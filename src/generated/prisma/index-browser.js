@@ -425,6 +425,15 @@ exports.Prisma.SupportMessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PasswordResetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -546,7 +555,8 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   UserSecuritySettings: 'UserSecuritySettings',
   SupportConversation: 'SupportConversation',
-  SupportMessage: 'SupportMessage'
+  SupportMessage: 'SupportMessage',
+  PasswordReset: 'PasswordReset'
 };
 
 /**

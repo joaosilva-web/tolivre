@@ -170,6 +170,7 @@ model User {
   supportConversations         SupportConversation[]
   assignedSupportConversations SupportConversation[] @relation("AssignedSupport")
   supportMessages              SupportMessage[]
+  passwordResets               PasswordReset[]
 }
 
 enum Role {
@@ -518,4 +519,19 @@ enum SupportStatus {
   OPEN // Aberta, aguardando atendimento
   IN_PROGRESS // Em atendimento
   CLOSED // Fechada/Resolvida
+}
+
+// Recovery de senha - armazena tokens temporários para reset
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique // Token aleatório gerado
+  expiresAt DateTime // Expira em 1 hora
+  used      Boolean  @default(false) // Marca como usado após reset
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
 }

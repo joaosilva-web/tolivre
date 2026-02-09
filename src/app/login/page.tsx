@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import useSession from "@/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -182,6 +183,14 @@ function LoginContent() {
                     onChange={(e) => setLoginPassword(e.target.value)}
                     required
                   />
+                  <div className="flex justify-end">
+                    <Link
+                      href="/esqueci-senha"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Esqueci minha senha
+                    </Link>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
