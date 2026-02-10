@@ -200,33 +200,27 @@ export default function ResetarSenhaPage({
 
                 {/* Requisitos */}
                 <div className="rounded-lg bg-muted p-3">
-                  <p className="text-xs font-medium mb-2">Requisitos da senha:</p>
+                  <p className="text-xs font-medium mb-2">
+                    Requisitos da senha:
+                  </p>
                   <ul className="text-xs text-muted-foreground space-y-1">
                     <li
-                      className={
-                        password.length >= 8 ? "text-green-600" : ""
-                      }
+                      className={password.length >= 8 ? "text-green-600" : ""}
                     >
                       ✓ Mínimo 8 caracteres
                     </li>
                     <li
-                      className={
-                        /[A-Z]/.test(password) ? "text-green-600" : ""
-                      }
+                      className={/[A-Z]/.test(password) ? "text-green-600" : ""}
                     >
                       ✓ Uma letra maiúscula
                     </li>
                     <li
-                      className={
-                        /[a-z]/.test(password) ? "text-green-600" : ""
-                      }
+                      className={/[a-z]/.test(password) ? "text-green-600" : ""}
                     >
                       ✓ Uma letra minúscula
                     </li>
                     <li
-                      className={
-                        /[0-9]/.test(password) ? "text-green-600" : ""
-                      }
+                      className={/[0-9]/.test(password) ? "text-green-600" : ""}
                     >
                       ✓ Um número
                     </li>

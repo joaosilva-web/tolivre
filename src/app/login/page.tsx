@@ -97,7 +97,7 @@ function LoginContent() {
         const data = await res.json();
         setSuccess(
           data.data?.message ||
-            "Usuário criado com sucesso! Verifique seu email para ativar sua conta."
+            "Usuário criado com sucesso! Verifique seu email para ativar sua conta.",
         );
         // Limpar formulário de registro
         setRegisterName("");
