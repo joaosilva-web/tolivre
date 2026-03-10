@@ -3,8 +3,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   // Output standalone para Docker (produção otimizada)
-  // Temporariamente desabilitado devido a conflito com Sentry no Windows
-  // output: "standalone",
+  output: "standalone",
 
   // Evita que o Turbopack tente empacotar libs de WhatsApp/logger com arquivos de teste embutidos
   // que quebram a build (thread-stream/pino/baileys e deps). Mantém essas libs como externas
