@@ -6,7 +6,6 @@ import { Resend } from "resend";
 import crypto from "crypto";
 
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -55,6 +54,7 @@ export async function POST(req: NextRequest) {
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/resetar-senha/${token}`;
 
     // Envia email
+    const resend = new Resend(process.env.RESEND_API_KEY);
     try {
       await resend.emails.send({
         from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
