@@ -12,10 +12,7 @@ const allowedOriginsInDev = [
 ];
 
 // Lista de origens permitidas em produção
-const allowedOriginsInProd = [
-  "https://tolivre.app",
-  "https://www.tolivre.app",
-];
+const allowedOriginsInProd = ["https://tolivre.app", "https://www.tolivre.app"];
 
 export function middleware(request: NextRequest) {
   // Apenas aplicar CORS em rotas /api/*
@@ -50,11 +47,11 @@ export function middleware(request: NextRequest) {
   // Sempre adicionar outros headers CORS
   response.headers.set(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS",
   );
   response.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Cookie, X-Requested-With"
+    "Content-Type, Authorization, Cookie, X-Requested-With",
   );
 
   // Tratar requisições OPTIONS (preflight)
@@ -68,11 +65,11 @@ export function middleware(request: NextRequest) {
 
     preflightResponse.headers.set(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS",
     );
     preflightResponse.headers.set(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, Cookie, X-Requested-With"
+      "Content-Type, Authorization, Cookie, X-Requested-With",
     );
     preflightResponse.headers.set("Access-Control-Max-Age", "86400");
 

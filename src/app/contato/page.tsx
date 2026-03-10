@@ -97,7 +97,7 @@ export default function ContatoPage() {
                 </div>
                 <h3 className="font-semibold mb-2">Localização</h3>
                 <p className="text-sm text-muted-foreground">
-                  São Paulo, Brasil
+                  Maringá - Paraná
                 </p>
               </CardContent>
             </Card>

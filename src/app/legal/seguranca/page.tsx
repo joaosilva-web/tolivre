@@ -1150,7 +1150,7 @@ export default function SegurancaPage() {
                     <strong>E-mail Criptografado:</strong> Chave PGP disponível
                   </p>
                   <p>
-                    <strong>Emergências:</strong> +55 (11) 9999-9999
+                    <strong>Emergências:</strong> +55 (44) 8802-6835
                   </p>
                   <p>
                     <strong>Disponibilidade:</strong> 24 horas por dia, 7 dias
@@ -1165,13 +1165,10 @@ export default function SegurancaPage() {
                 </h4>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <p>
-                    <strong>Nome:</strong> Dr. Carlos Santos
+                    <strong>E-mail:</strong> contato@tolivre.app
                   </p>
                   <p>
-                    <strong>E-mail:</strong> dpo@tolivre.com.br
-                  </p>
-                  <p>
-                    <strong>Telefone:</strong> (11) 9999-9999
+                    <strong>Telefone:</strong> (44) 8802-6835
                   </p>
                   <p>
                     <strong>Horário:</strong> Segunda a Sexta, 9h às 18h
@@ -1182,8 +1179,7 @@ export default function SegurancaPage() {
 
             <div className="mt-6 pt-6 border-t">
               <p className="text-sm text-muted-foreground mb-2">
-                <strong>Endereço:</strong> ToLivre Tecnologia Ltda. - Rua
-                Exemplo, 123 - São Paulo/SP
+                <strong>Endereço:</strong> ToLivre Tecnologia Ltda. - Maringá/PR
               </p>
               <p className="text-sm text-muted-foreground">
                 <strong>Última atualização desta página:</strong> 1 de dezembro

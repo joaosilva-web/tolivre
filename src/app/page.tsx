@@ -54,6 +54,13 @@ const useScrollReveal = () => {
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [heroRef, heroVisible] = useScrollReveal();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [heroVideoSrc, setHeroVideoSrc] = useState<string | null>(null);
+  useEffect(() => {
+    if (heroVisible && !heroVideoSrc) {
+      setHeroVideoSrc("/hero_video.mp4");
+    }
+  }, [heroVisible, heroVideoSrc]);
   const [clientsRef, clientsVisible] = useScrollReveal();
   const [featuresRef, featuresVisible] = useScrollReveal();
   const [multiRef, multiVisible] = useScrollReveal();
@@ -62,6 +69,14 @@ export default function Home() {
   const [pricingRef, pricingVisible] = useScrollReveal();
   const [testimonialsRef, testimonialsVisible] = useScrollReveal();
   const [ctaRef, ctaVisible] = useScrollReveal();
+  const avatarFor = (name: string) => {
+    const key = name.toLowerCase();
+    if (key.includes("carlos")) return "/carlos.jpg";
+    if (key.includes("ana paula") || key.includes("ana"))
+      return "/anapaula.jpg";
+    if (key.includes("roberto")) return "/roberto.jpg";
+    return "/avatar-placeholder.png";
+  };
 
   const revealClass = (visible: boolean) =>
     `scroll-reveal ${visible ? "scroll-reveal-visible" : ""}`;
@@ -171,15 +186,32 @@ export default function Home() {
       <section
         ref={heroRef}
         className="relative pt-20 pb-20 px-4 mt-16 min-h-[600px] bg-green-900"
-        style={{
-          backgroundImage: "url('/BG.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
       >
+        {/* Video / Poster container (lazyloads video when in viewport) */}
+        <div className="absolute inset-0">
+          {heroVideoSrc ? (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover absolute inset-0"
+              src={heroVideoSrc}
+              poster="/BG.png"
+              muted
+              autoPlay
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            />
+          ) : (
+            <div
+              className="w-full h-full absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: "url('/BG.png')" }}
+            />
+          )}
+        </div>
+
         {/* Overlay for text readability (subtle, to keep background visible) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/0"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/0 z-10"></div>
 
         {/* Decorative blurs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -187,7 +219,7 @@ export default function Home() {
           <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl"></div>
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10">
+        <div className="container mx-auto max-w-7xl relative z-20">
           <div
             ref={heroRef}
             className="flex flex-col items-center text-center space-y-8"
@@ -265,31 +297,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Clients Section */}
-      <section ref={clientsRef} className="py-12 border-y bg-muted/30">
-        <div className="container mx-auto max-w-7xl px-4">
-          <p
-            className={`text-center text-sm text-muted-foreground mb-8 fade-in-down ${clientsVisible ? "visible" : ""}`}
-          >
-            Confiado por centenas de profissionais em todo Brasil
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center opacity-60">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className={`h-12 w-32 rounded bg-muted flex items-center justify-center fade-in-scale delay-${i * 100} ${clientsVisible ? "visible" : ""}`}
-              >
-                <span className="text-xs text-muted-foreground">
-                  Cliente {i}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Features Grid - Banking Reimagined Style */}
-      <section ref={featuresRef} className="py-24 px-4">
+      <section
+        ref={featuresRef}
+        id="features"
+        style={{ scrollMarginTop: "80px" }}
+        className="py-24 px-4"
+      >
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2
@@ -394,7 +408,14 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20"></div>
+                      <Image
+                        src="/joao.jpg"
+                        alt="João Silva"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                        loading="lazy"
+                      />
                       <div>
                         <div className="font-semibold">João Silva</div>
                         <div className="text-sm text-muted-foreground">
@@ -412,7 +433,14 @@ export default function Home() {
 
                   <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20"></div>
+                      <Image
+                        src="/maria.jpg"
+                        alt="Maria Santos"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                        loading="lazy"
+                      />
                       <div>
                         <div className="font-semibold">Maria Santos</div>
                         <div className="text-sm text-muted-foreground">
@@ -430,7 +458,14 @@ export default function Home() {
 
                   <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20"></div>
+                      <Image
+                        src="/ana.jpg"
+                        alt="Ana Costa"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                        loading="lazy"
+                      />
                       <div>
                         <div className="font-semibold">Ana Costa</div>
                         <div className="text-sm text-muted-foreground">
@@ -516,7 +551,12 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section ref={pricingRef} className="py-24 px-4">
+      <section
+        ref={pricingRef}
+        id="pricing"
+        style={{ scrollMarginTop: "80px" }}
+        className="py-24 px-4"
+      >
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2
@@ -634,7 +674,12 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section ref={testimonialsRef} className="py-24 px-4 bg-muted/30">
+      <section
+        ref={testimonialsRef}
+        id="testimonials"
+        style={{ scrollMarginTop: "80px" }}
+        className="py-24 px-4 bg-muted/30"
+      >
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2
@@ -650,7 +695,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 items-stretch">
             {testimonials.map((testimonial, index) => {
               const animationClass = [
                 "fade-in-left",
@@ -662,9 +707,9 @@ export default function Home() {
               return (
                 <Card
                   key={index}
-                  className={`${animationClass} ${delayClass} ${testimonialsVisible ? "visible" : ""}`}
+                  className={`flex flex-col h-full ${animationClass} ${delayClass} ${testimonialsVisible ? "visible" : ""}`}
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 flex flex-col justify-between h-full">
                     <div className="flex gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -677,7 +722,14 @@ export default function Home() {
                       {testimonial.content}
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-muted"></div>
+                      <Image
+                        src={avatarFor(testimonial.name)}
+                        alt={testimonial.name}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                        loading="lazy"
+                      />
                       <div>
                         <div className="font-semibold">{testimonial.name}</div>
                         <div className="text-sm text-muted-foreground">
@@ -859,11 +911,11 @@ export default function Home() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Phone className="h-5 w-5 flex-shrink-0" />
-                  <span>(11) 98765-4321</span>
+                  <span>(44) 8802-6835</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-5 w-5 flex-shrink-0" />
-                  <span>São Paulo, Brasil</span>
+                  <span>Maringá - Paraná</span>
                 </li>
               </ul>
             </div>
