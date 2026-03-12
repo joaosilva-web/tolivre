@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,8 +13,9 @@ import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
 export default function ResetarSenhaPage({
   params,
 }: {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
+  const { token } = use(params);
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -57,7 +58,7 @@ export default function ResetarSenhaPage({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: params.token,
+          token: token,
           password,
         }),
       });

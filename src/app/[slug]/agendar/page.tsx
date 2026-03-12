@@ -466,7 +466,7 @@ export default function PublicBookingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <Loader2 className="w-16 h-16 animate-spin mx-auto mb-4 text-primary" />
           <p className="text-muted-foreground">Carregando...</p>
@@ -477,7 +477,7 @@ export default function PublicBookingPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-md">
           <h1 className="text-4xl font-bold mb-4">Página não encontrada</h1>
           <p className="text-muted-foreground mb-6">
@@ -496,10 +496,10 @@ export default function PublicBookingPage() {
     : data.professionals;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
       <header className="bg-card border-b py-4">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-2">
           <button
             onClick={() => {
               if (currentStep > 1 && !bookingSuccess) {
@@ -508,18 +508,20 @@ export default function PublicBookingPage() {
                 router.push(`/${slug}`);
               }
             }}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-md transition-all hover:opacity-80 cursor-pointer"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md transition-all hover:opacity-80 cursor-pointer shrink-0"
             style={{ color: data.primaryColor }}
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </button>
-          <h1 className="text-2xl font-bold">{data.title}</h1>
-          <div className="w-24" /> {/* Spacer */}
+          <h1 className="text-lg md:text-2xl font-bold truncate text-center">
+            {data.title}
+          </h1>
+          <div className="w-16 md:w-24 shrink-0" /> {/* Spacer */}
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-12">
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Progress Steps */}
         {!bookingSuccess && (
           <div className="mb-12">
@@ -541,7 +543,7 @@ export default function PublicBookingPage() {
                   </div>
                   {step < 4 && (
                     <div
-                      className={`h-1 w-16 mx-2 transition-all ${
+                      className={`h-1 flex-1 mx-1 md:w-16 md:mx-2 transition-all ${
                         step < currentStep ? "" : "bg-muted"
                       }`}
                       style={{
@@ -575,10 +577,10 @@ export default function PublicBookingPage() {
                 <button
                   key={service.id}
                   onClick={() => handleServiceSelect(service)}
-                  className="bg-card border rounded-xl p-6 text-left hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+                  className="bg-card border rounded-xl p-6 text-center md:text-left hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
                 >
                   <h3 className="text-xl font-bold mb-2">{service.name}</h3>
-                  <div className="flex items-center justify-between text-muted-foreground">
+                  <div className="flex items-center justify-center gap-4 md:justify-between text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       <span>{formatDuration(service.duration)}</span>
@@ -635,7 +637,9 @@ export default function PublicBookingPage() {
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-card border rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-4">Selecione a Data</h3>
+                <h3 className="text-xl font-bold mb-4 text-center md:text-left">
+                  Selecione a Data
+                </h3>
                 <Calendar
                   mode="single"
                   selected={selectedDate}
@@ -657,7 +661,9 @@ export default function PublicBookingPage() {
                 />
               </div>
               <div className="bg-card border rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-4">Horários Disponíveis</h3>
+                <h3 className="text-xl font-bold mb-4 text-center md:text-left">
+                  Horários Disponíveis
+                </h3>
                 {!selectedDate ? (
                   <p className="text-muted-foreground text-center py-8">
                     Selecione uma data para ver os horários disponíveis

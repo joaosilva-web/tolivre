@@ -53,7 +53,7 @@
   --popover-foreground: oklch(0.145 0 0);
 
   /* ✅ Cor primária baseada em #0d542b (Verde Teal) */
-  --primary: oklch(0.3935 0.0957 152.28);
+  --primary: #0d542b;
   --primary-foreground: oklch(0.985 0 0);
 
   /* 🎨 Cores secundárias da landing page */
