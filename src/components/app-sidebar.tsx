@@ -179,14 +179,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // Constrói o menu dinamicamente baseado no usuário
   const navMain = React.useMemo(() => {
-    // Staff do ToLivre vê apenas o menu de Gestão TôLivre
+    const items = [...baseNavMain, ...commonNavItems];
+
+    // Staff do ToLivre também vê os menus internos (Suporte + Gestão TôLivre)
     if (isToLivreStaff(user?.email)) {
-      return internalNavItems;
+      items.push(...internalNavItems);
     }
 
-    // Usuários normais veem todos os menus exceto Gestão TôLivre
-    const items = [...baseNavMain];
-    items.push(...commonNavItems);
     return items;
   }, [user?.email]);
 
