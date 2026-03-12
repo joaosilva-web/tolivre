@@ -35,8 +35,12 @@ export default async function DashboardLayout({
   const hasActiveSubscription =
     userWithTrial?.company?.subscription?.status === "ACTIVE";
 
+  // Contas internas @tolivre.app nunca são bloqueadas por trial/assinatura
+  const isInternalAccount = user.email.endsWith("@tolivre.app");
+
   // Se o trial expirou e não tem assinatura ativa, redirecionar para escolher plano
   if (
+    !isInternalAccount &&
     !canAccessSystem(userWithTrial?.trialEndsAt || null, hasActiveSubscription)
   ) {
     redirect("/escolher-plano");
@@ -49,7 +53,7 @@ export default async function DashboardLayout({
         <div className="">
           <TrialBanner
             trialEndsAt={userWithTrial?.trialEndsAt || null}
-            hasActiveSubscription={hasActiveSubscription}
+            hasActiveSubscription={hasActiveSubscription || isInternalAccount}
           />
         </div>
         <OnboardingGuard>{children}</OnboardingGuard>
