@@ -1,6 +1,6 @@
-# 🗓️ Ocupaê — Agendamentos sem complicação
+# 🗓️ TôLivre — Agendamentos sem complicação
 
-**Ocupaê** é uma plataforma SaaS (Software as a Service) feita para profissionais autônomos que querem ter controle total dos seus agendamentos, lembretes e cobranças, sem depender de atendentes, WhatsApp ou processos manuais.
+**TôLivre** é uma plataforma SaaS (Software as a Service) feita para profissionais autônomos que querem ter controle total dos seus agendamentos, lembretes e cobranças, sem depender de atendentes, WhatsApp ou processos manuais.
 
 A proposta é simples: **automatizar tarefas rotineiras e libertar tempo para que o profissional foque no que realmente importa — atender bem seus clientes.**
 
