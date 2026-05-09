@@ -13,6 +13,7 @@ import {
   IconCreditCard,
   IconLock,
   IconMessageCircle,
+  IconBrandWhatsapp,
 } from "@tabler/icons-react";
 
 // Removed NavDocuments import as it will no longer be used
@@ -135,6 +136,11 @@ const internalNavItems = [
 ];
 
 const commonNavItems = [
+  {
+    title: "WhatsApp",
+    url: "/dashboard/integrations",
+    icon: IconBrandWhatsapp,
+  },
   {
     title: "Segurança",
     url: "/dashboard/security",
