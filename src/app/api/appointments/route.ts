@@ -250,7 +250,6 @@ export async function POST(req: NextRequest) {
           select: {
             telefone: true,
             nomeFantasia: true,
-            uazapiConnected: true,
           },
         });
 
@@ -274,7 +273,7 @@ export async function POST(req: NextRequest) {
           select: { name: true },
         });
 
-        if (company?.telefone && clientPhone) {
+        if (clientPhone) {
           const startBrazil = toBrazilTime(start);
           const startLocal = startBrazil.toLocaleString("pt-BR", {
             day: "2-digit",
@@ -290,7 +289,7 @@ export async function POST(req: NextRequest) {
             `Recebemos sua solicitação de agendamento:\n\n` +
             `📅 *Data/Hora:* ${startLocal}\n` +
             `💼 *Serviço:* ${svc?.name || "o serviço"}\n` +
-            `🏢 *Local:* ${company.nomeFantasia || "ToLivre"}\n\n` +
+            `🏢 *Local:* ${company?.nomeFantasia || "ToLivre"}\n\n` +
             `Por favor, confirme seu agendamento:`;
 
           const result = await sendUazMenu({
@@ -301,30 +300,14 @@ export async function POST(req: NextRequest) {
               `❌ Cancelar|cancel_${created.id}`,
             ],
             footerText: "ToLivre - Sistema de Agendamentos",
+            companyId: parsed.companyId,
           });
-          console.log(
-            "[appointments] WhatsApp send result for appointment",
-            created.id,
-            {
-              companyId: parsed.companyId,
-              clientId: parsed.clientId,
-              clientPhone,
-              payload: { to: clientPhone, from: company.telefone },
-              connected: company.uazapiConnected,
-              result,
-            },
-          );
+          console.log("[appointments] WhatsApp send result", created.id, result);
         } else {
-          console.log(
-            "[appointments] Skipping WhatsApp: missing company phone or client phone",
-            {
-              companyPhone: company?.telefone,
-              clientPhone,
-              connected: company?.uazapiConnected,
-              companyId: parsed.companyId,
-              clientId: parsed.clientId,
-            },
-          );
+          console.log("[appointments] Skipping WhatsApp: no client phone", {
+            clientPhone,
+            companyId: parsed.companyId,
+          });
         }
       } catch (err) {
         console.error("Erro ao enviar notificação WhatsApp:", err);

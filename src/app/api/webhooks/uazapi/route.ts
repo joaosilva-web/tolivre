@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
         }
 
         sendWhatsAppMessage
-          .sendText({ to: phone, message: confirmationMessage })
+          .sendText({ to: phone, message: confirmationMessage, companyId: appointment.companyId })
           .catch((err) => {
             console.error("[uazapi webhook] Failed to send confirmation:", err);
           });
@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
         }
 
         sendWhatsAppMessage
-          .sendText({ to: phone, message: cancellationMessage })
+          .sendText({ to: phone, message: cancellationMessage, companyId: appointment.companyId })
           .catch((err) => {
             console.error("[uazapi webhook] Failed to send cancellation:", err);
           });
@@ -207,12 +207,9 @@ export async function POST(req: NextRequest) {
 
         if (phone) {
           sendWhatsAppMessage
-            .sendText({ to: phone, message: rescheduleMessage })
+            .sendText({ to: phone, message: rescheduleMessage, companyId: appointment.companyId })
             .catch((err) => {
-              console.error(
-                "[uazapi webhook] Failed to send reschedule link:",
-                err,
-              );
+              console.error("[uazapi webhook] Failed to send reschedule link:", err);
             });
         }
       }

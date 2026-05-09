@@ -197,6 +197,7 @@ export async function PATCH(
             `❌ Cancelar|cancel_${updated.id}`,
           ],
           footerText: "ToLivre - Sistema de Agendamentos",
+          companyId: updated.companyId,
         })
         .then((result) => {
           console.log("[RESCHEDULE] WhatsApp sent successfully:", result);
@@ -333,12 +334,9 @@ export async function POST(
           `Nos vemos em breve! 😊`;
 
         sendWhatsAppMessage
-          .sendText({ to: phone, message: clientMessage })
+          .sendText({ to: phone, message: clientMessage, companyId: appointment.companyId })
           .catch((err) => {
-            console.error(
-              "[reschedule POST] Failed to send client confirmation:",
-              err,
-            );
+            console.error("[reschedule POST] Failed to send client confirmation:", err);
           });
       }
     }

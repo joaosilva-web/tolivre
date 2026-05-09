@@ -3,30 +3,17 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import prisma from "@/lib/prisma";
 import * as api from "@/app/libs/apiResponse";
-import sendWhatsAppMessage, {
-  normalizePhone,
-  toBrazilTime,
-} from "@/lib/uazapi";
+import evolution, { normalizePhone, toBrazilTime } from "@/lib/evolution";
 import { PLANS, type PlanName } from "@/lib/subscriptionLimits";
 
-const DEFAULT_HOURS_BEFORE = Number(
-  process.env.APPOINTMENT_REMINDER_HOURS_BEFORE || "3",
-);
-const DEFAULT_WINDOW_MINUTES = Number(
-  process.env.APPOINTMENT_REMINDER_WINDOW_MINUTES || "30",
-);
-const DEFAULT_BATCH_SIZE = Number(
-  process.env.APPOINTMENT_REMINDER_BATCH_SIZE || "50",
-);
-const CRON_TOKEN =
-  process.env.REMINDER_CRON_TOKEN || process.env.CRON_SECRET_TOKEN || "";
+const DEFAULT_BATCH_SIZE = Number(process.env.APPOINTMENT_REMINDER_BATCH_SIZE || "50");
+const CRON_TOKEN = process.env.REMINDER_CRON_TOKEN || process.env.CRON_SECRET_TOKEN || "";
+const DEFAULT_INSTANCE = process.env.EVOLUTION_DEFAULT_INSTANCE || "";
 
 function isAuthorized(req: NextRequest) {
-  if (!CRON_TOKEN) return true; // allow in dev if token not set
+  if (!CRON_TOKEN) return true;
   const header = req.headers.get("authorization") || "";
-  const bearer = header.toLowerCase().startsWith("bearer ")
-    ? header.slice(7)
-    : header;
+  const bearer = header.toLowerCase().startsWith("bearer ") ? header.slice(7) : header;
   const tokenParam = new URL(req.url).searchParams.get("token") || "";
   return bearer === CRON_TOKEN || tokenParam === CRON_TOKEN;
 }
@@ -41,36 +28,18 @@ export async function POST(req: NextRequest) {
 
 async function handle(req: NextRequest) {
   if (!isAuthorized(req)) {
-    console.log("[cron-reminder] unauthorized request");
     return api.unauthorized("Token inválido para cron de lembretes");
   }
 
-  const batchSize = DEFAULT_BATCH_SIZE;
-
-  // Brasil timezone offset: UTC-3 (3 horas a menos que UTC)
-  const BRAZIL_OFFSET_MS = -3 * 60 * 60 * 1000;
-
   const now = new Date();
-  // Janela de lembretes: de 15 minutos antes até 2 horas antes do agendamento
-  // Busca agendamentos entre: now + 15min e now + 2h
-  const windowStart = new Date(now.getTime() + 15 * 60 * 1000); // +15 minutos
-  const windowEnd = new Date(now.getTime() + 2 * 60 * 60 * 1000); // +2 horas
+  const windowStart = new Date(now.getTime() + 15 * 60 * 1000);
+  const windowEnd = new Date(now.getTime() + 2 * 60 * 60 * 1000);
 
-  // Calcular nowBrazil apenas para exibir nos logs
-  const nowBrazil = new Date(now.getTime() + BRAZIL_OFFSET_MS);
-
-  console.log("[cron-reminder] params", {
-    reminderWindow: "15min to 2h before",
-    batchSize,
-  });
-  console.log("[cron-reminder] now/windowStart/windowEnd", {
-    nowUTC: now.toISOString(),
-    nowBrazil: nowBrazil.toISOString(),
+  console.log("[cron-reminder] janela", {
     windowStart: windowStart.toISOString(),
     windowEnd: windowEnd.toISOString(),
   });
-  // Use Prisma to fetch candidate appointments within the UTC window.
-  // Timezone normalization (if needed) will be handled in JS after fetching.
+
   const appointments = await prisma.appointment.findMany({
     where: {
       startTime: { gte: windowStart, lt: windowEnd },
@@ -87,80 +56,33 @@ async function handle(req: NextRequest) {
           nomeFantasia: true,
           contrato: true,
           trialEndsAt: true,
+          uazapiInstanceName: true,
+          uazapiConnected: true,
           subscription: { select: { plan: true, status: true } },
         },
       },
     },
-    take: batchSize,
+    take: DEFAULT_BATCH_SIZE,
   });
 
-  console.log("[cron-reminder] fetched appointments", appointments.length);
-  if (appointments.length > 0) {
-    console.log(
-      "[cron-reminder] sample fetched ids",
-      appointments
-        .slice(0, 10)
-        .map((a) => ({ id: a.id, startTime: a.startTime?.toISOString() })),
-    );
-  }
-
-  // Filter appointments by subscription status or trial status
-  // Accept if:
-  // 1. Company has subscription with status ACTIVE or TRIALING
-  // 2. Company is in trial period (trialEndsAt > now)
   const allowedStatuses = new Set(["ACTIVE", "TRIALING"]);
   const nowForTrial = new Date();
+
   const filteredAppointments = appointments.filter((a) => {
     const s = a.company?.subscription?.status;
     const trialEndsAt = a.company?.trialEndsAt;
-    const isInTrial = trialEndsAt && new Date(trialEndsAt) > nowForTrial;
-    const hasActiveSubscription =
-      s && allowedStatuses.has(String(s).toUpperCase());
-
-    console.log("[cron-reminder] filtering appointment", {
-      id: a.id,
-      hasCompany: !!a.company,
-      hasSubscription: !!a.company?.subscription,
-      status: s,
-      trialEndsAt: trialEndsAt?.toISOString(),
-      isInTrial,
-      hasActiveSubscription,
-      allowed: hasActiveSubscription || isInTrial,
-    });
-
-    return hasActiveSubscription || isInTrial;
-  });
-
-  console.log(
-    "[cron-reminder] after subscription filter",
-    filteredAppointments.length,
-    "appointments",
-  );
-  if (filteredAppointments.length > 0) {
-    console.log(
-      "[cron-reminder] sample filtered ids",
-      filteredAppointments.slice(0, 10).map((a) => ({
-        id: a.id,
-        startTime: a.startTime?.toISOString(),
-        subscription: a.company?.subscription?.status,
-      })),
+    return (
+      (s && allowedStatuses.has(String(s).toUpperCase())) ||
+      (trialEndsAt && new Date(trialEndsAt) > nowForTrial)
     );
-  }
+  });
 
   let sent = 0;
   const skipped: Array<{ id: string; reason: string }> = [];
   const failed: Array<{ id: string; error: string }> = [];
+
   for (const appt of filteredAppointments) {
-    console.log("[cron-reminder] processing appointment", {
-      id: appt.id,
-      startTime: appt.startTime?.toISOString(),
-      companyId: appt.companyId,
-    });
-    const planFromSub = appt.company?.subscription?.plan as
-      | PlanName
-      | undefined;
-    const planName: PlanName | undefined =
-      planFromSub || (appt.company?.contrato as PlanName | undefined);
+    const planName = (appt.company?.subscription?.plan || appt.company?.contrato) as PlanName | undefined;
     const plan = planName ? PLANS[planName] : undefined;
 
     if (plan && !plan.features.whatsapp) {
@@ -168,19 +90,25 @@ async function handle(req: NextRequest) {
       continue;
     }
 
-    const phoneRaw = appt.client?.phone || "";
-    const normalizedPhone = normalizePhone(phoneRaw);
+    const normalizedPhone = normalizePhone(appt.client?.phone || "");
     if (!normalizedPhone) {
       skipped.push({ id: appt.id, reason: "Telefone ausente ou inválido" });
       continue;
     }
 
-    const dateText = format(toBrazilTime(appt.startTime), "dd/MM/yyyy", {
-      locale: ptBR,
-    });
-    const timeText = format(toBrazilTime(appt.startTime), "HH:mm", {
-      locale: ptBR,
-    });
+    // Resolver instância: empresa própria > fallback global
+    const instanceName =
+      (appt.company?.uazapiConnected && appt.company?.uazapiInstanceName)
+        ? appt.company.uazapiInstanceName
+        : DEFAULT_INSTANCE || null;
+
+    if (!instanceName) {
+      skipped.push({ id: appt.id, reason: "Instância WhatsApp não configurada" });
+      continue;
+    }
+
+    const dateText = format(toBrazilTime(appt.startTime), "dd/MM/yyyy", { locale: ptBR });
+    const timeText = format(toBrazilTime(appt.startTime), "HH:mm", { locale: ptBR });
     const serviceName = appt.service?.name || "seu atendimento";
     const professionalName = appt.professional?.name || "nossa equipe";
     const companyName = appt.company?.nomeFantasia || "TôLivre";
@@ -195,25 +123,24 @@ async function handle(req: NextRequest) {
       `🏢 *Local:* ${companyName}\n\n` +
       `O que deseja fazer?`;
 
-    // Botões dinâmicos baseados no status
-    const choices: string[] = [];
+    const buttons: Array<{ id: string; text: string }> = [];
     if (appt.status === "CONFIRMED") {
-      // Já confirmado: apenas reagendar ou cancelar
-      choices.push(`📅 Reagendar|reschedule_${appt.id}`);
-      choices.push(`❌ Cancelar|cancel_${appt.id}`);
+      buttons.push({ id: `reschedule_${appt.id}`, text: "📅 Reagendar" });
+      buttons.push({ id: `cancel_${appt.id}`, text: "❌ Cancelar" });
     } else {
-      // Não confirmado: confirmar, reagendar ou cancelar
-      choices.push(`✅ Confirmar|confirm_${appt.id}`);
-      choices.push(`📅 Reagendar|reschedule_${appt.id}`);
-      choices.push(`❌ Cancelar|cancel_${appt.id}`);
+      buttons.push({ id: `confirm_${appt.id}`, text: "✅ Confirmar" });
+      buttons.push({ id: `reschedule_${appt.id}`, text: "📅 Reagendar" });
+      buttons.push({ id: `cancel_${appt.id}`, text: "❌ Cancelar" });
     }
 
     try {
-      const res = await sendWhatsAppMessage.sendMenu({
+      const res = await evolution.sendButtons({
+        instanceName,
         to: normalizedPhone,
-        text: messageText,
-        choices,
-        footerText: "ToLivre - Sistema de Agendamentos",
+        title: "TôLivre - Lembrete",
+        body: messageText,
+        footer: companyName,
+        buttons,
       });
 
       if (res.ok) {
@@ -222,32 +149,17 @@ async function handle(req: NextRequest) {
           data: { reminderSentAt: new Date() },
         });
         sent += 1;
-        console.log("[cron-reminder] sent", { id: appt.id });
+        console.log("[cron-reminder] enviado", appt.id, "via", instanceName);
       } else {
-        const errMsg =
-          (res as any).error || `HTTP ${(res as any).status ?? "unknown"}`;
+        const errMsg = (res as { error?: string }).error || `HTTP ${(res as { status?: number }).status ?? "?"}`;
         failed.push({ id: appt.id, error: errMsg });
-        console.log("[cron-reminder] send-failed", {
-          id: appt.id,
-          error: errMsg,
-        });
       }
     } catch (err) {
-      const errStr = String(err);
-      failed.push({ id: appt.id, error: errStr });
-      console.log("[cron-reminder] send-exception", {
-        id: appt.id,
-        error: errStr,
-      });
+      failed.push({ id: appt.id, error: String(err) });
     }
   }
 
-  console.log("[cron-reminder] summary", {
-    total: filteredAppointments.length,
-    sent,
-    skipped: skipped.length,
-    failed: failed.length,
-  });
+  console.log("[cron-reminder] summary", { total: filteredAppointments.length, sent, skipped: skipped.length, failed: failed.length });
 
   return api.ok({
     now: now.toISOString(),

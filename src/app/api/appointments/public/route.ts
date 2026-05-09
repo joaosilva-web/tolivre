@@ -227,9 +227,10 @@ export async function POST(req: NextRequest) {
             `❌ Cancelar|cancel_${result.id}`,
           ],
           footerText: "ToLivre - Sistema de Agendamentos",
+          companyId: parsed.companyId,
         })
         .catch((err) => {
-          console.error("[uazapi] Failed to send booking menu:", err);
+          console.error("[whatsapp] Failed to send booking menu:", err);
         });
     }
 
